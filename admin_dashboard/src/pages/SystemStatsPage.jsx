@@ -30,7 +30,7 @@ export const SystemStatsPage = () => {
     totalDevices > 0 ? Math.round((connectedDevices / totalDevices) * 100) : 100;
 
   return (
-    <div className="space-y-6 animate-fade-in">
+    <div className="space-y-6">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-slate-200">
         <div>
@@ -38,8 +38,8 @@ export const SystemStatsPage = () => {
             <h2 className="text-base font-bold text-slate-900 tracking-tight">
               IoT Telemetry & Fleet Infrastructure
             </h2>
-            <span className="font-mono text-[10px] uppercase px-2 py-0.5 rounded-full bg-emerald-50 text-[#22C55E] border border-emerald-200 font-bold flex items-center gap-1">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#22C55E] animate-pulse" />
+            <span className="font-mono text-[10px] uppercase px-2 py-0.5 rounded-full bg-green-50 text-green-600 border border-green-200 font-bold flex items-center gap-1">
+              <span className="w-1.5 h-1.5 rounded-full bg-green-600" />
               Healthy
             </span>
           </div>
@@ -51,9 +51,9 @@ export const SystemStatsPage = () => {
         <button
           onClick={fetchStats}
           disabled={isLoading}
-          className="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-semibold rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 shadow-subtle transition-all active:scale-95 disabled:opacity-50"
+          className="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-semibold rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 disabled:opacity-50 transition-colors duration-200"
         >
-          <RotateCw size={13} className={isLoading ? 'animate-spin text-[#3C6FDB]' : ''} />
+          <RotateCw size={13} className={isLoading ? 'text-[#3C6FDB]' : ''} />
           <span>Sync Telemetry</span>
         </button>
       </div>
@@ -89,13 +89,13 @@ export const SystemStatsPage = () => {
       {/* Deep Dive Infrastructure Grids */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
         {/* Device Health Breakdown */}
-        <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-card hover:shadow-elevated transition-all duration-300 space-y-4">
+        <div className="p-6 rounded-2xl bg-white border border-slate-200 space-y-4">
           <div className="flex items-center justify-between">
             <div>
               <h3 className="text-xs font-bold text-slate-900 tracking-tight">Signal Connectivity Index</h3>
               <p className="text-[11px] text-slate-500">Live heartbeat stream across active bracelets</p>
             </div>
-            <span className="font-mono text-xs font-bold text-[#22C55E] bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
+            <span className="font-mono text-xs font-bold text-green-600 bg-green-50 px-2.5 py-0.5 rounded-full border border-green-200">
               {connectivityRate}% Operational
             </span>
           </div>
@@ -104,14 +104,14 @@ export const SystemStatsPage = () => {
             <div>
               <div className="flex justify-between text-xs mb-1.5">
                 <span className="text-slate-700 font-sans font-semibold text-xs flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-[#22C55E] shadow-[0_0_6px_#22C55E] animate-pulse" />
+                  <span className="w-2 h-2 rounded-full bg-green-500" />
                   Active Telemetry Heartbeats
                 </span>
                 <span className="text-slate-800 font-bold">{connectedDevices} / {totalDevices}</span>
               </div>
               <div className="h-2.5 rounded-full bg-slate-100 overflow-hidden">
                 <div
-                  className="h-full bg-gradient-to-r from-[#3C6FDB] to-[#22C55E] rounded-full transition-all duration-700"
+                  className="h-full bg-green-500 rounded-full"
                   style={{ width: `${connectivityRate}%` }}
                 />
               </div>
@@ -127,21 +127,21 @@ export const SystemStatsPage = () => {
               </div>
               <div className="h-2.5 rounded-full bg-slate-100 overflow-hidden">
                 <div
-                  className="h-full bg-slate-400 rounded-full transition-all duration-700"
+                  className="h-full bg-slate-400 rounded-full"
                   style={{ width: `${100 - connectivityRate}%` }}
                 />
               </div>
             </div>
           </div>
 
-          <div className="p-4 rounded-xl bg-slate-50 border border-slate-200/80 text-[11px] text-slate-600 leading-relaxed font-sans">
+          <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 text-[11px] text-slate-600 leading-relaxed font-sans">
             <span className="font-bold text-slate-800">Telemetry Cycle: </span>
             Smart wearable monitors record timestamps to MySQL (`iot_devices.last_connection`). Wearables silent for over 15 minutes are automatically flagged as disconnected.
           </div>
         </div>
 
         {/* Aggregate Database Summary */}
-        <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-card hover:shadow-elevated transition-all duration-300 flex flex-col justify-between">
+        <div className="p-6 rounded-2xl bg-white border border-slate-200 flex flex-col justify-between">
           <div>
             <div className="flex items-center gap-2 mb-1.5">
               <Database size={16} className="text-[#3C6FDB]" />
@@ -152,7 +152,7 @@ export const SystemStatsPage = () => {
             </p>
 
             <div className="space-y-3 font-mono text-xs">
-              <div className="p-3.5 rounded-xl bg-blue-50/50 border border-blue-100 flex items-center justify-between shadow-subtle">
+              <div className="p-3.5 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-between">
                 <div>
                   <span className="font-sans font-bold text-slate-900 block text-xs">
                     Registered Senior Profiles
@@ -164,7 +164,7 @@ export const SystemStatsPage = () => {
                 </span>
               </div>
 
-              <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center justify-between shadow-subtle">
+              <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between">
                 <div>
                   <span className="font-sans font-bold text-slate-900 block text-xs">
                     Parent Subscribers

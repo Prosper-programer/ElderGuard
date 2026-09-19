@@ -14,12 +14,11 @@ export function App() {
 
   if (isLoading) {
     return (
-      <div className="h-screen w-screen flex flex-col items-center justify-center bg-[#0B1120] text-slate-300">
-        <div className="relative w-10 h-10 rounded-2xl bg-gradient-to-tr from-[#3C6FDB] to-[#2A56B0] flex items-center justify-center text-white shadow-primaryGlow mb-3 animate-pulse">
+      <div className="h-screen w-screen flex flex-col items-center justify-center bg-[#F8FAFC] text-slate-600">
+        <div className="relative w-10 h-10 rounded-2xl bg-[#3C6FDB] flex items-center justify-center text-white mb-3">
           <ShieldCheck size={20} />
-          <span className="absolute -bottom-1 -right-1 w-2.5 h-2.5 rounded-full bg-[#00FBFB] shadow-[0_0_8px_#00FBFB]" />
         </div>
-        <p className="text-xs font-mono text-slate-400">Initializing ElderGuard Console...</p>
+        <p className="text-xs font-mono text-slate-500">Initializing ElderGuard Console...</p>
       </div>
     );
   }

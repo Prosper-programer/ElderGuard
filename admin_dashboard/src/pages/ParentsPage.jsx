@@ -113,7 +113,7 @@ export const ParentsPage = () => {
   };
 
   return (
-    <div className="space-y-5 animate-fade-in">
+    <div className="space-y-5">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2 border-b border-slate-200">
         <div>
@@ -131,25 +131,25 @@ export const ParentsPage = () => {
         </div>
       </div>
 
-      {/* Floating Toast Notification with ElderGuard Accent */}
+      {/* Floating Toast Notification */}
       {toast && (
-        <div className="fixed bottom-6 right-6 z-50 animate-slide-up">
+        <div className="fixed bottom-6 right-6 z-50">
           <div
-            className={`px-4 py-3 rounded-2xl shadow-modal border text-xs flex items-center gap-3 backdrop-blur-md ${
+            className={`px-4 py-3 rounded-xl border text-xs flex items-center gap-3 bg-white shadow-md ${
               toast.type === 'success'
-                ? 'bg-[#0B1120]/95 text-white border-slate-700 shadow-primaryGlow'
-                : 'bg-rose-950/95 text-rose-100 border-rose-900 shadow-lg'
+                ? 'border-green-200 text-slate-800'
+                : 'border-red-200 text-slate-800'
             }`}
           >
             {toast.type === 'success' ? (
-              <CheckCircle2 size={16} className="text-[#00FBFB] flex-shrink-0" />
+              <CheckCircle2 size={16} className="text-green-600 flex-shrink-0" />
             ) : (
-              <AlertCircle size={16} className="text-[#EF4444] flex-shrink-0" />
+              <AlertCircle size={16} className="text-red-600 flex-shrink-0" />
             )}
             <span className="font-medium">{toast.message}</span>
             <button
               onClick={() => setToast(null)}
-              className="text-slate-400 hover:text-slate-200 ml-2"
+              className="text-slate-400 hover:text-slate-600 ml-2"
             >
               <X size={13} />
             </button>

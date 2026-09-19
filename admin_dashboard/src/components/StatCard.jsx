@@ -6,20 +6,16 @@ export const StatCard = ({
   subtext,
   icon: Icon,
   trend,
-  trendType = 'neutral', // 'positive' | 'negative' | 'neutral'
-  highlightColor = '#3C6FDB',
+  trendType = 'neutral',
 }) => {
   return (
-    <div className="group relative p-5 rounded-2xl bg-white border border-slate-200/90 shadow-card hover:border-[#3C6FDB]/50 hover:-translate-y-1 hover:shadow-elevated transition-all duration-300 flex flex-col justify-between overflow-hidden">
-      {/* Top Accent Line on Hover */}
-      <span className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#3C6FDB] via-[#00FBFB] to-[#3C6FDB] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-
+    <div className="p-5 rounded-2xl bg-white border border-slate-200 flex flex-col justify-between overflow-hidden hover:shadow-md hover:border-slate-300 transition-all duration-200">
       <div className="flex items-center justify-between text-slate-500 mb-3">
         <span className="text-[11px] font-bold uppercase tracking-wider font-mono text-slate-500">
           {label}
         </span>
         {Icon && (
-          <div className="w-8 h-8 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center justify-center text-[#3C6FDB] group-hover:bg-[#3C6FDB]/10 group-hover:scale-110 group-hover:text-[#3C6FDB] transition-all duration-200">
+          <div className="w-8 h-8 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-center text-[#3C6FDB]">
             <Icon size={16} strokeWidth={2} />
           </div>
         )}

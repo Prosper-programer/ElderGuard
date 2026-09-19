@@ -22,22 +22,22 @@ export const ConfirmationModal = ({
   const isDeactivating = action === 'deactivate';
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fade-in">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       {/* Backdrop */}
       <div
         onClick={!isLoading ? onClose : undefined}
-        className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm transition-opacity"
+        className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm transition-opacity duration-200"
       />
 
       {/* Dialog box */}
-      <div className="relative bg-white w-full max-w-md rounded-2xl shadow-modal border border-slate-200 overflow-hidden z-10 animate-scale-in">
+      <div className="relative bg-white w-full max-w-md rounded-2xl shadow-xl border border-slate-200 overflow-hidden z-10">
         <div className="p-6">
           <div className="flex items-start gap-4">
             <div
-              className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 shadow-sm ${
+              className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${
                 isDeactivating
-                  ? 'bg-rose-50 text-[#EF4444] border border-rose-100'
-                  : 'bg-emerald-50 text-[#22C55E] border border-emerald-100'
+                  ? 'bg-red-50 text-red-600 border border-red-100'
+                  : 'bg-green-50 text-green-600 border border-green-100'
               }`}
             >
               {isDeactivating ? <AlertCircle size={20} /> : <CheckCircle2 size={20} />}
@@ -55,12 +55,12 @@ export const ConfirmationModal = ({
               </p>
 
               {isDeactivating ? (
-                <div className="mt-3.5 p-3 rounded-xl bg-rose-50/70 border border-rose-200/80 text-[11px] text-rose-800 leading-normal">
+                <div className="mt-3.5 p-3 rounded-xl bg-red-50 border border-red-200 text-[11px] text-red-800 leading-normal">
                   <span className="font-bold">Immediate Session Invalidation: </span>
                   All active login tokens for this parent will be immediately rejected with HTTP 403 on their mobile app.
                 </div>
               ) : (
-                <div className="mt-3.5 p-3 rounded-xl bg-emerald-50/70 border border-emerald-200/80 text-[11px] text-emerald-800 leading-normal">
+                <div className="mt-3.5 p-3 rounded-xl bg-green-50 border border-green-200 text-[11px] text-green-800 leading-normal">
                   <span className="font-bold">Access Restored: </span>
                   The parent user will regain access to log in, view senior profiles, and coordinate with their care team.
                 </div>
@@ -70,12 +70,12 @@ export const ConfirmationModal = ({
         </div>
 
         {/* Footer controls */}
-        <div className="px-6 py-3.5 bg-slate-50 border-t border-slate-200/70 flex items-center justify-end gap-2.5">
+        <div className="px-6 py-3.5 bg-slate-50 border-t border-slate-200 flex items-center justify-end gap-2.5">
           <button
             type="button"
             onClick={onClose}
             disabled={isLoading}
-            className="px-4 py-2 text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-200/60 rounded-xl transition-all active:scale-95 disabled:opacity-50"
+            className="px-4 py-2 text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-200 rounded-xl transition-colors duration-200 disabled:opacity-50 bg-white border border-slate-200"
           >
             Cancel
           </button>
@@ -83,10 +83,10 @@ export const ConfirmationModal = ({
             type="button"
             onClick={onConfirm}
             disabled={isLoading}
-            className={`px-4 py-2 text-xs font-bold text-white rounded-xl shadow-md transition-all flex items-center gap-1.5 active:scale-95 ${
+            className={`px-4 py-2 text-xs font-bold text-white rounded-xl transition-colors duration-200 flex items-center gap-1.5 ${
               isDeactivating
-                ? 'bg-[#EF4444] hover:bg-rose-600 shadow-rose-500/20'
-                : 'bg-[#22C55E] hover:bg-emerald-600 shadow-emerald-500/20'
+                ? 'bg-red-500 hover:bg-red-600'
+                : 'bg-green-500 hover:bg-green-600'
             } disabled:opacity-50`}
           >
             {isLoading

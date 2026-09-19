@@ -162,13 +162,13 @@ export const ParentTable = ({
                       <span
                         className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase tracking-wider ${
                           isActive
-                            ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                            ? 'bg-green-50 text-green-700 border border-green-200'
                             : 'bg-slate-100 text-slate-600 border border-slate-200'
                         }`}
                       >
                         <span
                           className={`w-1.5 h-1.5 rounded-full ${
-                            isActive ? 'bg-[#22C55E] animate-pulse' : 'bg-slate-400'
+                            isActive ? 'bg-green-500' : 'bg-slate-400'
                           }`}
                         />
                         {p.status}
@@ -181,7 +181,7 @@ export const ParentTable = ({
                         <button
                           onClick={() => onViewParent(p)}
                           title="Inspect parent profile"
-                          className="px-2.5 py-1 text-xs rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 font-semibold shadow-subtle transition-all active:scale-95"
+                          className="px-2.5 py-1 text-xs rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 font-semibold transition-colors duration-200"
                         >
                           View
                         </button>
@@ -189,10 +189,10 @@ export const ParentTable = ({
                         <button
                           onClick={() => onToggleStatus(p)}
                           title={isActive ? 'Deactivate session' : 'Activate account'}
-                          className={`px-2.5 py-1 text-xs rounded-lg font-bold border transition-all active:scale-95 shadow-subtle ${
+                          className={`px-2.5 py-1 text-xs rounded-lg font-bold border transition-colors duration-200 ${
                             isActive
-                              ? 'border-rose-200 bg-rose-50 text-[#EF4444] hover:bg-rose-100'
-                              : 'border-emerald-200 bg-emerald-50 text-[#22C55E] hover:bg-emerald-100'
+                              ? 'border-red-200 bg-red-50 text-red-600 hover:bg-red-100'
+                              : 'border-green-200 bg-green-50 text-green-600 hover:bg-green-100'
                           }`}
                         >
                           {isActive ? 'Deactivate' : 'Activate'}
@@ -208,7 +208,7 @@ export const ParentTable = ({
       </div>
 
       {/* Pagination Bar */}
-      <div className="p-3.5 border-t border-slate-200 bg-slate-50/60 flex items-center justify-between text-xs text-slate-500 font-mono">
+      <div className="p-3.5 border-t border-slate-200 bg-slate-50 flex items-center justify-between text-xs text-slate-500 font-mono">
         <div className="text-xs">
           Showing <span className="font-bold text-slate-800">{total > 0 ? (page - 1) * limit + 1 : 0}</span>–
           <span className="font-bold text-slate-800">{Math.min(page * limit, total)}</span> of{' '}
@@ -219,7 +219,7 @@ export const ParentTable = ({
           <button
             onClick={() => onPageChange(page - 1)}
             disabled={page <= 1 || isLoading}
-            className="p-1.5 rounded-lg border border-slate-200 bg-white hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed transition-all active:scale-90 text-slate-700 shadow-subtle"
+            className="p-1.5 rounded-lg border border-slate-200 bg-white hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed transition-colors duration-200 text-slate-700"
           >
             <ChevronLeft size={15} />
           </button>
@@ -229,7 +229,7 @@ export const ParentTable = ({
           <button
             onClick={() => onPageChange(page + 1)}
             disabled={page >= totalPages || isLoading}
-            className="p-1.5 rounded-lg border border-slate-200 bg-white hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed transition-all active:scale-90 text-slate-700 shadow-subtle"
+            className="p-1.5 rounded-lg border border-slate-200 bg-white hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed transition-colors duration-200 text-slate-700"
           >
             <ChevronRight size={15} />
           </button>
