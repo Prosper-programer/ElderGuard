@@ -3,17 +3,7 @@ import bcrypt from 'bcrypt';
 import pool from '../config/database';
 import { AuthenticatedRequest } from '../middleware/auth.middleware';
 
-/**
- * USER CONTROLLER
- * 
- * Handles general user profile operations for authenticated Parents and Caregivers.
- */
 
-/**
- * PUT /api/users/profile
- * Allows a user (Parent or Caregiver) to update their personal profile.
- * Maps to UML: users.updateUserProfile()
- */
 export async function updateUserProfile(req: AuthenticatedRequest, res: Response): Promise<void> {
   try {
     if (!req.user) {

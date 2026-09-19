@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { View, Text, StyleSheet, FlatList, RefreshControl, Switch, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
-import { ArrowLeft, User as UserIcon, Shield, Activity } from 'lucide-react-native';
+import { ArrowLeft, User as UserIcon, Shield, Activity, Users } from 'lucide-react-native';
 import { ScreenContainer, Card, LoadingSpinner, EmptyState, StatusBadge } from '@/components/ui';
 import { Colors, Typography, Spacing } from '@/constants/theme';
 import { getAllUsers, toggleUserStatus, AdminUser } from '@/services/adminService';
