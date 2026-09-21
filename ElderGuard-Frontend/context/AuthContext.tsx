@@ -19,6 +19,7 @@
  */
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { Alert } from 'react-native';
 import { User, UserRole, AuthContextValue } from '@/types/auth';
 import { MOCK_USERS } from '@/services/mockData';
 import { apiLogin, apiSignup, apiLogout } from '@/services/authService';
@@ -52,7 +53,27 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
 
     // Connect to WebSocket and join user's notification channel
-    connectSocket(user.id);
+    const socket = connectSocket(user.id);
+
+    if (socket) {
+      socket.on('notification', (data: any) => {
+        Alert.alert(data.title || 'Notification', data.message || '');
+      });
+
+      socket.on('new_prescription', (data: any) => {
+        Alert.alert(
+          'New Prescription Added',
+          `Dr. ${data.doctorName} prescribed a new medication for ${data.seniorName}.`
+        );
+      });
+
+      socket.on('medication_administered', (data: any) => {
+        Alert.alert(
+          'Medication Administered',
+          `${data.administeredBy} has recorded a medication dose administration.`
+        );
+      });
+    }
 
     const unsubscribe = onAccountStatusChange((event) => {
       const isTargetUser =

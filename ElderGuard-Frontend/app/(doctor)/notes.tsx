@@ -40,7 +40,7 @@ const DEMO_NOTES: ClinicalNoteRecord[] = [
       'Patient Margaret Thompson is maintaining good hemodynamic stability. Resting heart rate telemetry averaged 72 bpm over the preceding 7 days without significant sinus bradycardia. SpO2 maintained >96% consistently.',
     recommendations:
       'Maintain current Lisinopril 10mg morning schedule. Continue daily hydration protocol (1500ml target monitored by caregiver Sarah). Repeat assessment in 14 days.',
-    doctor_name: 'Dr. James Hargreaves',
+    doctor_name: 'Dr. Jean-Paul Mbarga',
     created_at: '2026-09-10T14:30:00Z',
   },
   {
@@ -52,7 +52,7 @@ const DEMO_NOTES: ClinicalNoteRecord[] = [
       'Baseline evaluation completed. Mild osteoporosis noted. ElderGuard wearable fall-detection accelerometer calibrated to High Sensitivity. Gait steady with walking aid.',
     recommendations:
       'Ensure obstacle-free hallway lighting at night. Caregiver instructed to log all medication doses promptly.',
-    doctor_name: 'Dr. James Hargreaves',
+    doctor_name: 'Dr. Jean-Paul Mbarga',
     created_at: '2026-08-28T10:15:00Z',
   },
 ];
@@ -69,7 +69,7 @@ export default function DoctorNotesScreen() {
   const [saving, setSaving] = useState(false);
 
   const seniorName = activeProfile?.fullName || 'Margaret Thompson';
-  const doctorName = user?.name || activeProfile?.doctorName || 'Dr. James Hargreaves';
+  const doctorName = user?.name || activeProfile?.doctorName || 'Dr. Jean-Paul Mbarga';
 
   useEffect(() => {
     async function loadNotes() {

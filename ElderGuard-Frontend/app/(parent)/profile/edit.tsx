@@ -35,19 +35,19 @@ export default function EditElderlyProfileScreen() {
     activeProfile?.medicalInfo?.medicationNotes || ''
   );
   const [physicianName, setPhysicianName] = useState(
-    activeProfile?.doctorName || activeProfile?.medicalInfo?.physicianName || 'Dr. James Hargreaves'
+    activeProfile?.doctorName || activeProfile?.medicalInfo?.physicianName || 'Dr. Jean-Paul Mbarga'
   );
   const [doctorSpecialty, setDoctorSpecialty] = useState(
-    activeProfile?.doctorSpecialty || 'Geriatric Medicine'
+    activeProfile?.doctorSpecialty || 'Cardiologie & Médecine Gériatrique'
   );
   const [doctorHospital, setDoctorHospital] = useState(
-    activeProfile?.doctorHospital || activeProfile?.medicalInfo?.hospitalPreference || "St. Thomas' Hospital, London"
+    activeProfile?.doctorHospital || activeProfile?.medicalInfo?.hospitalPreference || 'Hôpital Central de Yaoundé'
   );
   const [doctorPhone, setDoctorPhone] = useState(
-    activeProfile?.doctorPhone || activeProfile?.medicalInfo?.physicianPhone || '+44 20 7946 0000'
+    activeProfile?.doctorPhone || activeProfile?.medicalInfo?.physicianPhone || '+237 655 89 12 34'
   );
   const [doctorEmail, setDoctorEmail] = useState(
-    activeProfile?.doctorEmail || 'doctor@elderguard.com'
+    activeProfile?.doctorEmail || 'doctor.mbarga@elderguard.cm'
   );
 
   const [emergencyName, setEmergencyName] = useState(primaryContact.name);
@@ -304,7 +304,7 @@ export default function EditElderlyProfileScreen() {
           label="Primary Physician"
           value={physicianName}
           onChangeText={setPhysicianName}
-          placeholder="e.g. Dr. James Hargreaves"
+          placeholder="e.g. Dr. Jean-Paul Mbarga"
         />
 
         <View style={styles.spacing} />
@@ -332,7 +332,7 @@ export default function EditElderlyProfileScreen() {
           value={doctorPhone}
           onChangeText={setDoctorPhone}
           keyboardType="phone-pad"
-          placeholder="e.g. +44 20 7946 0000"
+          placeholder="e.g. +237 655 89 12 34"
         />
 
         <View style={styles.spacing} />

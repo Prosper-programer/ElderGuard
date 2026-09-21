@@ -7,6 +7,7 @@ import {
   Modal,
   TextInput,
   ScrollView,
+  Alert,
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import {
@@ -18,6 +19,7 @@ import {
   Heart,
   Activity,
   Check,
+  CheckCircle2,
 } from 'lucide-react-native';
 import {
   ScreenContainer,
@@ -29,9 +31,16 @@ import {
 } from '@/components/ui';
 import { Colors, Spacing } from '@/constants/theme';
 import { MOCK_CARE_ACTIVITIES } from '@/services/mockData';
+import { useCare } from '@/context/CareContext';
+import { useAuth } from '@/context/AuthContext';
+import { useElderly } from '@/context/ElderlyContext';
 
 export default function CaregiverCareScreen() {
   const router = useRouter();
+  const { user } = useAuth();
+  const { activeProfile } = useElderly();
+  const { todayDoses, markDoseStatus, medications } = useCare();
+
   const [showModal, setShowModal] = useState(false);
   const [activityType, setActivityType] = useState('wellness-check');
   const [title, setTitle] = useState('');
@@ -40,9 +49,11 @@ export default function CaregiverCareScreen() {
 
   const [activities, setActivities] = useState(MOCK_CARE_ACTIVITIES);
 
+  const caregiverName = user?.name || 'Amara Biya';
+  const seniorName = activeProfile?.fullName || 'Pa Samuel Ngu';
+
   const activityTypes = [
     { id: 'wellness-check', label: 'Wellness check', color: '#3C6FDB' },
-    { id: 'medication', label: 'Medication', color: '#8B5CF6' },
     { id: 'physiotherapy', label: 'Physiotherapy', color: '#16A34A' },
     { id: 'walk', label: 'Walk / exercise', color: '#0EA5E9' },
     { id: 'personal-care', label: 'Personal care', color: '#EA580C' },
@@ -55,7 +66,7 @@ export default function CaregiverCareScreen() {
     setSaved(true);
     const newAct = {
       id: Date.now(),
-      caregiver: 'Sarah Mitchell',
+      caregiver: caregiverName,
       type: activityType,
       title: title.trim() || activityTypes.find((t) => t.id === activityType)?.label || 'Care Activity',
       notes: notes.trim() || 'Completed on schedule without issues.',
@@ -74,7 +85,16 @@ export default function CaregiverCareScreen() {
     }, 800);
   };
 
+  const handleMarkDoseDone = (doseId: string, medName: string) => {
+    markDoseStatus(doseId, 'taken', caregiverName);
+    Alert.alert(
+      'Medication Administered',
+      `${medName} has been recorded as taken. The parent and medical chart have been updated.`
+    );
+  };
+
   const todayActs = activities.filter((a) => a.date === 'Today');
+  const completedDosesCount = todayDoses.filter((d) => d.status === 'taken').length;
 
   return (
     <ScreenContainer
@@ -84,7 +104,7 @@ export default function CaregiverCareScreen() {
       bottomBar={<BottomTabBar activeTab="care" role="caregiver" />}
     >
       <TopBar
-        title="Care Activities"
+        title="Care & Medications"
         onBack={() => router.push('/(caregiver)')}
         right={
           <TouchableOpacity
@@ -97,7 +117,85 @@ export default function CaregiverCareScreen() {
         }
       />
 
-      {/* Summary Header */}
+      {/* ── 1. Medication Administration Checklist (Rx) ─────── */}
+      <View style={styles.headerRow}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+          <Pill size={14} color="#7C3AED" />
+          <Text style={styles.headerTitle}>MEDICATION SCHEDULE (Rx)</Text>
+        </View>
+        <View style={[styles.countPill, { backgroundColor: '#F5F3FF' }]}>
+          <Text style={[styles.countPillText, { color: '#7C3AED' }]}>
+            {completedDosesCount}/{todayDoses.length} Done
+          </Text>
+        </View>
+      </View>
+
+      <Card style={styles.cardZeroPadding}>
+        {todayDoses.map((dose, idx) => {
+          const isDone = dose.status === 'taken';
+          return (
+            <View
+              key={dose.id}
+              style={[
+                styles.medDoseRow,
+                idx === todayDoses.length - 1 && { borderBottomWidth: 0 },
+              ]}
+            >
+              <View
+                style={[
+                  styles.medIconBox,
+                  isDone ? styles.medIconBoxDone : styles.medIconBoxPending,
+                ]}
+              >
+                {isDone ? (
+                  <CheckCircle2 size={18} color="#16A34A" />
+                ) : (
+                  <Clock size={18} color="#7C3AED" />
+                )}
+              </View>
+
+              <View style={{ flex: 1 }}>
+                <View style={styles.medTitleRow}>
+                  <Text style={styles.medNameText}>{dose.medicationName}</Text>
+                  <Text style={styles.medTimeBadge}>{dose.scheduledTime}</Text>
+                </View>
+
+                <Text style={styles.medDosageText}>{dose.dosage}</Text>
+
+                {isDone ? (
+                  <View style={styles.adminSuccessRow}>
+                    <Check size={12} color="#16A34A" />
+                    <Text style={styles.adminSuccessText}>
+                      Administered at {dose.loggedAt || '08:05 AM'} by {dose.loggedBy || caregiverName}
+                    </Text>
+                  </View>
+                ) : (
+                  <Text style={styles.adminPendingText}>Awaiting administration for {seniorName}</Text>
+                )}
+              </View>
+
+              {!isDone ? (
+                <TouchableOpacity
+                  style={styles.actionDoneBtn}
+                  onPress={() => handleMarkDoseDone(dose.id, dose.medicationName)}
+                  activeOpacity={0.8}
+                >
+                  <Check size={14} color="#FFFFFF" strokeWidth={2.5} />
+                  <Text style={styles.actionDoneBtnText}>Done</Text>
+                </TouchableOpacity>
+              ) : (
+                <View style={styles.completedBadgePill}>
+                  <Text style={styles.completedBadgePillText}>Taken</Text>
+                </View>
+              )}
+            </View>
+          );
+        })}
+      </Card>
+
+      <View style={{ height: Spacing.lg }} />
+
+      {/* ── 2. Today's Care Protocols ───────────────────────── */}
       <View style={styles.headerRow}>
         <Text style={styles.headerTitle}>TODAY&apos;S CARE PROTOCOLS</Text>
         <View style={styles.countPill}>
@@ -197,7 +295,7 @@ export default function CaregiverCareScreen() {
               style={styles.textArea}
               multiline
               numberOfLines={4}
-              placeholder="Describe tasks completed, Margaret's response, vitals or any observations..."
+              placeholder="Describe tasks completed, senior's response, vitals or any observations..."
               placeholderTextColor="#94A3B8"
               value={notes}
               onChangeText={setNotes}
@@ -392,5 +490,96 @@ const styles = StyleSheet.create({
   modalButtonsRow: {
     flexDirection: 'row',
     gap: 12,
+  },
+  medDoseRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#F1F5F9',
+    gap: 12,
+  },
+  medIconBox: {
+    width: 38,
+    height: 38,
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  medIconBoxPending: {
+    backgroundColor: '#F5F3FF',
+  },
+  medIconBoxDone: {
+    backgroundColor: '#F0FDF4',
+  },
+  medTitleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 2,
+  },
+  medNameText: {
+    fontSize: 14,
+    fontWeight: '700',
+    color: '#0F172A',
+  },
+  medTimeBadge: {
+    fontSize: 11,
+    fontWeight: '700',
+    color: '#7C3AED',
+    backgroundColor: '#F5F3FF',
+    paddingHorizontal: 7,
+    paddingVertical: 2,
+    borderRadius: 6,
+  },
+  medDosageText: {
+    fontSize: 12,
+    color: '#64748B',
+    marginBottom: 4,
+  },
+  adminSuccessRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+  },
+  adminSuccessText: {
+    fontSize: 11,
+    fontWeight: '600',
+    color: '#16A34A',
+  },
+  adminPendingText: {
+    fontSize: 11,
+    color: '#94A3B8',
+    fontStyle: 'italic',
+  },
+  actionDoneBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    backgroundColor: '#16A34A',
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    borderRadius: 10,
+    shadowColor: '#16A34A',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  actionDoneBtnText: {
+    fontSize: 12,
+    fontWeight: '800',
+    color: '#FFFFFF',
+  },
+  completedBadgePill: {
+    backgroundColor: '#DCFCE7',
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 8,
+  },
+  completedBadgePillText: {
+    fontSize: 11,
+    fontWeight: '700',
+    color: '#16A34A',
   },
 });

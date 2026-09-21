@@ -43,7 +43,7 @@ export default function DoctorPortalScreen() {
   const { vitals } = useVitals();
   const { medications, todayDoses } = useCare();
 
-  const doctorName = user?.name || activeProfile?.doctorName || 'Dr. James Hargreaves';
+  const doctorName = user?.name || activeProfile?.doctorName || 'Dr. Jean-Paul Mbarga';
   const doctorHospital = activeProfile?.doctorHospital || "St. Thomas' Hospital, London";
   const doctorSpecialty = activeProfile?.doctorSpecialty || 'Geriatric Medicine';
 
@@ -218,10 +218,10 @@ export default function DoctorPortalScreen() {
             <View style={styles.careTeamRow}>
               <View style={styles.memberInfo}>
                 <User size={15} color="#2563EB" />
-                <Text style={styles.memberName}>Robert Thompson (Son / Manager)</Text>
+                <Text style={styles.memberName}>Robert Ngu (Son / Manager)</Text>
               </View>
               <TouchableOpacity
-                onPress={() => handleCall('+44 7700 900123', 'Robert Thompson')}
+                onPress={() => handleCall('+237 671 23 45 67', 'Robert Ngu')}
                 style={styles.callSmallBtn}
                 activeOpacity={0.7}
               >
@@ -233,10 +233,10 @@ export default function DoctorPortalScreen() {
             <View style={styles.careTeamRow}>
               <View style={styles.memberInfo}>
                 <Shield size={15} color="#16A34A" />
-                <Text style={styles.memberName}>Sarah Mitchell (Assigned Nurse)</Text>
+                <Text style={styles.memberName}>Amara Biya (Assigned Nurse)</Text>
               </View>
               <TouchableOpacity
-                onPress={() => handleCall('+44 7700 900456', 'Sarah Mitchell')}
+                onPress={() => handleCall('+237 699 45 23 10', 'Amara Biya')}
                 style={[styles.callSmallBtn, { backgroundColor: '#F0FDF4' }]}
                 activeOpacity={0.7}
               >

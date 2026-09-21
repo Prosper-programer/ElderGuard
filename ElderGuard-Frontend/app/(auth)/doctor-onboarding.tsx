@@ -160,7 +160,7 @@ export default function DoctorOnboardingScreen() {
               <Text style={styles.physicianAvatarText}>JH</Text>
             </View>
             <View style={{ flex: 1 }}>
-              <Text style={styles.physicianName}>Dr. James Hargreaves</Text>
+              <Text style={styles.physicianName}>Dr. Jean-Paul Mbarga</Text>
               <Text style={styles.physicianMeta}>Geriatric Medicine · St. Thomas Hospital</Text>
             </View>
             <View style={styles.activeDot} />

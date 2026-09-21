@@ -23,44 +23,44 @@ import {
 } from '@/services/elderlyService';
 
 /**
- * Baseline demonstration profile for Margaret Thompson (Age 78):
+ * Baseline demonstration profile for Pa Samuel Ngu (Age 78, Yaoundé, Cameroon):
  */
 const DEMO_MARGARET_PROFILE: ElderlyProfile = {
   id: 'eld-01',
-  fullName: 'Margaret Thompson',
-  preferredName: 'Margaret',
+  fullName: 'Pa Samuel Ngu',
+  preferredName: 'Pa Samuel',
   age: 78,
-  dateOfBirth: '1948-03-22',
-  gender: 'Female',
-  address: '42 Maple Street, London, SW1A 2AA',
-  phone: '+44 7700 900123',
+  dateOfBirth: '1948-03-15',
+  gender: 'Male',
+  address: 'Bastos, Yaoundé, Cameroon',
+  phone: '+237 671 23 45 67',
   imageUrl: require('@/assets/images/elderly_margaret.jpg'),
   parentManagerId: 'usr-parent-01',
   primaryCaregiverId: 'usr-caregiver-01',
-  primaryCaregiverName: 'Sarah Mitchell',
+  primaryCaregiverName: 'Amara Biya',
   doctorId: 'usr-doctor-01',
-  doctorName: 'Dr. James Hargreaves',
-  doctorPhone: '+44 20 7946 0000',
-  doctorSpecialty: 'Geriatric Medicine',
-  doctorHospital: "St. Thomas' Hospital, London",
-  doctorEmail: 'doctor@elderguard.com',
+  doctorName: 'Dr. Jean-Paul Mbarga',
+  doctorPhone: '+237 655 89 12 34',
+  doctorSpecialty: 'Cardiologie & Médecine Gériatrique',
+  doctorHospital: 'Hôpital Central de Yaoundé',
+  doctorEmail: 'doctor.mbarga@elderguard.cm',
 
   medicalInfo: {
-    bloodType: 'A+',
-    allergies: ['Penicillin', 'Sulfonamides'],
-    chronicConditions: ['Type 2 Diabetes', 'Hypertension', 'Mild Osteoporosis'],
-    medicationNotes: 'Lisinopril 10mg every morning at 08:00 AM. Metformin 500mg after lunch.',
-    physicianName: 'Dr. James Hargreaves',
-    physicianPhone: '+44 20 7946 0000',
-    hospitalPreference: "St. Thomas' Hospital, London",
+    bloodType: 'O+',
+    allergies: ['Penicillin'],
+    chronicConditions: ['Hypertension', 'Type 2 Diabetes', 'Mild Joint Stiffness'],
+    medicationNotes: 'Amlodipine 5mg in the morning at 08:00 AM. Metformin 500mg after dinner.',
+    physicianName: 'Dr. Jean-Paul Mbarga',
+    physicianPhone: '+237 655 89 12 34',
+    hospitalPreference: 'Hôpital Central de Yaoundé',
   },
 
   emergencyContacts: [
     {
       id: 'ec-1',
-      name: 'Robert Thompson',
+      name: 'Robert Ngu',
       relationship: 'Son (Primary)',
-      phone: '+44 7700 900123',
+      phone: '+237 671 23 45 67',
       isPrimary: true,
     },
   ],
@@ -90,8 +90,11 @@ export function ElderlyProvider({ children }: { children: React.ReactNode }) {
   const isDemoAccount =
     user?.email === 'parent@elderguard.com' ||
     user?.email === 'robert.thompson@email.com' ||
+    user?.email === 'robert.ngu@elderguard.cm' ||
     user?.email === 'caregiver@elderguard.com' ||
-    user?.email === 'doctor@elderguard.com';
+    user?.email === 'amara.biya@elderguard.cm' ||
+    user?.email === 'doctor@elderguard.com' ||
+    user?.email === 'doctor.mbarga@elderguard.cm';
 
   const refreshProfiles = useCallback(async () => {
     if (!isAuthenticated || !user) {
@@ -107,7 +110,7 @@ export function ElderlyProvider({ children }: { children: React.ReactNode }) {
       setProfiles(result.profiles);
       setActiveProfileId(result.profiles[0].id);
     } else if (result.success && result.profiles.length === 0) {
-      // If user is a known demo account, fallback to pre-seeded Margaret
+      // If user is a known demo account, fallback to pre-seeded Pa Samuel
       if (isDemoAccount) {
         setProfiles([DEMO_MARGARET_PROFILE]);
         setActiveProfileId(DEMO_MARGARET_PROFILE.id);

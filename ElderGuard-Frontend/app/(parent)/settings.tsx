@@ -96,9 +96,9 @@ export default function ParentSettingsScreen() {
             </Text>
           </View>
           <View style={styles.profileInfo}>
-            <Text style={styles.profileName}>{user?.name || 'Robert Thompson'}</Text>
-            <Text style={styles.profileEmail}>{user?.email || 'robert.thompson@email.com'}</Text>
-            <Text style={styles.profilePhone}>{user?.phone || '+44 7700 900123'}</Text>
+            <Text style={styles.profileName}>{user?.name || 'Robert Ngu'}</Text>
+            <Text style={styles.profileEmail}>{user?.email || 'robert.ngu@elderguard.cm'}</Text>
+            <Text style={styles.profilePhone}>{user?.phone || '+237 671 23 45 67'}</Text>
           </View>
           <TouchableOpacity
             style={styles.editBtn}

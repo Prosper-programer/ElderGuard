@@ -18,7 +18,7 @@ export function MapView({
   showGeofence = false,
   geofenceRadius = 300,
   height = 200,
-  address = '42 Maple Street, London, SW1A 2AA',
+  address = 'Bastos, Yaoundé, Cameroon',
   room = 'Living Room',
   isSafe = true,
   onPressExpand,
@@ -48,7 +48,7 @@ export function MapView({
         ].map(([cx, cy], i) => (
           <Circle key={i} cx={cx} cy={cy} r="4" fill="#4ADE80" opacity={0.8} />
         ))}
-        <SvgText x="62" y="66" fontSize="7" fill="#15803D" textAnchor="middle" fontWeight="bold">MAPLE PARK</SvgText>
+        <SvgText x="62" y="66" fontSize="7" fill="#15803D" textAnchor="middle" fontWeight="bold">BASTOS PARK</SvgText>
 
         {/* City building blocks */}
         {[

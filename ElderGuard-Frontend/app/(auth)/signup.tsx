@@ -201,7 +201,7 @@ export default function SignupScreen() {
               <Text style={styles.inputLabel}>Phone number</Text>
               <TextInput
                 style={styles.textInput}
-                placeholder="+44 7700 900000"
+                placeholder="+237 671 23 45 67"
                 placeholderTextColor="#94A3B8"
                 value={phone}
                 onChangeText={(t) => {

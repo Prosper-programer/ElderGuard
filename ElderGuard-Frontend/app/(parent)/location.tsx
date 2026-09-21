@@ -29,10 +29,13 @@ import {
   BottomTabBar,
   Card,
 } from '@/components/ui';
+import { useElderly } from '@/context/ElderlyContext';
 import { MOCK_ELDERLY_PERSON } from '@/services/mockData';
 
 export default function ParentLocationScreen() {
   const router = useRouter();
+  const { activeProfile } = useElderly();
+  const seniorFirstName = activeProfile?.fullName?.split(' ')[0] || 'Pa Samuel';
 
   return (
     <ScreenContainer
@@ -87,7 +90,7 @@ export default function ParentLocationScreen() {
             <Rect x="40" y="120" width="80" height="42" rx="6" fill="#DCE7F5" />
 
             {/* Parks (Green zones) */}
-            {/* Maple Park */}
+            {/* Bastos Park */}
             <Rect x="14" y="20" width="106" height="74" rx="10" fill="#BBF7D0" opacity={0.8} />
             <Circle cx="35" cy="35" r="4" fill="#86EFAC" />
             <Circle cx="60" cy="38" r="4.5" fill="#86EFAC" />
@@ -95,13 +98,13 @@ export default function ParentLocationScreen() {
             <Circle cx="75" cy="58" r="5" fill="#86EFAC" />
             <Circle cx="95" cy="40" r="4.5" fill="#86EFAC" />
             <SvgText x="20" y="82" fill="#15803D" fontSize="8" fontWeight="bold">
-              MAPLE PARK
+              BASTOS PARK
             </SvgText>
 
-            {/* Victoria Gardens */}
+            {/* Omnisports Gardens */}
             <Rect x="222" y="165" width="104" height="85" rx="10" fill="#BBF7D0" opacity={0.8} />
             <SvgText x="238" y="228" fill="#15803D" fontSize="8" fontWeight="bold">
-              VICTORIA GARDENS
+              OMNISPORTS GARDENS
             </SvgText>
 
             {/* Street Grid Lines */}
@@ -113,13 +116,13 @@ export default function ParentLocationScreen() {
 
             {/* Street Names */}
             <SvgText x="156" y="96" fill="#94A3B8" fontSize="7.5" fontWeight="600">
-              MAPLE STREET
+              RUE DE BASTOS
             </SvgText>
             <SvgText x="127" y="130" fill="#94A3B8" fontSize="6.5" fontWeight="600" transform="rotate(-90 127 130)">
-              PARK ROAD
+              AVENUE DE PARIS
             </SvgText>
 
-            {/* Pulsing Beacon Rings at 42 Maple Street */}
+            {/* Pulsing Beacon Rings at Bastos Residence */}
             <Circle cx="175" cy="128" r="22" fill="none" stroke="#3C6FDB" strokeWidth="1" strokeDasharray="3,3" opacity={0.6} />
             <Circle cx="175" cy="128" r="14" fill="#3C6FDB" opacity={0.18} />
             <Circle cx="175" cy="128" r="8" fill="#FFFFFF" stroke="#3C6FDB" strokeWidth="2.5" />
@@ -128,7 +131,7 @@ export default function ParentLocationScreen() {
 
           {/* Floating Location Beacon Badge */}
           <View style={styles.mapBeaconBadge}>
-            <Text style={styles.beaconAddressText}>42 Maple Street</Text>
+            <Text style={styles.beaconAddressText}>Bastos Residence</Text>
             <View style={styles.beaconLiveRow}>
               <View style={styles.beaconCyanDot} />
               <Text style={styles.beaconLiveText}>LIVE - GPS ±5m</Text>
@@ -147,10 +150,10 @@ export default function ParentLocationScreen() {
           </View>
         </View>
 
-        {/* Margaret's Location Summary Bar below map */}
+        {/* Senior's Location Summary Bar below map */}
         <View style={styles.locationSummaryBar}>
           <View style={styles.locationSummaryHeader}>
-            <Text style={styles.locationSummaryTitle}>Margaret's Location</Text>
+            <Text style={styles.locationSummaryTitle}>{seniorFirstName}&apos;s Location</Text>
             <View style={styles.safeBadgePill}>
               <View style={styles.safeBadgeDot} />
               <Text style={styles.safeBadgeText}>Safe</Text>
@@ -160,7 +163,7 @@ export default function ParentLocationScreen() {
           <View style={styles.locationAddressRow}>
             <MapPin size={15} color="#3C6FDB" />
             <Text style={styles.locationAddressText}>
-              42 Maple Street, London, SW1A 2AA
+              {activeProfile?.address || 'Bastos, Yaoundé, Cameroon'}
             </Text>
           </View>
 
@@ -239,7 +242,7 @@ export default function ParentLocationScreen() {
               <Home size={18} color="#3C6FDB" />
             </View>
             <View style={styles.historyContent}>
-              <Text style={styles.historyTitle}>42 Maple Street</Text>
+              <Text style={styles.historyTitle}>Bastos Residence</Text>
               <Text style={styles.historySubtitle}>Overnight stay</Text>
             </View>
             <Text style={styles.historyTime}>07:00 AM</Text>

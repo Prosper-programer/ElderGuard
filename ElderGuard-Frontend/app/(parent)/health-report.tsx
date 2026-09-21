@@ -40,7 +40,7 @@ export default function HealthReportScreen() {
   const [exported, setExported] = useState(false);
 
   const seniorName = activeProfile?.fullName || 'Margaret Thompson';
-  const doctorName = activeProfile?.doctorName || 'Dr. James Hargreaves';
+  const doctorName = activeProfile?.doctorName || 'Dr. Jean-Paul Mbarga';
   const doctorHospital = activeProfile?.doctorHospital || "St. Thomas' Hospital, London";
   const doctorSpecialty = activeProfile?.doctorSpecialty || 'Geriatric Medicine';
 

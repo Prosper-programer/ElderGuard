@@ -27,10 +27,10 @@ export default function DoctorStatusScreen() {
   const router = useRouter();
   const { activeProfile } = useElderly();
 
-  const doctorName = activeProfile?.doctorName || 'Dr. James Hargreaves';
-  const doctorSpecialty = activeProfile?.doctorSpecialty || 'Geriatric Medicine';
-  const doctorHospital = activeProfile?.doctorHospital || "St. Thomas' Hospital, London";
-  const doctorPhone = activeProfile?.doctorPhone || '+44 20 7946 0000';
+  const doctorName = activeProfile?.doctorName || 'Dr. Jean-Paul Mbarga';
+  const doctorSpecialty = activeProfile?.doctorSpecialty || 'Cardiologie & Médecine Gériatrique';
+  const doctorHospital = activeProfile?.doctorHospital || 'Hôpital Central de Yaoundé';
+  const doctorPhone = activeProfile?.doctorPhone || '+237 655 89 12 34';
   const doctorInitials = doctorName
     .replace('Dr.', '')
     .trim()
@@ -39,7 +39,7 @@ export default function DoctorStatusScreen() {
     .filter(Boolean)
     .slice(0, 2)
     .join('')
-    .toUpperCase() || 'DR';
+    .toUpperCase() || 'JM';
 
   const handleCallDoctor = () => {
     const cleanPhone = doctorPhone.replace(/[^\d+]/g, '');
@@ -57,7 +57,7 @@ export default function DoctorStatusScreen() {
       icon: Smartphone,
       iconBg: '#EEF2FF',
       iconColor: '#4F46E5',
-      title: 'Push notification to Dr. Hargreaves',
+      title: `Push notification to ${doctorName}`,
       time: '10:15:03 AM',
     },
     {
@@ -65,7 +65,7 @@ export default function DoctorStatusScreen() {
       icon: MessageSquare,
       iconBg: '#F3E8FF',
       iconColor: '#9333EA',
-      title: 'SMS: "EMERGENCY — Fall detected at 42 Maple Street. HR 108 bpm. Please respond."',
+      title: 'SMS: "URGENCE — Chute détectée à Bastos Yaoundé. FC 108 bpm. Prière d\'intervenir."',
       time: '10:15:05 AM',
     },
     {
@@ -73,7 +73,7 @@ export default function DoctorStatusScreen() {
       icon: PhoneCall,
       iconBg: '#FEE2E2',
       iconColor: '#EF4444',
-      title: 'Auto-call to +44 20 7946 0000',
+      title: 'Auto-call to +237 655 89 12 34',
       time: '10:15:08 AM',
     },
     {
@@ -89,7 +89,7 @@ export default function DoctorStatusScreen() {
       icon: ClipboardCheck,
       iconBg: '#FEF3C7',
       iconColor: '#D97706',
-      title: 'Dr. Hargreaves confirmed: will visit within 2 hours',
+      title: 'Dr. Jean-Paul Mbarga confirmed: will visit within 2 hours',
       time: '10:17:45 AM',
     },
   ];

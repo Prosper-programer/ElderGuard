@@ -147,7 +147,7 @@ export default function CreateCaregiverScreen() {
 
         <TextInput
           label="Phone Number"
-          placeholder="e.g. +44 7700 900456"
+          placeholder="e.g. +237 699 45 23 10"
           value={phoneNumber}
           onChangeText={(t) => {
             setPhoneNumber(t);

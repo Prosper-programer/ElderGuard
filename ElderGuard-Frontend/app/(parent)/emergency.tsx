@@ -52,10 +52,10 @@ export default function EmergencyScreen() {
 
   const handleCallEmergency = () => {
     setCalled(true);
-    Linking.openURL('tel:999').catch(() => {
+    Linking.openURL('tel:119').catch(() => {
       Alert.alert(
         'Calling Emergency Services',
-        'Simulated 999 dispatch call initiated to UK Emergency Services.'
+        'Simulated 119 dispatch call initiated to Cameroon Emergency Services.'
       );
     });
   };
@@ -158,7 +158,7 @@ export default function EmergencyScreen() {
           >
             <Phone size={19} color="#DC2626" />
             <Text style={styles.callBtnText}>
-              {called ? 'Emergency Services Contacted' : 'Call Emergency Services · 999'}
+              {called ? 'Emergency Services Contacted' : 'Call Emergency Services \u2014 119'}
             </Text>
           </TouchableOpacity>
 
@@ -202,7 +202,7 @@ export default function EmergencyScreen() {
             <View style={styles.checkCircle}>
               <Check size={11} color="#22C55E" strokeWidth={3} />
             </View>
-            <Text style={styles.notificationText}>SMS to Dr. Hargreaves</Text>
+            <Text style={styles.notificationText}>SMS to Dr. Jean-Paul Mbarga</Text>
             <Text style={styles.notificationTime}>10:15 AM</Text>
           </View>
 
@@ -210,7 +210,7 @@ export default function EmergencyScreen() {
             <View style={styles.checkCircle}>
               <Check size={11} color="#22C55E" strokeWidth={3} />
             </View>
-            <Text style={styles.notificationText}>Auto-call to Dr. Hargreaves</Text>
+            <Text style={styles.notificationText}>Auto-call to Dr. Jean-Paul Mbarga</Text>
             <Text style={styles.notificationTime}>10:16 AM</Text>
           </View>
 

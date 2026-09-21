@@ -24,6 +24,8 @@ import {
   X,
   Sparkles,
   ArrowRight,
+  Users,
+  Stethoscope,
 } from 'lucide-react-native';
 import { BottomTabBar } from '@/components/ui';
 
@@ -61,12 +63,20 @@ export default function ParentMoreScreen() {
       onPress: () => router.push('/(parent)/geofencing' as any),
     },
     {
-      id: 'caregiver_monitor',
-      title: 'Caregiver\nMonitor',
-      icon: Eye,
+      id: 'manage_caregivers',
+      title: 'Caregivers',
+      icon: Users,
       iconColor: '#0284C7',
       iconBg: '#E0F2FE',
-      onPress: () => router.push('/(parent)/care' as any),
+      onPress: () => router.push('/(parent)/caregivers' as any),
+    },
+    {
+      id: 'manage_doctors',
+      title: 'Doctors',
+      icon: Stethoscope,
+      iconColor: '#059669',
+      iconBg: '#D1FAE5',
+      onPress: () => router.push('/(parent)/doctors' as any),
     },
     {
       id: 'history',

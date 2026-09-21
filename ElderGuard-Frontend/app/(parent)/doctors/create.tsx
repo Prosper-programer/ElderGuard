@@ -34,7 +34,7 @@ export default function CreateDoctorScreen() {
   const handleCreate = async () => {
     setError(null);
     if (!fullName.trim()) {
-      setError('Please enter the physician’s full name (e.g. Dr. James Hargreaves).');
+      setError('Please enter the physician’s full name (e.g. Dr. Jean-Paul Mbarga).');
       return;
     }
     if (!email.trim() || !email.includes('@')) {
@@ -123,7 +123,7 @@ export default function CreateDoctorScreen() {
             setFullName(t);
             if (error) setError(null);
           }}
-          placeholder="e.g. Dr. James Hargreaves"
+          placeholder="e.g. Dr. Jean-Paul Mbarga"
           leftIcon={<Stethoscope size={16} color="#64748B" />}
         />
 
@@ -133,7 +133,7 @@ export default function CreateDoctorScreen() {
           label="Medical Specialty"
           value={specialty}
           onChangeText={setSpecialty}
-          placeholder="e.g. Geriatric Medicine, Cardiology"
+          placeholder="e.g. Cardiologie & Médecine Gériatrique"
           leftIcon={<Award size={16} color="#64748B" />}
         />
 
@@ -143,7 +143,7 @@ export default function CreateDoctorScreen() {
           label="Clinic / Hospital Affiliation"
           value={hospital}
           onChangeText={setHospital}
-          placeholder="e.g. St. Thomas' Hospital, London"
+          placeholder="e.g. Hôpital Central de Yaoundé"
           leftIcon={<Building2 size={16} color="#64748B" />}
         />
 
@@ -157,7 +157,7 @@ export default function CreateDoctorScreen() {
             if (error) setError(null);
           }}
           keyboardType="phone-pad"
-          placeholder="e.g. +44 20 7946 0000"
+          placeholder="e.g. +237 655 89 12 34"
           leftIcon={<Phone size={16} color="#64748B" />}
         />
       </Card>

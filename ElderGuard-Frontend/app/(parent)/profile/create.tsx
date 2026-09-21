@@ -27,13 +27,13 @@ export default function CreateElderlyProfileScreen() {
 
   const [emergencyName, setEmergencyName] = useState(user?.name || '');
   const [emergencyRelation, setEmergencyRelation] = useState('Parent Manager');
-  const [emergencyPhone, setEmergencyPhone] = useState('+1 (555) 234-5678');
+  const [emergencyPhone, setEmergencyPhone] = useState('+237 671 23 45 67');
 
-  const [doctorName, setDoctorName] = useState('Dr. James Hargreaves');
-  const [doctorSpecialty, setDoctorSpecialty] = useState('Geriatric Medicine');
-  const [doctorHospital, setDoctorHospital] = useState("St. Thomas' Hospital, London");
-  const [doctorPhone, setDoctorPhone] = useState('+44 20 7946 0000');
-  const [doctorEmail, setDoctorEmail] = useState('doctor@elderguard.com');
+  const [doctorName, setDoctorName] = useState('Dr. Jean-Paul Mbarga');
+  const [doctorSpecialty, setDoctorSpecialty] = useState('Cardiologie & Médecine Gériatrique');
+  const [doctorHospital, setDoctorHospital] = useState('Hôpital Central de Yaoundé');
+  const [doctorPhone, setDoctorPhone] = useState('+237 655 89 12 34');
+  const [doctorEmail, setDoctorEmail] = useState('doctor.mbarga@elderguard.cm');
 
   const [deviceId, setDeviceId] = useState(`EG-IOT-${Math.floor(1000 + Math.random() * 9000)}`);
 
@@ -80,7 +80,7 @@ export default function CreateElderlyProfileScreen() {
       address: address.trim(),
       phone: phone.trim(),
       parentManagerId: user?.id || 'usr-parent-01',
-      doctorName: doctorName.trim() || 'Dr. James Hargreaves',
+      doctorName: doctorName.trim() || 'Dr. Jean-Paul Mbarga',
       doctorSpecialty: doctorSpecialty.trim() || 'Geriatric Medicine',
       doctorHospital: doctorHospital.trim() || "St. Thomas' Hospital, London",
       doctorPhone: doctorPhone.trim() || '+44 20 7946 0000',
@@ -90,7 +90,7 @@ export default function CreateElderlyProfileScreen() {
         allergies: parsedAllergies,
         chronicConditions: parsedConditions,
         medicationNotes: medicationNotes.trim(),
-        physicianName: doctorName.trim() || 'Dr. James Hargreaves',
+        physicianName: doctorName.trim() || 'Dr. Jean-Paul Mbarga',
         physicianPhone: doctorPhone.trim() || '+44 20 7946 0000',
         hospitalPreference: doctorHospital.trim() || "St. Thomas' Hospital, London",
       },
@@ -341,7 +341,7 @@ export default function CreateElderlyProfileScreen() {
           label="Doctor's Full Name"
           value={doctorName}
           onChangeText={setDoctorName}
-          placeholder="e.g. Dr. James Hargreaves"
+          placeholder="e.g. Dr. Jean-Paul Mbarga"
         />
 
         <View style={styles.spacing} />
@@ -369,7 +369,7 @@ export default function CreateElderlyProfileScreen() {
           value={doctorPhone}
           onChangeText={setDoctorPhone}
           keyboardType="phone-pad"
-          placeholder="e.g. +44 20 7946 0000"
+          placeholder="e.g. +237 655 89 12 34"
         />
 
         <View style={styles.spacing} />

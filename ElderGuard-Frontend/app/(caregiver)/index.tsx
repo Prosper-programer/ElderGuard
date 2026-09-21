@@ -23,6 +23,9 @@ import {
   Phone,
   Stethoscope,
   CheckSquare,
+  Check,
+  CheckCircle2,
+  Clock,
 } from 'lucide-react-native';
 import {
   ScreenContainer,
@@ -34,6 +37,7 @@ import { useAuth } from '@/context/AuthContext';
 import { useElderly } from '@/context/ElderlyContext';
 import { useVitals } from '@/context/VitalsContext';
 import { useAlerts } from '@/context/AlertContext';
+import { useCare } from '@/context/CareContext';
 import {
   MOCK_ELDERLY_PERSON,
   MOCK_CAREGIVER,
@@ -47,6 +51,7 @@ export default function CaregiverHomeScreen() {
   const { activeProfile } = useElderly();
   const { vitals } = useVitals();
   const { activeAlerts } = useAlerts();
+  const { todayDoses, markDoseStatus } = useCare();
 
   const todayStr = new Date().toLocaleDateString('en-GB', {
     weekday: 'short',
@@ -73,14 +78,14 @@ export default function CaregiverHomeScreen() {
   const tempValue = vitals.temperature?.value || 36.8;
 
   const handleCallParent = () => {
-    const phone = activeProfile?.emergencyContacts?.[0]?.phone || MOCK_USERS.parent.phone || '+447700900123';
+    const phone = activeProfile?.emergencyContacts?.[0]?.phone || MOCK_USERS.parent.phone || '+237671234567';
     const cleanPhone = phone.replace(/[^0-9+]/g, '');
     const url = Platform.OS === 'ios' ? `telprompt:${cleanPhone}` : `tel:${cleanPhone}`;
     Linking.openURL(url).catch(() => {});
   };
 
   const handleCallDoctor = () => {
-    const phone = activeProfile?.doctorPhone || MOCK_USERS.doctor.phone || '+442079460000';
+    const phone = activeProfile?.doctorPhone || MOCK_USERS.doctor.phone || '+237655891234';
     const cleanPhone = phone.replace(/[^0-9+]/g, '');
     const url = Platform.OS === 'ios' ? `telprompt:${cleanPhone}` : `tel:${cleanPhone}`;
     Linking.openURL(url).catch(() => {});
@@ -154,7 +159,7 @@ export default function CaregiverHomeScreen() {
             <View style={styles.heroMeta}>
               <Text style={styles.seniorNameText}>{seniorName}</Text>
               <Text style={styles.seniorSubText}>
-                {seniorAge} years · 42 Maple St, London
+                {seniorAge} years · {activeProfile?.address || 'Bastos, Yaoundé, Cameroon'}
               </Text>
 
               <View style={styles.heroBadgeRow}>
@@ -398,6 +403,123 @@ export default function CaregiverHomeScreen() {
         </View>
       </View>
 
+      {/* ── 5.5 Medication Schedule & Quick Administration ── */}
+      <View style={styles.sectionWrap}>
+        <View style={styles.sectionHeaderRow}>
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+            <Pill size={14} color="#7C3AED" />
+            <Text style={styles.sectionOverline}>MEDICATIONS TO ADMINISTER</Text>
+          </View>
+          <TouchableOpacity
+            onPress={() => router.push('/(caregiver)/care' as any)}
+            activeOpacity={0.7}
+          >
+            <Text style={styles.sectionActionText}>View all →</Text>
+          </TouchableOpacity>
+        </View>
+
+        <Card style={{ padding: 0, overflow: 'hidden' }}>
+          {todayDoses.map((dose, idx) => {
+            const isDone = dose.status === 'taken';
+            return (
+              <View
+                key={dose.id}
+                style={[
+                  {
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    padding: 14,
+                    borderBottomWidth: idx === todayDoses.length - 1 ? 0 : 1,
+                    borderBottomColor: '#F1F5F9',
+                    gap: 12,
+                  },
+                ]}
+              >
+                <View
+                  style={{
+                    width: 36,
+                    height: 36,
+                    borderRadius: 10,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    backgroundColor: isDone ? '#F0FDF4' : '#F5F3FF',
+                  }}
+                >
+                  {isDone ? (
+                    <CheckCircle2 size={18} color="#16A34A" />
+                  ) : (
+                    <Clock size={18} color="#7C3AED" />
+                  )}
+                </View>
+
+                <View style={{ flex: 1 }}>
+                  <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <Text style={{ fontSize: 13, fontWeight: '700', color: '#0F172A' }}>
+                      {dose.medicationName}
+                    </Text>
+                    <Text
+                      style={{
+                        fontSize: 10,
+                        fontWeight: '700',
+                        color: '#7C3AED',
+                        backgroundColor: '#F5F3FF',
+                        paddingHorizontal: 6,
+                        paddingVertical: 2,
+                        borderRadius: 6,
+                      }}
+                    >
+                      {dose.scheduledTime}
+                    </Text>
+                  </View>
+
+                  <Text style={{ fontSize: 11, color: '#64748B', marginTop: 1 }}>
+                    {dose.dosage}
+                  </Text>
+
+                  {isDone ? (
+                    <Text style={{ fontSize: 10, fontWeight: '600', color: '#16A34A', marginTop: 2 }}>
+                      ✓ Administered at {dose.loggedAt || '08:05 AM'}
+                    </Text>
+                  ) : null}
+                </View>
+
+                {!isDone ? (
+                  <TouchableOpacity
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      gap: 4,
+                      backgroundColor: '#16A34A',
+                      paddingHorizontal: 12,
+                      paddingVertical: 7,
+                      borderRadius: 8,
+                    }}
+                    onPress={() => {
+                      markDoseStatus(dose.id, 'taken', caregiverName);
+                    }}
+                    activeOpacity={0.8}
+                  >
+                    <Check size={13} color="#FFFFFF" strokeWidth={3} />
+                    <Text style={{ fontSize: 11, fontWeight: '800', color: '#FFFFFF' }}>Done</Text>
+                  </TouchableOpacity>
+                ) : (
+                  <View
+                    style={{
+                      backgroundColor: '#DCFCE7',
+                      paddingHorizontal: 8,
+                      paddingVertical: 4,
+                      borderRadius: 6,
+                    }}
+                  >
+                    <Text style={{ fontSize: 10, fontWeight: '700', color: '#16A34A' }}>Taken</Text>
+                  </View>
+                )}
+              </View>
+            );
+          })}
+        </Card>
+      </View>
+
       {/* ── 6. Care Team & Emergency Coordination ────────────── */}
       <View style={styles.sectionWrap}>
         <View style={styles.sectionHeaderRow}>
@@ -411,7 +533,7 @@ export default function CaregiverHomeScreen() {
               <Heart size={20} color="#2563EB" />
             </View>
             <View style={{ flex: 1 }}>
-              <Text style={styles.contactName}>Robert Thompson</Text>
+              <Text style={styles.contactName}>{activeProfile?.emergencyContacts?.[0]?.name || 'Robert Ngu'}</Text>
               <Text style={styles.contactRole}>Son · Primary Family Manager</Text>
             </View>
             <TouchableOpacity
@@ -431,10 +553,10 @@ export default function CaregiverHomeScreen() {
             </View>
             <View style={{ flex: 1 }}>
               <Text style={styles.contactName}>
-                {activeProfile?.doctorName || 'Dr. James Hargreaves'}
+                {activeProfile?.doctorName || 'Dr. Jean-Paul Mbarga'}
               </Text>
               <Text style={styles.contactRole}>
-                {activeProfile?.doctorSpecialty || 'Geriatric Specialist'} · {activeProfile?.doctorHospital || "St. Thomas'"}
+                {activeProfile?.doctorSpecialty || 'Cardiologie & Médecine Gériatrique'} · {activeProfile?.doctorHospital || 'Hôpital Central de Yaoundé'}
               </Text>
             </View>
             <TouchableOpacity

@@ -70,19 +70,19 @@ export function mapBackendToElderlyProfile(item: BackendElderlyProfile): Elderly
     primaryCaregiverId: item.caregiver_id ? `usr-${item.caregiver_id}` : undefined,
     primaryCaregiverName: item.caregiver_name || (item.caregiver_id ? 'Assigned Caregiver' : undefined),
     doctorId: item.doctor_id ? `usr-${item.doctor_id}` : undefined,
-    doctorName: item.doctor_name || 'Dr. James Hargreaves',
-    doctorPhone: item.doctor_phone || '+44 20 7946 0000',
-    doctorSpecialty: item.doctor_specialty || 'Geriatric Medicine',
-    doctorHospital: item.doctor_hospital || "St. Thomas' Hospital, London",
-    doctorEmail: item.doctor_email || 'doctor@elderguard.com',
+    doctorName: item.doctor_name || 'Dr. Jean-Paul Mbarga',
+    doctorPhone: item.doctor_phone || '+237 655 89 12 34',
+    doctorSpecialty: item.doctor_specialty || 'Cardiologie & Médecine Gériatrique',
+    doctorHospital: item.doctor_hospital || 'Hôpital Central de Yaoundé',
+    doctorEmail: item.doctor_email || 'doctor.mbarga@elderguard.cm',
     medicalInfo: {
       bloodType: 'O+',
       allergies: [],
       chronicConditions: item.medical_information ? [item.medical_information] : ['Hypertension', 'Type 2 Diabetes'],
-      medicationNotes: item.medical_information || 'Daily morning insulin, evening blood pressure medication.',
-      physicianName: item.doctor_name || 'Dr. James Hargreaves',
-      physicianPhone: item.doctor_phone || '+44 20 7946 0000',
-      hospitalPreference: item.doctor_hospital || "St. Thomas' Hospital, London",
+      medicationNotes: item.medical_information || 'Amlodipine 5mg le matin, Metformin 500mg le soir après le dîner.',
+      physicianName: item.doctor_name || 'Dr. Jean-Paul Mbarga',
+      physicianPhone: item.doctor_phone || '+237 655 89 12 34',
+      hospitalPreference: item.doctor_hospital || 'Hôpital Central de Yaoundé',
     },
     emergencyContacts: [
       {
@@ -461,3 +461,240 @@ export async function apiCreateClinicalNote(payload: {
     };
   }
 }
+
+export interface PrescriptionRecord {
+  prescription_id: number;
+  elderly_id: number;
+  doctor_id: number;
+  medication_name: string;
+  dosage: string;
+  frequency: string;
+  scheduled_time: string;
+  instructions?: string | null;
+  status: 'active' | 'completed' | 'discontinued';
+  last_administered_at?: string | null;
+  last_administered_by?: string | null;
+  created_at?: string;
+  doctor?: {
+    user_id: number;
+    full_name: string;
+    email: string;
+    phone_number: string;
+  };
+}
+
+/**
+ * Fetch prescriptions for an elderly person.
+ */
+export async function apiGetPrescriptions(elderlyId: number | string): Promise<{
+  success: boolean;
+  prescriptions: PrescriptionRecord[];
+  error?: string;
+}> {
+  try {
+    const numericId = typeof elderlyId === 'string' ? elderlyId.replace('eld-', '') : elderlyId;
+    const token = getAuthToken();
+    const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+    if (token) headers['Authorization'] = `Bearer ${token}`;
+
+    const response = await fetch(`${API_BASE_URL}/api/prescriptions/elderly/${numericId}`, {
+      method: 'GET',
+      headers,
+    });
+
+    if (!response.ok) {
+      return { success: false, prescriptions: [], error: 'Failed to fetch prescriptions.' };
+    }
+
+    const data = await response.json();
+    return {
+      success: true,
+      prescriptions: data.data || [],
+    };
+  } catch (err: any) {
+    console.error('apiGetPrescriptions error:', err);
+    return {
+      success: false,
+      prescriptions: [],
+      error: err.message || 'Network error fetching prescriptions.',
+    };
+  }
+}
+
+/**
+ * Create a new prescription (by Doctor).
+ */
+export async function apiCreatePrescription(payload: {
+  elderly_id: number | string;
+  medication_name: string;
+  dosage: string;
+  frequency: string;
+  scheduled_time: string;
+  instructions?: string;
+}): Promise<{
+  success: boolean;
+  prescription?: PrescriptionRecord;
+  error?: string;
+}> {
+  try {
+    const numericId = typeof payload.elderly_id === 'string' ? payload.elderly_id.replace('eld-', '') : payload.elderly_id;
+    const token = getAuthToken();
+    const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+    if (token) headers['Authorization'] = `Bearer ${token}`;
+
+    const response = await fetch(`${API_BASE_URL}/api/prescriptions`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({
+        ...payload,
+        elderly_id: Number(numericId),
+      }),
+    });
+
+    const data = await response.json();
+    if (!response.ok) {
+      return {
+        success: false,
+        error: data.message || 'Failed to create prescription.',
+      };
+    }
+
+    return {
+      success: true,
+      prescription: data.data,
+    };
+  } catch (err: any) {
+    console.error('apiCreatePrescription error:', err);
+    return {
+      success: false,
+      error: err.message || 'Network error creating prescription.',
+    };
+  }
+}
+
+/**
+ * Record administration of medication (Caregiver clicks "Done").
+ */
+export async function apiAdministerPrescription(
+  prescriptionId: number,
+  administeredBy?: string
+): Promise<{
+  success: boolean;
+  prescription?: PrescriptionRecord;
+  error?: string;
+}> {
+  try {
+    const token = getAuthToken();
+    const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+    if (token) headers['Authorization'] = `Bearer ${token}`;
+
+    const response = await fetch(`${API_BASE_URL}/api/prescriptions/${prescriptionId}/administer`, {
+      method: 'PATCH',
+      headers,
+      body: JSON.stringify({ administered_by: administeredBy }),
+    });
+
+    const data = await response.json();
+    if (!response.ok) {
+      return {
+        success: false,
+        error: data.message || 'Failed to record medication administration.',
+      };
+    }
+
+    return {
+      success: true,
+      prescription: data.data,
+    };
+  } catch (err: any) {
+    console.error('apiAdministerPrescription error:', err);
+    return {
+      success: false,
+      error: err.message || 'Network error recording administration.',
+    };
+  }
+}
+
+/**
+ * Parent updates caregiver details.
+ */
+export async function apiUpdateCaregiver(
+  caregiverId: number,
+  payload: { fullName?: string; phoneNumber?: string; email?: string; status?: string }
+): Promise<{ success: boolean; data?: any; error?: string }> {
+  try {
+    const token = getAuthToken();
+    const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+    if (token) headers['Authorization'] = `Bearer ${token}`;
+
+    const response = await fetch(`${API_BASE_URL}/api/users/caregivers/${caregiverId}`, {
+      method: 'PUT',
+      headers,
+      body: JSON.stringify(payload),
+    });
+
+    const data = await response.json();
+    if (!response.ok) {
+      return { success: false, error: data.message || 'Failed to update caregiver.' };
+    }
+    return { success: true, data: data.data };
+  } catch (err: any) {
+    console.error('apiUpdateCaregiver error:', err);
+    return { success: false, error: err.message || 'Network error updating caregiver.' };
+  }
+}
+
+/**
+ * Parent updates doctor details.
+ */
+export async function apiUpdateDoctor(
+  doctorId: number,
+  payload: { fullName?: string; phoneNumber?: string; email?: string; status?: string }
+): Promise<{ success: boolean; data?: any; error?: string }> {
+  try {
+    const token = getAuthToken();
+    const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+    if (token) headers['Authorization'] = `Bearer ${token}`;
+
+    const response = await fetch(`${API_BASE_URL}/api/users/doctors/${doctorId}`, {
+      method: 'PUT',
+      headers,
+      body: JSON.stringify(payload),
+    });
+
+    const data = await response.json();
+    if (!response.ok) {
+      return { success: false, error: data.message || 'Failed to update doctor.' };
+    }
+    return { success: true, data: data.data };
+  } catch (err: any) {
+    console.error('apiUpdateDoctor error:', err);
+    return { success: false, error: err.message || 'Network error updating doctor.' };
+  }
+}
+
+/**
+ * Parent deletes/unlinks a caregiver or doctor user.
+ */
+export async function apiDeleteUser(userId: number): Promise<{ success: boolean; error?: string }> {
+  try {
+    const token = getAuthToken();
+    const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+    if (token) headers['Authorization'] = `Bearer ${token}`;
+
+    const response = await fetch(`${API_BASE_URL}/api/users/${userId}`, {
+      method: 'DELETE',
+      headers,
+    });
+
+    const data = await response.json();
+    if (!response.ok) {
+      return { success: false, error: data.message || 'Failed to remove user.' };
+    }
+    return { success: true };
+  } catch (err: any) {
+    console.error('apiDeleteUser error:', err);
+    return { success: false, error: err.message || 'Network error removing user.' };
+  }
+}
+

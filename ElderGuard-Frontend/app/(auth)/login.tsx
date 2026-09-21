@@ -52,7 +52,7 @@ const ROLE_PRESETS: RolePreset[] = [
     role: 'doctor',
     label: 'Doctor',
     badge: 'Primary Physician',
-    name: 'Dr. James Hargreaves',
+    name: 'Dr. Jean-Paul Mbarga',
     email: 'doctor@elderguard.com',
     icon: Stethoscope,
     accentColor: '#7C3AED',

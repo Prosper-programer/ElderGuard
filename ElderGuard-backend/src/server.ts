@@ -31,6 +31,7 @@ import geofenceRoutes from './routes/geofence.routes';
 import reportRoutes from './routes/report.routes';
 import adminRoutes from './routes/admin.routes';
 import clinicalNoteRoutes from './routes/clinicalNote.routes';
+import prescriptionRoutes from './routes/prescription.routes';
 
 // Mount API Routes
 app.use('/api/auth', authRoutes);
@@ -46,6 +47,7 @@ app.use('/api/geofences', geofenceRoutes);
 app.use('/api/reports', reportRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/clinical-notes', clinicalNoteRoutes);
+app.use('/api/prescriptions', prescriptionRoutes);
 
 /**
  * Basic Root Health Check Route
@@ -88,7 +90,8 @@ import http from 'http';
 import { initSocket } from './config/socket';
 
 const server = http.createServer(app);
-initSocket(server);
+const io = initSocket(server);
+app.set('io', io);
 
 // Start the HTTP and WebSocket server
 server.listen(PORT, async () => {
@@ -103,6 +106,8 @@ server.listen(PORT, async () => {
   try {
     await sequelize.authenticate();
     console.log('✅ Connected to MySQL database successfully via Sequelize ORM!');
+    const { Prescription } = await import('./models');
+    await Prescription.sync();
   } catch (error: any) {
     console.error('❌ Failed to connect to MySQL database at startup:');
     console.error(error.message);

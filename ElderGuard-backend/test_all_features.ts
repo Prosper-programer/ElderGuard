@@ -457,9 +457,71 @@ async function runTests() {
     assert(sysStatsRes.status === 200 && (sysStatsRes.data?.data?.parents?.total >= 1 || sysStatsRes.data?.data?.total_parents >= 1), 'Admin gets system stats GET /api/admin/system-stats', sysStatsRes);
 
     // -------------------------------------------------------------
-    // SECTION 13: Clean-up Deletions
+    // SECTION 13: Clinical Prescriptions & Dual Notifications & Parent Management
     // -------------------------------------------------------------
-    console.log('\n--- SECTION 13: Clean-up Operations ---');
+    console.log('\n--- SECTION 13: Prescriptions, Dual Notifications & Parent Management ---');
+    let prescriptionId = 0;
+
+    // Doctor creates prescription
+    const createPrescriptionRes = await request('POST', '/api/prescriptions', {
+      elderly_id: elderlyId,
+      medication_name: 'Amlodipine Besylate',
+      dosage: '5mg Tablet',
+      frequency: 'Once daily in the morning',
+      scheduled_time: '08:00 AM',
+      instructions: 'Administer with a glass of water after breakfast'
+    }, doctorToken);
+    assert(createPrescriptionRes.status === 201 && createPrescriptionRes.data?.data?.prescription_id, 'Doctor creates prescription POST /api/prescriptions', createPrescriptionRes);
+    prescriptionId = createPrescriptionRes.data?.data?.prescription_id;
+
+    // Verify PARENT received prescription notification
+    const parentNotifsRes = await request('GET', '/api/notifications', undefined, parentToken);
+    const parentHasPrescriptionNotif = parentNotifsRes.data?.data?.some((n: any) =>
+      n.title?.toLowerCase().includes('prescription') || n.message?.toLowerCase().includes('amlodipine')
+    );
+    assert(parentNotifsRes.status === 200 && parentHasPrescriptionNotif, 'Parent received prescription notification GET /api/notifications', parentNotifsRes);
+
+    // Verify CAREGIVER received prescription notification
+    const caregiverNotifsRes = await request('GET', '/api/notifications', undefined, caregiverToken);
+    const caregiverHasPrescriptionNotif = caregiverNotifsRes.data?.data?.some((n: any) =>
+      n.title?.toLowerCase().includes('medication') || n.message?.toLowerCase().includes('amlodipine')
+    );
+    assert(caregiverNotifsRes.status === 200 && caregiverHasPrescriptionNotif, 'Caregiver received prescription notification GET /api/notifications', caregiverNotifsRes);
+
+    // Caregiver lists prescriptions for elderly
+    const listPrescriptionsRes = await request('GET', `/api/prescriptions/elderly/${elderlyId}`, undefined, caregiverToken);
+    assert(listPrescriptionsRes.status === 200 && listPrescriptionsRes.data?.data?.length >= 1, 'Caregiver views prescriptions GET /api/prescriptions/elderly/:elderlyId', listPrescriptionsRes);
+
+    // Caregiver marks medication dose as administered ("Done" button)
+    const administerRes = await request('PATCH', `/api/prescriptions/${prescriptionId}/administer`, {
+      administered_by: 'Caregiver Amara'
+    }, caregiverToken);
+    assert(administerRes.status === 200 && !!administerRes.data?.data?.last_administered_at, 'Caregiver clicks Done to administer prescription PATCH /api/prescriptions/:id/administer', administerRes);
+
+    // Doctor updates prescription status
+    const updatePrescriptionRes = await request('PATCH', `/api/prescriptions/${prescriptionId}/status`, {
+      status: 'completed'
+    }, doctorToken);
+    assert(updatePrescriptionRes.status === 200 && updatePrescriptionRes.data?.data?.status === 'completed', 'Doctor updates prescription status PATCH /api/prescriptions/:id/status', updatePrescriptionRes);
+
+    // Parent updates Caregiver profile
+    const updateCaregiverRes = await request('PUT', `/api/users/caregivers/${caregiverId}`, {
+      fullName: 'Amara Biya',
+      phoneNumber: '+237699452310'
+    }, parentToken);
+    assert(updateCaregiverRes.status === 200 && updateCaregiverRes.data?.data?.full_name === 'Amara Biya', 'Parent updates Caregiver profile PUT /api/users/caregivers/:id', updateCaregiverRes);
+
+    // Parent updates Doctor profile
+    const updateDoctorRes = await request('PUT', `/api/users/doctors/${doctorId}`, {
+      fullName: 'Dr. Jean-Paul Mbarga',
+      phoneNumber: '+237655891234'
+    }, parentToken);
+    assert(updateDoctorRes.status === 200 && updateDoctorRes.data?.data?.full_name === 'Dr. Jean-Paul Mbarga', 'Parent updates Doctor profile PUT /api/users/doctors/:id', updateDoctorRes);
+
+    // -------------------------------------------------------------
+    // SECTION 14: Clean-up Deletions
+    // -------------------------------------------------------------
+    console.log('\n--- SECTION 14: Clean-up Operations ---');
     const delActRes = await request('DELETE', `/api/activities/${activityId}`, undefined, parentToken);
     assert(delActRes.status === 200, 'Delete activity DELETE /api/activities/:id', delActRes);
 

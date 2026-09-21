@@ -91,7 +91,7 @@ export default function HistoryScreen() {
         {
           id: '7',
           time: '10:15',
-          title: 'Fall detected — assessed by Sarah, Dr Hargreaves notified',
+          title: 'Fall detected — assessed by Sarah, Dr. Jean-Paul Mbarga notified',
           dotColor: '#DC2626',
           category: 'alerts',
         },

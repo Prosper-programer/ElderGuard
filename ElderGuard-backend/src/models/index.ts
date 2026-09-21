@@ -1,4 +1,4 @@
-﻿import { sequelize } from '../config/database';
+import { sequelize } from '../config/database';
 import User from './User';
 import Admin from './Admin';
 import ElderlyProfile from './ElderlyProfile';
@@ -11,6 +11,7 @@ import Alert from './Alert';
 import Geofence from './Geofence';
 import Report from './Report';
 import ClinicalNote from './ClinicalNote';
+import Prescription from './Prescription';
 
 // Associations
 
@@ -62,6 +63,14 @@ ClinicalNote.belongsTo(ElderlyProfile, { foreignKey: 'elderly_id', as: 'elderly'
 User.hasMany(ClinicalNote, { foreignKey: 'doctor_id', as: 'writtenNotes' });
 ClinicalNote.belongsTo(User, { foreignKey: 'doctor_id', as: 'doctor' });
 
+// ElderlyProfile <-> Prescription
+ElderlyProfile.hasMany(Prescription, { foreignKey: 'elderly_id', as: 'prescriptions' });
+Prescription.belongsTo(ElderlyProfile, { foreignKey: 'elderly_id', as: 'elderly' });
+
+// Doctor User <-> Prescription
+User.hasMany(Prescription, { foreignKey: 'doctor_id', as: 'prescriptions' });
+Prescription.belongsTo(User, { foreignKey: 'doctor_id', as: 'doctor' });
+
 // User <-> Notification
 User.hasMany(Notification, { foreignKey: 'user_id', as: 'notifications' });
 Notification.belongsTo(User, { foreignKey: 'user_id', as: 'user' });
@@ -80,6 +89,7 @@ export {
   Geofence,
   Report,
   ClinicalNote,
+  Prescription,
 };
 
 export default {
@@ -96,4 +106,5 @@ export default {
   Geofence,
   Report,
   ClinicalNote,
+  Prescription,
 };

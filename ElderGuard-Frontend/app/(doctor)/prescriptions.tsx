@@ -24,6 +24,7 @@ import { Card, Button, TextInput } from '@/components/ui';
 import { Colors, Typography, Spacing, BorderRadius } from '@/constants/theme';
 import { useElderly } from '@/context/ElderlyContext';
 import { useCare } from '@/context/CareContext';
+import { apiCreatePrescription } from '@/services/elderlyService';
 
 export default function DoctorPrescriptionsScreen() {
   const { activeProfile } = useElderly();
@@ -36,9 +37,9 @@ export default function DoctorPrescriptionsScreen() {
   const [scheduledTime, setScheduledTime] = useState('08:00 AM');
   const [instructions, setInstructions] = useState('');
 
-  const seniorName = activeProfile?.fullName || 'Margaret Thompson';
+  const seniorName = activeProfile?.fullName || 'Pa Samuel Ngu';
 
-  const handleAddPrescription = () => {
+  const handleAddPrescription = async () => {
     if (!drugName.trim() || !dosage.trim()) {
       Alert.alert('Incomplete Form', 'Please specify the medication name and dosage.');
       return;
@@ -52,11 +53,22 @@ export default function DoctorPrescriptionsScreen() {
       timesOfDay: [scheduledTime.trim() || '08:00 AM'],
     });
 
+    // Synchronize to backend to persist and trigger dual notifications for Parent and Caregiver
+    const rawId = activeProfile?.id || '1';
+    await apiCreatePrescription({
+      elderly_id: rawId,
+      medication_name: drugName.trim(),
+      dosage: dosage.trim(),
+      frequency: frequency.trim(),
+      scheduled_time: scheduledTime.trim() || '08:00 AM',
+      instructions: instructions.trim(),
+    });
+
     setDrugName('');
     setDosage('');
     setInstructions('');
     setModalVisible(false);
-    Alert.alert('Prescription Added', `${drugName.trim()} added. Caregiver schedule updated.`);
+    Alert.alert('Prescription Added', `${drugName.trim()} added. Parent and Caregiver have been automatically notified.`);
   };
 
   return (

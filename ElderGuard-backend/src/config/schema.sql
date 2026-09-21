@@ -171,5 +171,24 @@ CREATE TABLE IF NOT EXISTS clinical_notes (
   FOREIGN KEY (doctor_id) REFERENCES users(user_id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+-- 13. PRESCRIPTIONS TABLE
+-- Medication regimens prescribed by Doctor, monitored by Parent, administered by Caregiver
+CREATE TABLE IF NOT EXISTS prescriptions (
+  prescription_id INT AUTO_INCREMENT PRIMARY KEY,
+  elderly_id INT NOT NULL,
+  doctor_id INT NOT NULL,
+  medication_name VARCHAR(150) NOT NULL,
+  dosage VARCHAR(100) NOT NULL,
+  frequency VARCHAR(100) NOT NULL,
+  scheduled_time VARCHAR(50) NOT NULL,
+  instructions TEXT NULL,
+  status ENUM('active', 'completed', 'discontinued') NOT NULL DEFAULT 'active',
+  last_administered_at DATETIME NULL,
+  last_administered_by VARCHAR(100) NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (elderly_id) REFERENCES elderly_profiles(elderly_id) ON DELETE CASCADE,
+  FOREIGN KEY (doctor_id) REFERENCES users(user_id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 -- Re-enable foreign key checks
 SET FOREIGN_KEY_CHECKS = 1;

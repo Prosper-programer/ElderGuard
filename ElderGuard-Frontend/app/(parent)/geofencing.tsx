@@ -42,7 +42,7 @@ export default function GeofencingScreen() {
   const svgRadius = 35 + ((radius - 100) / 1900) * 85;
 
   const handleCenterChange = () => {
-    Alert.alert('Change Centre Point', 'Centre point is anchored to registered residential address: 42 Maple Street, London.');
+    Alert.alert('Change Centre Point', 'Centre point is anchored to registered residential address: Bastos, Yaoundé, Cameroon.');
   };
 
   return (
@@ -132,12 +132,12 @@ export default function GeofencingScreen() {
                   <Circle cx="60" cy="38" r="4.5" fill="#86EFAC" />
                   <Circle cx="45" cy="55" r="4" fill="#86EFAC" />
                   <SvgText x="20" y="82" fill="#15803D" fontSize="8" fontWeight="bold">
-                    MAPLE PARK
+                    BASTOS PARK
                   </SvgText>
 
                   <Rect x="222" y="165" width="104" height="85" rx="10" fill="#BBF7D0" opacity={0.8} />
                   <SvgText x="238" y="228" fill="#15803D" fontSize="8" fontWeight="bold">
-                    VICTORIA GARDENS
+                    OMNISPORTS GARDENS
                   </SvgText>
 
                   {/* Grid Lines */}
@@ -165,7 +165,7 @@ export default function GeofencingScreen() {
 
                 {/* Floating Location Beacon Badge */}
                 <View style={styles.mapBeaconBadge}>
-                  <Text style={styles.beaconAddressText}>42 Maple Street</Text>
+                  <Text style={styles.beaconAddressText}>Bastos Residence</Text>
                   <View style={styles.beaconLiveRow}>
                     <View style={styles.beaconCyanDot} />
                     <Text style={styles.beaconLiveText}>LIVE - GPS ±5m</Text>
@@ -244,8 +244,8 @@ export default function GeofencingScreen() {
             <MapPin size={17} color="#3C6FDB" />
           </View>
           <View style={styles.centerTextCol}>
-            <Text style={styles.centerMainText}>42 Maple Street, London</Text>
-            <Text style={styles.centerSubText}>SW1A 2AA</Text>
+            <Text style={styles.centerMainText}>Bastos, Yaoundé</Text>
+            <Text style={styles.centerSubText}>Cameroon</Text>
           </View>
           <TouchableOpacity onPress={handleCenterChange} activeOpacity={0.7}>
             <Text style={styles.changeLink}>Change</Text>

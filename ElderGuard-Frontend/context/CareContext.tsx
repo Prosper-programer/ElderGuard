@@ -18,6 +18,7 @@
 
 import React, { createContext, useContext, useState, useCallback } from 'react';
 import { Medication, MedicationDose, CareActivity, CareContextValue, DoseStatus } from '@/types/care';
+import { apiAdministerPrescription } from '@/services/elderlyService';
 
 /**
  * Baseline doctor prescriptions for Margaret Johnson:
@@ -28,10 +29,10 @@ import { Medication, MedicationDose, CareActivity, CareContextValue, DoseStatus 
 const INITIAL_MEDICATIONS: Medication[] = [
   {
     id: 'med-1',
-    name: 'Lisinopril',
-    dosage: '10mg Tablet',
-    frequency: 'Once daily',
-    instructions: 'Take in the morning with a full glass of water.',
+    name: 'Amlodipine Besylate',
+    dosage: '5mg Tablet',
+    frequency: 'Once daily in the morning',
+    instructions: 'Take in the morning with a full glass of water after breakfast.',
     timesOfDay: ['08:00 AM'],
   },
   {
@@ -54,18 +55,18 @@ const INITIAL_MEDICATIONS: Medication[] = [
 
 /**
  * Today's dosage instances:
- * Morning and afternoon doses have already been marked 'taken' by caregiver David.
+ * Morning and afternoon doses have already been marked 'taken' by caregiver Amara.
  * Evening Metformin is 'pending'.
  */
 const INITIAL_DOSES: MedicationDose[] = [
   {
     id: 'dose-1',
     medicationId: 'med-1',
-    medicationName: 'Lisinopril',
-    dosage: '10mg Tablet',
+    medicationName: 'Amlodipine Besylate',
+    dosage: '5mg Tablet',
     scheduledTime: '08:00 AM',
     status: 'taken',
-    loggedBy: 'David Miller (Caregiver)',
+    loggedBy: 'Amara Biya (Caregiver)',
     loggedAt: '08:05 AM',
   },
   {
@@ -75,7 +76,7 @@ const INITIAL_DOSES: MedicationDose[] = [
     dosage: '600mg',
     scheduledTime: '12:30 PM',
     status: 'taken',
-    loggedBy: 'David Miller (Caregiver)',
+    loggedBy: 'Amara Biya (Caregiver)',
     loggedAt: '12:35 PM',
   },
   {
@@ -100,7 +101,7 @@ const INITIAL_ACTIVITIES: CareActivity[] = [
     current: 1.6,
     unit: 'Liters',
     status: 'in_progress',
-    notes: 'Glasses tracked throughout morning & lunch',
+    notes: 'Tracked throughout morning & lunch in Yaoundé',
   },
   {
     id: 'act-2',
@@ -110,7 +111,7 @@ const INITIAL_ACTIVITIES: CareActivity[] = [
     current: 25,
     unit: 'mins',
     status: 'in_progress',
-    notes: 'Walked in backyard garden with walker support',
+    notes: 'Walked in Bastos compound garden with walker support',
   },
   {
     id: 'act-3',
@@ -121,7 +122,7 @@ const INITIAL_ACTIVITIES: CareActivity[] = [
     unit: 'check',
     status: 'completed',
     notes: 'Reading: 124 / 82 mmHg (Normal)',
-    loggedBy: 'David Miller (Caregiver)',
+    loggedBy: 'Amara Biya (Caregiver)',
     loggedAt: '11:15 AM',
   },
 ];
@@ -157,6 +158,14 @@ export function CareProvider({ children }: { children: React.ReactNode }) {
           return dose;
         })
       );
+
+      // Asynchronously record administration with backend if connected
+      if (status === 'taken') {
+        const numId = parseInt(doseId.replace(/[^0-9]/g, ''), 10);
+        if (!isNaN(numId) && numId > 0) {
+          apiAdministerPrescription(numId, loggedByName).catch(() => {});
+        }
+      }
     },
     []
   );
