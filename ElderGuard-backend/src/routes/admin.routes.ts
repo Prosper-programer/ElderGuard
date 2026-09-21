@@ -21,12 +21,16 @@ router.use(authorize('admin'));
 router.get('/parents', getParents);
 router.get('/parents/:id', getParentById);
 router.put('/parents/:id/activate', activateParent);
+router.patch('/parents/:id/activate', activateParent);
 router.put('/parents/:id/deactivate', deactivateParent);
+router.patch('/parents/:id/deactivate', deactivateParent);
 
 // Backwards-compatible routes
 router.get('/users', getAllUsers);
 router.put('/users/:id/activate', activateAccount);
+router.patch('/users/:id/activate', activateAccount);
 router.put('/users/:id/deactivate', deactivateAccount);
+router.patch('/users/:id/deactivate', deactivateAccount);
 
 // System statistics overview
 router.get('/system-stats', getSystemStats);

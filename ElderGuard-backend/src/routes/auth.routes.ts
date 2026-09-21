@@ -13,6 +13,7 @@ const router = Router();
 router.post('/register', register);
 router.post('/login', login);
 router.post('/admin-login', adminLogin);
+router.post('/admin/login', adminLogin);
 router.post('/logout', logout);
 
 // Protected routes (requires valid JWT token)

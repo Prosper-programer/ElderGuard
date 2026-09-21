@@ -1,4 +1,4 @@
-﻿import { DataTypes, Model, Optional } from 'sequelize';
+import { DataTypes, Model, Optional } from 'sequelize';
 import { sequelize } from '../config/database';
 
 export interface NotificationAttributes {
@@ -16,12 +16,12 @@ export interface NotificationCreationAttributes
 export class Notification
   extends Model<NotificationAttributes, NotificationCreationAttributes>
   implements NotificationAttributes {
-  public notification_id!: number;
-  public user_id!: number;
-  public title!: string;
-  public message!: string;
-  public date_time!: Date;
-  public status!: 'unread' | 'read';
+  declare notification_id: number;
+  declare user_id: number;
+  declare title: string;
+  declare message: string;
+  declare date_time: Date;
+  declare status: 'unread' | 'read';
 }
 
 Notification.init(

@@ -1,4 +1,4 @@
-﻿import { DataTypes, Model, Optional } from 'sequelize';
+import { DataTypes, Model, Optional } from 'sequelize';
 import { sequelize } from '../config/database';
 
 export interface AdminAttributes {
@@ -12,11 +12,11 @@ export interface AdminAttributes {
 export interface AdminCreationAttributes extends Optional<AdminAttributes, 'admin_id' | 'created_at'> {}
 
 export class Admin extends Model<AdminAttributes, AdminCreationAttributes> implements AdminAttributes {
-  public admin_id!: number;
-  public name!: string;
-  public email!: string;
-  public password!: string;
-  public created_at!: Date;
+  declare admin_id: number;
+  declare name: string;
+  declare email: string;
+  declare password: string;
+  declare created_at: Date;
 }
 
 Admin.init(

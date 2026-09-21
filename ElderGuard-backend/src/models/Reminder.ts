@@ -1,4 +1,4 @@
-﻿import { DataTypes, Model, Optional } from 'sequelize';
+import { DataTypes, Model, Optional } from 'sequelize';
 import { sequelize } from '../config/database';
 
 export interface ReminderAttributes {
@@ -17,15 +17,15 @@ export interface ReminderCreationAttributes
   extends Optional<ReminderAttributes, 'reminder_id' | 'description' | 'type' | 'status' | 'created_at'> {}
 
 export class Reminder extends Model<ReminderAttributes, ReminderCreationAttributes> implements ReminderAttributes {
-  public reminder_id!: number;
-  public elderly_id!: number;
-  public title!: string;
-  public date!: string | Date;
-  public time!: string;
-  public description!: string | null;
-  public type!: string;
-  public status!: 'active' | 'completed' | 'dismissed';
-  public created_at!: Date;
+  declare reminder_id: number;
+  declare elderly_id: number;
+  declare title: string;
+  declare date: string | Date;
+  declare time: string;
+  declare description: string | null;
+  declare type: string;
+  declare status: 'active' | 'completed' | 'dismissed';
+  declare created_at: Date;
 }
 
 Reminder.init(

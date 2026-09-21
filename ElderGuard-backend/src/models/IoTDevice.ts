@@ -1,4 +1,4 @@
-﻿import { DataTypes, Model, Optional } from 'sequelize';
+import { DataTypes, Model, Optional } from 'sequelize';
 import { sequelize } from '../config/database';
 
 export interface IoTDeviceAttributes {
@@ -16,12 +16,12 @@ export interface IoTDeviceCreationAttributes
 export class IoTDevice
   extends Model<IoTDeviceAttributes, IoTDeviceCreationAttributes>
   implements IoTDeviceAttributes {
-  public device_id!: number;
-  public elderly_id!: number | null;
-  public device_name!: string;
-  public last_connection!: Date | null;
-  public status!: 'connected' | 'disconnected';
-  public created_at!: Date;
+  declare device_id: number;
+  declare elderly_id: number | null;
+  declare device_name: string;
+  declare last_connection: Date | null;
+  declare status: 'connected' | 'disconnected';
+  declare created_at: Date;
 }
 
 IoTDevice.init(

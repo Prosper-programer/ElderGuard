@@ -1,4 +1,4 @@
-﻿import { DataTypes, Model, Optional } from 'sequelize';
+import { DataTypes, Model, Optional } from 'sequelize';
 import { sequelize } from '../config/database';
 
 export interface AlertAttributes {
@@ -13,11 +13,11 @@ export interface AlertCreationAttributes
   extends Optional<AlertAttributes, 'alert_id' | 'notification_id' | 'date_time'> {}
 
 export class Alert extends Model<AlertAttributes, AlertCreationAttributes> implements AlertAttributes {
-  public alert_id!: number;
-  public elderly_id!: number;
-  public notification_id!: number | null;
-  public description!: string;
-  public date_time!: Date;
+  declare alert_id: number;
+  declare elderly_id: number;
+  declare notification_id: number | null;
+  declare description: string;
+  declare date_time: Date;
 }
 
 Alert.init(

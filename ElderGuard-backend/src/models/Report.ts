@@ -1,4 +1,4 @@
-﻿import { DataTypes, Model, Optional } from 'sequelize';
+import { DataTypes, Model, Optional } from 'sequelize';
 import { sequelize } from '../config/database';
 
 export interface ReportAttributes {
@@ -15,13 +15,13 @@ export interface ReportCreationAttributes
   extends Optional<ReportAttributes, 'report_id' | 'generated_date'> {}
 
 export class Report extends Model<ReportAttributes, ReportCreationAttributes> implements ReportAttributes {
-  public report_id!: number;
-  public elderly_id!: number;
-  public parent_id!: number;
-  public title!: string;
-  public period!: string;
-  public generated_date!: Date;
-  public content!: string;
+  declare report_id: number;
+  declare elderly_id: number;
+  declare parent_id: number;
+  declare title: string;
+  declare period: string;
+  declare generated_date: Date;
+  declare content: string;
 }
 
 Report.init(

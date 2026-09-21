@@ -1,4 +1,4 @@
-﻿import { DataTypes, Model, Optional } from 'sequelize';
+import { DataTypes, Model, Optional } from 'sequelize';
 import { sequelize } from '../config/database';
 
 export interface DailyActivityAttributes {
@@ -19,15 +19,15 @@ export interface DailyActivityCreationAttributes
 export class DailyActivity
   extends Model<DailyActivityAttributes, DailyActivityCreationAttributes>
   implements DailyActivityAttributes {
-  public activity_id!: number;
-  public elderly_id!: number;
-  public name!: string;
-  public date!: string | Date;
-  public start_time!: string;
-  public end_time!: string;
-  public description!: string | null;
-  public status!: 'pending' | 'completed';
-  public created_at!: Date;
+  declare activity_id: number;
+  declare elderly_id: number;
+  declare name: string;
+  declare date: string | Date;
+  declare start_time: string;
+  declare end_time: string;
+  declare description: string | null;
+  declare status: 'pending' | 'completed';
+  declare created_at: Date;
 }
 
 DailyActivity.init(

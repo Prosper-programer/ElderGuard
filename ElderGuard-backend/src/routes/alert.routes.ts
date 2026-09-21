@@ -16,5 +16,6 @@ router.get('/:id', getAlertById);
 
 // Send manual emergency alert
 router.post('/', sendManualAlert);
+router.post('/manual', sendManualAlert);
 
 export default router;

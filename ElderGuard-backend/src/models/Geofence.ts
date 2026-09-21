@@ -1,4 +1,4 @@
-﻿import { DataTypes, Model, Optional } from 'sequelize';
+import { DataTypes, Model, Optional } from 'sequelize';
 import { sequelize } from '../config/database';
 
 export interface GeofenceAttributes {
@@ -15,13 +15,13 @@ export interface GeofenceCreationAttributes
   extends Optional<GeofenceAttributes, 'geofence_id' | 'is_enabled' | 'created_at'> {}
 
 export class Geofence extends Model<GeofenceAttributes, GeofenceCreationAttributes> implements GeofenceAttributes {
-  public geofence_id!: number;
-  public elderly_id!: number;
-  public center_latitude!: number;
-  public center_longitude!: number;
-  public radius!: number;
-  public is_enabled!: boolean;
-  public created_at!: Date;
+  declare geofence_id: number;
+  declare elderly_id: number;
+  declare center_latitude: number;
+  declare center_longitude: number;
+  declare radius: number;
+  declare is_enabled: boolean;
+  declare created_at: Date;
 }
 
 Geofence.init(

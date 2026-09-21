@@ -1,4 +1,4 @@
-﻿import { DataTypes, Model, Optional } from 'sequelize';
+import { DataTypes, Model, Optional } from 'sequelize';
 import { sequelize } from '../config/database';
 
 export interface ClinicalNoteAttributes {
@@ -17,13 +17,13 @@ export interface ClinicalNoteCreationAttributes
 export class ClinicalNote
   extends Model<ClinicalNoteAttributes, ClinicalNoteCreationAttributes>
   implements ClinicalNoteAttributes {
-  public note_id!: number;
-  public elderly_id!: number;
-  public doctor_id!: number;
-  public title!: string;
-  public note_content!: string;
-  public recommendations!: string | null;
-  public created_at!: Date;
+  declare note_id: number;
+  declare elderly_id: number;
+  declare doctor_id: number;
+  declare title: string;
+  declare note_content: string;
+  declare recommendations: string | null;
+  declare created_at: Date;
 }
 
 ClinicalNote.init(

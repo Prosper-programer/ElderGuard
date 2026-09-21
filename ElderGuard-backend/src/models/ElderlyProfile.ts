@@ -1,4 +1,4 @@
-﻿import { DataTypes, Model, Optional } from 'sequelize';
+import { DataTypes, Model, Optional } from 'sequelize';
 import { sequelize } from '../config/database';
 
 export interface ElderlyProfileAttributes {
@@ -26,22 +26,22 @@ export interface ElderlyProfileCreationAttributes
 export class ElderlyProfile
   extends Model<ElderlyProfileAttributes, ElderlyProfileCreationAttributes>
   implements ElderlyProfileAttributes {
-  public elderly_id!: number;
-  public parent_id!: number;
-  public caregiver_id!: number | null;
-  public doctor_id!: number | null;
-  public full_name!: string;
-  public date_of_birth!: string | Date;
-  public gender!: string;
-  public address!: string;
-  public emergency_contact!: string;
-  public medical_information!: string | null;
-  public doctor_name!: string | null;
-  public doctor_phone!: string | null;
-  public doctor_specialty!: string | null;
-  public doctor_hospital!: string | null;
-  public doctor_email!: string | null;
-  public created_at!: Date;
+  declare elderly_id: number;
+  declare parent_id: number;
+  declare caregiver_id: number | null;
+  declare doctor_id: number | null;
+  declare full_name: string;
+  declare date_of_birth: string | Date;
+  declare gender: string;
+  declare address: string;
+  declare emergency_contact: string;
+  declare medical_information: string | null;
+  declare doctor_name: string | null;
+  declare doctor_phone: string | null;
+  declare doctor_specialty: string | null;
+  declare doctor_hospital: string | null;
+  declare doctor_email: string | null;
+  declare created_at: Date;
 }
 
 ElderlyProfile.init(

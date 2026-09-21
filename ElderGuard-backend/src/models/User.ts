@@ -1,4 +1,4 @@
-﻿import { DataTypes, Model, Optional } from 'sequelize';
+import { DataTypes, Model, Optional } from 'sequelize';
 import { sequelize } from '../config/database';
 
 export interface UserAttributes {
@@ -15,14 +15,14 @@ export interface UserAttributes {
 export interface UserCreationAttributes extends Optional<UserAttributes, 'user_id' | 'status' | 'created_at'> {}
 
 export class User extends Model<UserAttributes, UserCreationAttributes> implements UserAttributes {
-  public user_id!: number;
-  public full_name!: string;
-  public email!: string;
-  public phone_number!: string;
-  public password!: string;
-  public role!: 'parent' | 'caregiver' | 'doctor';
-  public status!: 'active' | 'inactive';
-  public created_at!: Date;
+  declare user_id: number;
+  declare full_name: string;
+  declare email: string;
+  declare phone_number: string;
+  declare password: string;
+  declare role: 'parent' | 'caregiver' | 'doctor';
+  declare status: 'active' | 'inactive';
+  declare created_at: Date;
 }
 
 User.init(

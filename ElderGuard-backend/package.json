@@ -7,7 +7,8 @@
     "dev": "tsx watch src/server.ts",
     "build": "tsc",
     "start": "node dist/server.js",
-    "db:init": "tsx src/config/initDatabase.ts"
+    "db:init": "tsx src/config/initDatabase.ts",
+    "test": "tsx test_all_features.ts"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"

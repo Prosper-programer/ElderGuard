@@ -13,9 +13,9 @@ const router = Router();
 // All elderly profile operations require authentication
 router.use(authenticate);
 
-// 1. Both Parent and Caregiver can view profiles (Parent views managed, Caregiver views assigned)
-router.get('/', authorize('parent', 'caregiver'), getElderlyProfiles);
-router.get('/:id', authorize('parent', 'caregiver'), getElderlyProfileById);
+// 1. Parent, Caregiver, and Doctor can view profiles
+router.get('/', authorize('parent', 'caregiver', 'doctor'), getElderlyProfiles);
+router.get('/:id', authorize('parent', 'caregiver', 'doctor'), getElderlyProfileById);
 
 // 2. Only Parent can create, update, or delete elderly profiles
 router.post('/', authorize('parent'), createElderlyProfile);

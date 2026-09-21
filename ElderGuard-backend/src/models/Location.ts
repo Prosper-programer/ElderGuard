@@ -1,4 +1,4 @@
-﻿import { DataTypes, Model, Optional } from 'sequelize';
+import { DataTypes, Model, Optional } from 'sequelize';
 import { sequelize } from '../config/database';
 
 export interface LocationAttributes {
@@ -13,11 +13,11 @@ export interface LocationCreationAttributes
   extends Optional<LocationAttributes, 'location_id' | 'timestamp'> {}
 
 export class Location extends Model<LocationAttributes, LocationCreationAttributes> implements LocationAttributes {
-  public location_id!: number;
-  public elderly_id!: number;
-  public latitude!: number;
-  public longitude!: number;
-  public timestamp!: Date;
+  declare location_id: number;
+  declare elderly_id: number;
+  declare latitude: number;
+  declare longitude: number;
+  declare timestamp: Date;
 }
 
 Location.init(
