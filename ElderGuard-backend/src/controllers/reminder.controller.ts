@@ -1,6 +1,6 @@
 import { Response } from 'express';
-import pool from '../config/database';
 import { AuthenticatedRequest } from '../middleware/auth.middleware';
+import { Reminder, ElderlyProfile, Notification } from '../models';
 
 /**
  * REMINDER CONTROLLER
@@ -23,28 +23,28 @@ import { AuthenticatedRequest } from '../middleware/auth.middleware';
 async function sendReminderNotification(elderlyId: number, title: string, message: string) {
   try {
     // Find parent and caregiver for this elderly person
-    const [profiles]: any = await pool.query(
-      'SELECT parent_id, caregiver_id, full_name FROM elderly_profiles WHERE elderly_id = ?',
-      [elderlyId]
-    );
+    const profile = await ElderlyProfile.findByPk(elderlyId);
+    if (!profile) return;
 
-    if (profiles.length === 0) return;
-
-    const { parent_id, caregiver_id, full_name } = profiles[0];
+    const { parent_id, caregiver_id, full_name } = profile;
     const fullMessage = `[Reminder for ${full_name}] ${message}`;
 
     // 1. Notify Parent
-    await pool.query(
-      'INSERT INTO notifications (user_id, title, message, status) VALUES (?, ?, ?, "unread")',
-      [parent_id, title, fullMessage]
-    );
+    await Notification.create({
+      user_id: parent_id,
+      title,
+      message: fullMessage,
+      status: 'unread'
+    });
 
     // 2. Notify Caregiver if assigned
     if (caregiver_id) {
-      await pool.query(
-        'INSERT INTO notifications (user_id, title, message, status) VALUES (?, ?, ?, "unread")',
-        [caregiver_id, title, fullMessage]
-      );
+      await Notification.create({
+        user_id: caregiver_id,
+        title,
+        message: fullMessage,
+        status: 'unread'
+      });
     }
   } catch (error) {
     console.error('Error in sendReminderNotification:', error);
@@ -70,12 +70,11 @@ export async function createReminder(req: AuthenticatedRequest, res: Response): 
     }
 
     // Verify parent manages this elderly person
-    const [profiles]: any = await pool.query(
-      'SELECT elderly_id FROM elderly_profiles WHERE elderly_id = ? AND parent_id = ?',
-      [elderlyId, parentId]
-    );
+    const profile = await ElderlyProfile.findOne({
+      where: { elderly_id: elderlyId, parent_id: parentId }
+    });
 
-    if (profiles.length === 0) {
+    if (!profile) {
       res.status(403).json({
         message: 'Forbidden: You do not manage this elderly person.',
         status: 'error'
@@ -85,13 +84,15 @@ export async function createReminder(req: AuthenticatedRequest, res: Response): 
 
     const reminderType = type || 'medication';
 
-    const [result]: any = await pool.query(
-      `INSERT INTO reminders (elderly_id, title, date, time, description, type, status)
-       VALUES (?, ?, ?, ?, ?, ?, 'active')`,
-      [elderlyId, title.trim(), date, time, description ? description.trim() : null, reminderType]
-    );
-
-    const reminderId = result.insertId;
+    const newReminder = await Reminder.create({
+      elderly_id: elderlyId,
+      title: title.trim(),
+      date,
+      time,
+      description: description ? description.trim() : null,
+      type: reminderType,
+      status: 'active'
+    });
 
     // Send notification (UML relationship: Reminder -> Notification)
     await sendReminderNotification(
@@ -103,16 +104,7 @@ export async function createReminder(req: AuthenticatedRequest, res: Response): 
     res.status(201).json({
       message: 'Reminder created successfully.',
       status: 'success',
-      data: {
-        reminder_id: reminderId,
-        elderly_id: elderlyId,
-        title: title.trim(),
-        date,
-        time,
-        description: description || null,
-        type: reminderType,
-        status: 'active'
-      }
+      data: newReminder.toJSON()
     });
   } catch (error: any) {
     console.error('Create reminder error:', error);
@@ -131,10 +123,13 @@ export async function getRemindersByElderly(req: AuthenticatedRequest, res: Resp
   try {
     const elderlyId = Number(req.params.elderlyId);
 
-    const [rows]: any = await pool.query(
-      'SELECT * FROM reminders WHERE elderly_id = ? ORDER BY date ASC, time ASC',
-      [elderlyId]
-    );
+    const rows = await Reminder.findAll({
+      where: { elderly_id: elderlyId },
+      order: [
+        ['date', 'ASC'],
+        ['time', 'ASC']
+      ]
+    });
 
     res.status(200).json({
       status: 'success',
@@ -160,28 +155,20 @@ export async function updateReminder(req: AuthenticatedRequest, res: Response): 
     const reminderId = Number(req.params.id);
     const { title, date, time, description, type, status } = req.body;
 
-    const [existing]: any = await pool.query('SELECT * FROM reminders WHERE reminder_id = ?', [reminderId]);
-    if (existing.length === 0) {
+    const reminder = await Reminder.findByPk(reminderId);
+    if (!reminder) {
       res.status(404).json({ message: 'Reminder not found.', status: 'error' });
       return;
     }
 
-    const current = existing[0];
-
-    await pool.query(
-      `UPDATE reminders SET
-        title = ?, date = ?, time = ?, description = ?, type = ?, status = ?
-       WHERE reminder_id = ?`,
-      [
-        title !== undefined ? title.trim() : current.title,
-        date !== undefined ? date : current.date,
-        time !== undefined ? time : current.time,
-        description !== undefined ? description : current.description,
-        type !== undefined ? type : current.type,
-        status !== undefined ? status : current.status,
-        reminderId
-      ]
-    );
+    await reminder.update({
+      title: title !== undefined ? title.trim() : reminder.title,
+      date: date !== undefined ? date : reminder.date,
+      time: time !== undefined ? time : reminder.time,
+      description: description !== undefined ? description : reminder.description,
+      type: type !== undefined ? type : reminder.type,
+      status: status !== undefined ? status : reminder.status,
+    });
 
     res.status(200).json({
       message: 'Reminder updated successfully.',
@@ -205,8 +192,11 @@ export async function deleteReminder(req: AuthenticatedRequest, res: Response): 
   try {
     const reminderId = Number(req.params.id);
 
-    const [result]: any = await pool.query('DELETE FROM reminders WHERE reminder_id = ?', [reminderId]);
-    if (result.affectedRows === 0) {
+    const deleted = await Reminder.destroy({
+      where: { reminder_id: reminderId }
+    });
+
+    if (deleted === 0) {
       res.status(404).json({ message: 'Reminder not found.', status: 'error' });
       return;
     }

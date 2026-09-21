@@ -10,7 +10,7 @@ export interface AuthenticatedRequest extends Request {
   user?: AuthTokenPayload;
 }
 
-import pool from '../config/database';
+import { User, Admin } from '../models';
 
 /**
  * AUTHENTICATION MIDDLEWARE
@@ -37,13 +37,10 @@ export async function authenticate(req: AuthenticatedRequest, res: Response, nex
   try {
     const decoded = verifyToken(token);
 
-    // If token belongs to an admin, verify against admins table
+    // If token belongs to an admin, verify against admins table via Sequelize
     if (decoded.role === 'admin') {
-      const [admins]: any = await pool.query(
-        'SELECT admin_id FROM admins WHERE admin_id = ?',
-        [decoded.userId]
-      );
-      if (admins.length === 0) {
+      const admin = await Admin.findByPk(decoded.userId);
+      if (!admin) {
         res.status(401).json({
           message: 'Admin account not found or access revoked.',
           status: 'error'
@@ -51,13 +48,10 @@ export async function authenticate(req: AuthenticatedRequest, res: Response, nex
         return;
       }
     } else {
-      // For platform users (parents, caregivers, doctors), verify account status in DB
-      const [users]: any = await pool.query(
-        'SELECT status FROM users WHERE user_id = ?',
-        [decoded.userId]
-      );
+      // For platform users (parents, caregivers, doctors), verify account status via Sequelize
+      const user = await User.findByPk(decoded.userId);
 
-      if (users.length === 0) {
+      if (!user) {
         res.status(401).json({
           message: 'User account not found.',
           status: 'error'
@@ -65,7 +59,7 @@ export async function authenticate(req: AuthenticatedRequest, res: Response, nex
         return;
       }
 
-      if (users[0].status !== 'active') {
+      if (user.status !== 'active') {
         // Allow read-only GET requests so the mobile app can load and show deactivation status on the home page.
         // Restrict write/mutation operations (POST, PUT, DELETE).
         if (req.method !== 'GET') {

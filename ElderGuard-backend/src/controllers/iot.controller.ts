@@ -1,9 +1,9 @@
 import { Request, Response } from 'express';
-import pool from '../config/database';
+import { IoTDevice, ElderlyProfile, Location, Notification, Alert } from '../models';
 import { AuthenticatedRequest } from '../middleware/auth.middleware';
 
 /**
- * IOT DEVICE CONTROLLER
+ * IOT DEVICE CONTROLLER (Sequelize ORM)
  * 
  * Maps to UML: IOT device
  * Attributes: deviceId, deviceName, lastConnection
@@ -14,7 +14,7 @@ import { AuthenticatedRequest } from '../middleware/auth.middleware';
 
 /**
  * POST /api/iot/register
- * Registers a new IoT device and optionally links it to an elderly person.
+ * Registers a new IoT device and optionally links it to an elderly person via Sequelize.
  */
 export async function registerDevice(req: AuthenticatedRequest, res: Response): Promise<void> {
   try {
@@ -25,20 +25,16 @@ export async function registerDevice(req: AuthenticatedRequest, res: Response): 
       return;
     }
 
-    const [result]: any = await pool.query(
-      'INSERT INTO iot_devices (device_name, elderly_id, status) VALUES (?, ?, "disconnected")',
-      [deviceName.trim(), elderlyId || null]
-    );
+    const device = await IoTDevice.create({
+      device_name: deviceName.trim(),
+      elderly_id: elderlyId ? Number(elderlyId) : null,
+      status: 'disconnected',
+    });
 
     res.status(201).json({
       message: 'IoT device registered successfully.',
       status: 'success',
-      data: {
-        device_id: result.insertId,
-        device_name: deviceName.trim(),
-        elderly_id: elderlyId || null,
-        status: 'disconnected'
-      }
+      data: device,
     });
   } catch (error: any) {
     console.error('Register device error:', error);
@@ -57,20 +53,18 @@ export async function connectDevice(req: Request, res: Response): Promise<void> 
   try {
     const deviceId = Number(req.params.deviceId);
 
-    const [result]: any = await pool.query(
-      'UPDATE iot_devices SET status = "connected", last_connection = NOW() WHERE device_id = ?',
-      [deviceId]
-    );
-
-    if (result.affectedRows === 0) {
+    const device = await IoTDevice.findByPk(deviceId);
+    if (!device) {
       res.status(404).json({ message: 'IoT device not found.', status: 'error' });
       return;
     }
 
+    await device.update({ status: 'connected', last_connection: new Date() });
+
     res.status(200).json({
       message: 'IoT device connected successfully.',
       status: 'success',
-      device_id: deviceId
+      device_id: deviceId,
     });
   } catch (error: any) {
     console.error('Connect device error:', error);
@@ -89,20 +83,18 @@ export async function disconnectDevice(req: Request, res: Response): Promise<voi
   try {
     const deviceId = Number(req.params.deviceId);
 
-    const [result]: any = await pool.query(
-      'UPDATE iot_devices SET status = "disconnected", last_connection = NOW() WHERE device_id = ?',
-      [deviceId]
-    );
-
-    if (result.affectedRows === 0) {
+    const device = await IoTDevice.findByPk(deviceId);
+    if (!device) {
       res.status(404).json({ message: 'IoT device not found.', status: 'error' });
       return;
     }
 
+    await device.update({ status: 'disconnected', last_connection: new Date() });
+
     res.status(200).json({
       message: 'IoT device disconnected.',
       status: 'success',
-      device_id: deviceId
+      device_id: deviceId,
     });
   } catch (error: any) {
     console.error('Disconnect device error:', error);
@@ -117,16 +109,12 @@ export async function disconnectDevice(req: Request, res: Response): Promise<voi
  * POST /api/iot/data
  * Maps to UML: IOT device.sendData() -> Alert.sendAlert()
  * 
- * Receives telemetry from IoT device / simulation:
+ * Receives telemetry from IoT device / simulation via Sequelize:
  * - heartRate (bpm)
  * - spo2 (%)
  * - temperature (°C)
  * - fallDetected (boolean)
  * - latitude, longitude (optional location update)
- * 
- * If any metric is abnormal, it automatically:
- * 1. Creates an Alert in the alerts table
- * 2. Creates a Notification in the notifications table for Parent and Caregiver
  */
 export async function receiveDeviceData(req: Request, res: Response): Promise<void> {
   try {
@@ -141,31 +129,31 @@ export async function receiveDeviceData(req: Request, res: Response): Promise<vo
     }
 
     // Update device last_connection timestamp
-    await pool.query('UPDATE iot_devices SET last_connection = NOW() WHERE device_id = ?', [deviceId]);
+    const device = await IoTDevice.findByPk(deviceId);
+    if (device) {
+      await device.update({ last_connection: new Date() });
+    }
 
-    // Check if location was included, if so, record in locations table
+    // Record location if provided
     if (latitude !== undefined && longitude !== undefined) {
-      await pool.query(
-        'INSERT INTO locations (elderly_id, latitude, longitude, timestamp) VALUES (?, ?, ?, NOW())',
-        [elderlyId, latitude, longitude]
-      );
+      await Location.create({
+        elderly_id: Number(elderlyId),
+        latitude: Number(latitude),
+        longitude: Number(longitude),
+      });
     }
 
     // Find elderly person, parent, and caregiver
-    const [profiles]: any = await pool.query(
-      'SELECT parent_id, caregiver_id, full_name FROM elderly_profiles WHERE elderly_id = ?',
-      [elderlyId]
-    );
-
-    if (profiles.length === 0) {
+    const profile = await ElderlyProfile.findByPk(elderlyId);
+    if (!profile) {
       res.status(404).json({ message: 'Elderly profile not found.', status: 'error' });
       return;
     }
 
-    const { parent_id, caregiver_id, full_name } = profiles[0];
+    const { parent_id, caregiver_id, full_name } = profile;
     const generatedAlerts: string[] = [];
 
-    // Vital signs check logic
+    // Vital signs threshold check
     if (fallDetected === true) {
       generatedAlerts.push(`CRITICAL FALL DETECTED for ${full_name}! Immediate assistance required.`);
     }
@@ -179,35 +167,39 @@ export async function receiveDeviceData(req: Request, res: Response): Promise<vo
       generatedAlerts.push(`Abnormal Body Temperature detected for ${full_name}: ${temperature}°C.`);
     }
 
-    // If any abnormal condition was detected, save Alert and notify Parent & Caregiver
+    // Save Alert and notify Parent & Caregiver if abnormal
     for (const alertDesc of generatedAlerts) {
       // 1. Create Notification for Parent
-      const [notifResult]: any = await pool.query(
-        'INSERT INTO notifications (user_id, title, message, status) VALUES (?, "EMERGENCY HEALTH ALERT", ?, "unread")',
-        [parent_id, alertDesc]
-      );
-      const notifId = notifResult.insertId;
+      const parentNotif = await Notification.create({
+        user_id: parent_id,
+        title: 'EMERGENCY HEALTH ALERT',
+        message: alertDesc,
+        status: 'unread',
+      });
 
       // 2. Also notify assigned Caregiver if available
       if (caregiver_id) {
-        await pool.query(
-          'INSERT INTO notifications (user_id, title, message, status) VALUES (?, "EMERGENCY HEALTH ALERT", ?, "unread")',
-          [caregiver_id, alertDesc]
-        );
+        await Notification.create({
+          user_id: caregiver_id,
+          title: 'EMERGENCY HEALTH ALERT',
+          message: alertDesc,
+          status: 'unread',
+        });
       }
 
       // 3. Create Alert record linked to elderly and notification
-      await pool.query(
-        'INSERT INTO alerts (elderly_id, notification_id, description, date_time) VALUES (?, ?, ?, NOW())',
-        [elderlyId, notifId, alertDesc]
-      );
+      await Alert.create({
+        elderly_id: Number(elderlyId),
+        notification_id: parentNotif.notification_id,
+        description: alertDesc,
+      });
     }
 
     res.status(200).json({
       message: 'IoT sensor data processed successfully.',
       status: 'success',
       is_abnormal: generatedAlerts.length > 0,
-      alerts_triggered: generatedAlerts
+      alerts_triggered: generatedAlerts,
     });
   } catch (error: any) {
     console.error('Receive IoT data error:', error);
@@ -220,21 +212,35 @@ export async function receiveDeviceData(req: Request, res: Response): Promise<vo
 
 /**
  * GET /api/iot/devices
- * Lists all registered IoT devices.
+ * Lists all registered IoT devices via Sequelize.
  */
 export async function getDevices(req: AuthenticatedRequest, res: Response): Promise<void> {
   try {
-    const [rows]: any = await pool.query(
-      `SELECT d.*, e.full_name AS elderly_name
-       FROM iot_devices d
-       LEFT JOIN elderly_profiles e ON d.elderly_id = e.elderly_id
-       ORDER BY d.device_id ASC`
-    );
+    const devices: any = await IoTDevice.findAll({
+      include: [
+        {
+          model: ElderlyProfile,
+          as: 'elderly',
+          attributes: ['full_name'],
+        },
+      ],
+      order: [['device_id', 'ASC']],
+    });
+
+    const formattedDevices = devices.map((d: any) => ({
+      device_id: d.device_id,
+      elderly_id: d.elderly_id,
+      device_name: d.device_name,
+      last_connection: d.last_connection,
+      status: d.status,
+      created_at: d.created_at,
+      elderly_name: d.elderly?.full_name || null,
+    }));
 
     res.status(200).json({
       status: 'success',
-      count: rows.length,
-      data: rows
+      count: formattedDevices.length,
+      data: formattedDevices,
     });
   } catch (error: any) {
     console.error('Get devices error:', error);

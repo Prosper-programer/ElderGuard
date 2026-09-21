@@ -1,6 +1,6 @@
 import { Response } from 'express';
-import pool from '../config/database';
 import { AuthenticatedRequest } from '../middleware/auth.middleware';
+import { ElderlyProfile, User } from '../models';
 
 /**
  * ELDERLY PERSON PROFILE CONTROLLER
@@ -45,52 +45,27 @@ export async function createElderlyProfile(req: AuthenticatedRequest, res: Respo
       return;
     }
 
-    // Insert into MySQL elderly_profiles table
-    const [result]: any = await pool.query(
-      `INSERT INTO elderly_profiles 
-       (parent_id, caregiver_id, doctor_id, full_name, date_of_birth, gender, address, emergency_contact, medical_information,
-        doctor_name, doctor_phone, doctor_specialty, doctor_hospital, doctor_email)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-      [
-        parentId,
-        caregiverId || null,
-        doctorId || null,
-        fullName.trim(),
-        dateOfBirth,
-        gender.trim(),
-        address.trim(),
-        emergencyContact.trim(),
-        medicalInformation ? medicalInformation.trim() : null,
-        doctorName ? doctorName.trim() : null,
-        doctorPhone ? doctorPhone.trim() : null,
-        doctorSpecialty ? doctorSpecialty.trim() : null,
-        doctorHospital ? doctorHospital.trim() : null,
-        doctorEmail ? doctorEmail.trim() : null,
-      ]
-    );
-
-    const elderlyId = result.insertId;
+    const newProfile = await ElderlyProfile.create({
+      parent_id: parentId!,
+      caregiver_id: caregiverId || null,
+      doctor_id: doctorId || null,
+      full_name: fullName.trim(),
+      date_of_birth: dateOfBirth,
+      gender: gender.trim(),
+      address: address.trim(),
+      emergency_contact: emergencyContact.trim(),
+      medical_information: medicalInformation ? medicalInformation.trim() : null,
+      doctor_name: doctorName ? doctorName.trim() : null,
+      doctor_phone: doctorPhone ? doctorPhone.trim() : null,
+      doctor_specialty: doctorSpecialty ? doctorSpecialty.trim() : null,
+      doctor_hospital: doctorHospital ? doctorHospital.trim() : null,
+      doctor_email: doctorEmail ? doctorEmail.trim() : null,
+    });
 
     res.status(201).json({
       message: 'Elderly profile created successfully.',
       status: 'success',
-      data: {
-        elderly_id: elderlyId,
-        parent_id: parentId,
-        caregiver_id: caregiverId || null,
-        doctor_id: doctorId || null,
-        full_name: fullName.trim(),
-        date_of_birth: dateOfBirth,
-        gender: gender.trim(),
-        address: address.trim(),
-        emergency_contact: emergencyContact.trim(),
-        medical_information: medicalInformation || null,
-        doctor_name: doctorName || null,
-        doctor_phone: doctorPhone || null,
-        doctor_specialty: doctorSpecialty || null,
-        doctor_hospital: doctorHospital || null,
-        doctor_email: doctorEmail || null,
-      }
+      data: newProfile.toJSON()
     });
   } catch (error: any) {
     console.error('Create elderly profile error:', error);
@@ -113,36 +88,14 @@ export async function getElderlyProfiles(req: AuthenticatedRequest, res: Respons
     const userId = req.user?.userId;
     const userRole = req.user?.role;
 
-    let query = '';
-    let params: any[] = [];
+    let whereClause: any = {};
 
     if (userRole === 'parent') {
-      query = `SELECT e.*, 
-                      u.full_name AS caregiver_name, u.phone_number AS caregiver_phone,
-                      d.full_name AS doc_user_name, d.phone_number AS doc_user_phone
-               FROM elderly_profiles e
-               LEFT JOIN users u ON e.caregiver_id = u.user_id
-               LEFT JOIN users d ON e.doctor_id = d.user_id
-               WHERE e.parent_id = ?
-               ORDER BY e.created_at DESC`;
-      params = [userId];
+      whereClause = { parent_id: userId };
     } else if (userRole === 'caregiver') {
-      query = `SELECT e.*, p.full_name AS parent_name, p.phone_number AS parent_phone
-               FROM elderly_profiles e
-               JOIN users p ON e.parent_id = p.user_id
-               WHERE e.caregiver_id = ?
-               ORDER BY e.created_at DESC`;
-      params = [userId];
+      whereClause = { caregiver_id: userId };
     } else if (userRole === 'doctor') {
-      query = `SELECT e.*, 
-                      p.full_name AS parent_name, p.phone_number AS parent_phone,
-                      c.full_name AS caregiver_name, c.phone_number AS caregiver_phone
-               FROM elderly_profiles e
-               JOIN users p ON e.parent_id = p.user_id
-               LEFT JOIN users c ON e.caregiver_id = c.user_id
-               WHERE e.doctor_id = ?
-               ORDER BY e.created_at DESC`;
-      params = [userId];
+      whereClause = { doctor_id: userId };
     } else {
       res.status(403).json({
         message: 'Forbidden: Admins do not manage or view elderly profiles.',
@@ -151,12 +104,33 @@ export async function getElderlyProfiles(req: AuthenticatedRequest, res: Respons
       return;
     }
 
-    const [rows]: any = await pool.query(query, params);
+    const profiles = await ElderlyProfile.findAll({
+      where: whereClause,
+      include: [
+        { model: User, as: 'parent', attributes: ['full_name', 'phone_number'] },
+        { model: User, as: 'caregiver', attributes: ['full_name', 'phone_number'] },
+        { model: User, as: 'doctorUser', attributes: ['full_name', 'phone_number'] },
+      ],
+      order: [['created_at', 'DESC']]
+    });
+
+    const data = profiles.map(p => {
+      const json: any = p.toJSON();
+      return {
+        ...json,
+        caregiver_name: json.caregiver?.full_name || null,
+        caregiver_phone: json.caregiver?.phone_number || null,
+        parent_name: json.parent?.full_name || null,
+        parent_phone: json.parent?.phone_number || null,
+        doc_user_name: json.doctorUser?.full_name || null,
+        doc_user_phone: json.doctorUser?.phone_number || null,
+      };
+    });
 
     res.status(200).json({
       status: 'success',
-      count: rows.length,
-      data: rows
+      count: data.length,
+      data
     });
   } catch (error: any) {
     console.error('Get elderly profiles error:', error);
@@ -178,25 +152,18 @@ export async function getElderlyProfileById(req: AuthenticatedRequest, res: Resp
     const userId = req.user?.userId;
     const userRole = req.user?.role;
 
-    const [rows]: any = await pool.query(
-      `SELECT e.*, 
-              p.full_name AS parent_name, p.phone_number AS parent_phone,
-              c.full_name AS caregiver_name, c.phone_number AS caregiver_phone,
-              d.full_name AS doc_user_name, d.phone_number AS doc_user_phone
-       FROM elderly_profiles e
-       JOIN users p ON e.parent_id = p.user_id
-       LEFT JOIN users c ON e.caregiver_id = c.user_id
-       LEFT JOIN users d ON e.doctor_id = d.user_id
-       WHERE e.elderly_id = ?`,
-      [elderlyId]
-    );
+    const profile = await ElderlyProfile.findByPk(elderlyId, {
+      include: [
+        { model: User, as: 'parent', attributes: ['full_name', 'phone_number'] },
+        { model: User, as: 'caregiver', attributes: ['full_name', 'phone_number'] },
+        { model: User, as: 'doctorUser', attributes: ['full_name', 'phone_number'] },
+      ]
+    });
 
-    if (rows.length === 0) {
+    if (!profile) {
       res.status(404).json({ message: 'Elderly profile not found.', status: 'error' });
       return;
     }
-
-    const profile = rows[0];
 
     // Authorization check: User must be either the managing Parent, assigned Caregiver, or assigned Doctor
     if (userRole === 'parent' && profile.parent_id !== userId) {
@@ -212,9 +179,20 @@ export async function getElderlyProfileById(req: AuthenticatedRequest, res: Resp
       return;
     }
 
+    const json: any = profile.toJSON();
+    const data = {
+      ...json,
+      parent_name: json.parent?.full_name || null,
+      parent_phone: json.parent?.phone_number || null,
+      caregiver_name: json.caregiver?.full_name || null,
+      caregiver_phone: json.caregiver?.phone_number || null,
+      doc_user_name: json.doctorUser?.full_name || null,
+      doc_user_phone: json.doctorUser?.phone_number || null,
+    };
+
     res.status(200).json({
       status: 'success',
-      data: profile
+      data
     });
   } catch (error: any) {
     console.error('Get elderly profile by id error:', error);
@@ -250,13 +228,11 @@ export async function updateElderlyProfile(req: AuthenticatedRequest, res: Respo
       doctorEmail,
     } = req.body;
 
-    // Check ownership
-    const [existing]: any = await pool.query(
-      'SELECT * FROM elderly_profiles WHERE elderly_id = ? AND parent_id = ?',
-      [elderlyId, parentId]
-    );
+    const profile = await ElderlyProfile.findOne({
+      where: { elderly_id: elderlyId, parent_id: parentId }
+    });
 
-    if (existing.length === 0) {
+    if (!profile) {
       res.status(404).json({
         message: 'Elderly profile not found or you do not have permission to update it.',
         status: 'error'
@@ -264,42 +240,21 @@ export async function updateElderlyProfile(req: AuthenticatedRequest, res: Respo
       return;
     }
 
-    const current = existing[0];
-
-    await pool.query(
-      `UPDATE elderly_profiles SET
-        full_name = ?,
-        date_of_birth = ?,
-        gender = ?,
-        address = ?,
-        emergency_contact = ?,
-        medical_information = ?,
-        caregiver_id = ?,
-        doctor_id = ?,
-        doctor_name = ?,
-        doctor_phone = ?,
-        doctor_specialty = ?,
-        doctor_hospital = ?,
-        doctor_email = ?
-       WHERE elderly_id = ? AND parent_id = ?`,
-      [
-        fullName !== undefined ? fullName.trim() : current.full_name,
-        dateOfBirth !== undefined ? dateOfBirth : current.date_of_birth,
-        gender !== undefined ? gender.trim() : current.gender,
-        address !== undefined ? address.trim() : current.address,
-        emergencyContact !== undefined ? emergencyContact.trim() : current.emergency_contact,
-        medicalInformation !== undefined ? medicalInformation : current.medical_information,
-        caregiverId !== undefined ? caregiverId : current.caregiver_id,
-        doctorId !== undefined ? doctorId : current.doctor_id,
-        doctorName !== undefined ? doctorName.trim() : current.doctor_name,
-        doctorPhone !== undefined ? doctorPhone.trim() : current.doctor_phone,
-        doctorSpecialty !== undefined ? doctorSpecialty.trim() : current.doctor_specialty,
-        doctorHospital !== undefined ? doctorHospital.trim() : current.doctor_hospital,
-        doctorEmail !== undefined ? doctorEmail.trim() : current.doctor_email,
-        elderlyId,
-        parentId
-      ]
-    );
+    await profile.update({
+      full_name: fullName !== undefined ? fullName.trim() : profile.full_name,
+      date_of_birth: dateOfBirth !== undefined ? dateOfBirth : profile.date_of_birth,
+      gender: gender !== undefined ? gender.trim() : profile.gender,
+      address: address !== undefined ? address.trim() : profile.address,
+      emergency_contact: emergencyContact !== undefined ? emergencyContact.trim() : profile.emergency_contact,
+      medical_information: medicalInformation !== undefined ? medicalInformation : profile.medical_information,
+      caregiver_id: caregiverId !== undefined ? caregiverId : profile.caregiver_id,
+      doctor_id: doctorId !== undefined ? doctorId : profile.doctor_id,
+      doctor_name: doctorName !== undefined ? doctorName.trim() : profile.doctor_name,
+      doctor_phone: doctorPhone !== undefined ? doctorPhone.trim() : profile.doctor_phone,
+      doctor_specialty: doctorSpecialty !== undefined ? doctorSpecialty.trim() : profile.doctor_specialty,
+      doctor_hospital: doctorHospital !== undefined ? doctorHospital.trim() : profile.doctor_hospital,
+      doctor_email: doctorEmail !== undefined ? doctorEmail.trim() : profile.doctor_email,
+    });
 
     res.status(200).json({
       message: 'Elderly profile updated successfully.',
@@ -323,12 +278,11 @@ export async function deleteElderlyProfile(req: AuthenticatedRequest, res: Respo
     const elderlyId = Number(req.params.id);
     const parentId = req.user?.userId;
 
-    const [result]: any = await pool.query(
-      'DELETE FROM elderly_profiles WHERE elderly_id = ? AND parent_id = ?',
-      [elderlyId, parentId]
-    );
+    const deleted = await ElderlyProfile.destroy({
+      where: { elderly_id: elderlyId, parent_id: parentId }
+    });
 
-    if (result.affectedRows === 0) {
+    if (deleted === 0) {
       res.status(404).json({
         message: 'Elderly profile not found or you do not have permission to delete it.',
         status: 'error'

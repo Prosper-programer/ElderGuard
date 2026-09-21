@@ -1,3 +1,4 @@
+import { Sequelize } from 'sequelize';
 import mysql from 'mysql2/promise';
 import dotenv from 'dotenv';
 
@@ -5,12 +6,50 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 /**
- * DATABASE CONNECTION POOL
+ * SEQUELIZE ORM INSTANCE
  * 
- * What is a Connection Pool?
- * Instead of opening and closing a new database connection for every single HTTP request,
- * a connection pool maintains a cache of active database connections that can be reused.
- * This makes our backend much faster and prevents database connection overload.
+ * Provides object-relational mapping with intuitive models
+ * (User.findAll, User.findOne, ElderlyProfile.create, etc.)
+ */
+export const sequelize = new Sequelize(
+  process.env.DB_NAME || 'elderguard',
+  process.env.DB_USER || 'root',
+  process.env.DB_PASSWORD || '',
+  {
+    host: process.env.DB_HOST || 'localhost',
+    port: Number(process.env.DB_PORT) || 3306,
+    dialect: 'mysql',
+    logging: false, // Keep console output clean
+    pool: {
+      max: 10,
+      min: 0,
+      acquire: 30000,
+      idle: 10000,
+    },
+    define: {
+      timestamps: false, // Schema manages created_at directly
+      underscored: true,
+      freezeTableName: true,
+    },
+  }
+);
+
+/**
+ * Test database connectivity helper
+ */
+export async function testConnection(): Promise<boolean> {
+  try {
+    await sequelize.authenticate();
+    console.log('✅ Sequelize database connection established successfully.');
+    return true;
+  } catch (error) {
+    console.error('❌ Unable to connect to MySQL database via Sequelize:', error);
+    return false;
+  }
+}
+
+/**
+ * Legacy/direct mysql2 connection pool fallback
  */
 export const pool = mysql.createPool({
   host: process.env.DB_HOST || 'localhost',

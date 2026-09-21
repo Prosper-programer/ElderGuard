@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
-import pool from '../config/database';
 import { calculateDistanceMeters } from '../utils/geo';
 import { AuthenticatedRequest } from '../middleware/auth.middleware';
+import { Location, Geofence, ElderlyProfile, Notification, Alert } from '../models';
 
 /**
  * LOCATION CONTROLLER
@@ -35,61 +35,62 @@ export async function updateLocation(req: Request, res: Response): Promise<void>
     const lon = Number(longitude);
 
     // 1. Store location record in MySQL
-    const [insertResult]: any = await pool.query(
-      'INSERT INTO locations (elderly_id, latitude, longitude, timestamp) VALUES (?, ?, ?, NOW())',
-      [elderlyId, lat, lon]
-    );
+    const newLocation = await Location.create({
+      elderly_id: elderlyId,
+      latitude: lat,
+      longitude: lon,
+    });
 
     // 2. Check if a Geofence is active for this elderly person
-    const [geofences]: any = await pool.query(
-      'SELECT * FROM geofences WHERE elderly_id = ? AND is_enabled = TRUE',
-      [elderlyId]
-    );
+    const geofence = await Geofence.findOne({
+      where: { elderly_id: elderlyId, is_enabled: true }
+    });
 
     let geofenceBreached = false;
     let distanceToCenter = 0;
 
-    if (geofences.length > 0) {
-      const gf = geofences[0];
+    if (geofence) {
       distanceToCenter = calculateDistanceMeters(
         lat,
         lon,
-        Number(gf.center_latitude),
-        Number(gf.center_longitude)
+        Number(geofence.center_latitude),
+        Number(geofence.center_longitude)
       );
 
       // If distance exceeds allowed radius, trigger geofence breach alert!
-      if (distanceToCenter > Number(gf.radius)) {
+      if (distanceToCenter > Number(geofence.radius)) {
         geofenceBreached = true;
 
         // Get parent and caregiver
-        const [profiles]: any = await pool.query(
-          'SELECT parent_id, caregiver_id, full_name FROM elderly_profiles WHERE elderly_id = ?',
-          [elderlyId]
-        );
+        const profile = await ElderlyProfile.findByPk(elderlyId);
 
-        if (profiles.length > 0) {
-          const { parent_id, caregiver_id, full_name } = profiles[0];
-          const alertMessage = `GEOFENCE BREACH: ${full_name} is ${Math.round(distanceToCenter)}m away from center (Safe limit: ${gf.radius}m).`;
+        if (profile) {
+          const { parent_id, caregiver_id, full_name } = profile;
+          const alertMessage = `GEOFENCE BREACH: ${full_name} is ${Math.round(distanceToCenter)}m away from center (Safe limit: ${geofence.radius}m).`;
 
           // Create notification for Parent
-          const [notifResult]: any = await pool.query(
-            'INSERT INTO notifications (user_id, title, message, status) VALUES (?, "GEOFENCE ALERT", ?, "unread")',
-            [parent_id, alertMessage]
-          );
+          const parentNotif = await Notification.create({
+            user_id: parent_id,
+            title: 'GEOFENCE ALERT',
+            message: alertMessage,
+            status: 'unread'
+          });
 
           if (caregiver_id) {
-            await pool.query(
-              'INSERT INTO notifications (user_id, title, message, status) VALUES (?, "GEOFENCE ALERT", ?, "unread")',
-              [caregiver_id, alertMessage]
-            );
+            await Notification.create({
+              user_id: caregiver_id,
+              title: 'GEOFENCE ALERT',
+              message: alertMessage,
+              status: 'unread'
+            });
           }
 
           // Create Alert record
-          await pool.query(
-            'INSERT INTO alerts (elderly_id, notification_id, description, date_time) VALUES (?, ?, ?, NOW())',
-            [elderlyId, notifResult.insertId, alertMessage]
-          );
+          await Alert.create({
+            elderly_id: elderlyId,
+            notification_id: parentNotif.notification_id,
+            description: alertMessage,
+          });
         }
       }
     }
@@ -98,11 +99,11 @@ export async function updateLocation(req: Request, res: Response): Promise<void>
       message: 'Location recorded successfully.',
       status: 'success',
       data: {
-        location_id: insertResult.insertId,
+        location_id: newLocation.location_id,
         elderly_id: elderlyId,
         latitude: lat,
         longitude: lon,
-        geofence_checked: geofences.length > 0,
+        geofence_checked: !!geofence,
         geofence_breached: geofenceBreached,
         distance_to_center_meters: distanceToCenter
       }
@@ -124,19 +125,19 @@ export async function getCurrentLocation(req: AuthenticatedRequest, res: Respons
   try {
     const elderlyId = Number(req.params.elderlyId);
 
-    const [rows]: any = await pool.query(
-      'SELECT * FROM locations WHERE elderly_id = ? ORDER BY timestamp DESC LIMIT 1',
-      [elderlyId]
-    );
+    const loc = await Location.findOne({
+      where: { elderly_id: elderlyId },
+      order: [['timestamp', 'DESC']]
+    });
 
-    if (rows.length === 0) {
+    if (!loc) {
       res.status(404).json({ message: 'No location data found for this elderly person.', status: 'error' });
       return;
     }
 
     res.status(200).json({
       status: 'success',
-      data: rows[0]
+      data: loc.toJSON()
     });
   } catch (error: any) {
     console.error('Get current location error:', error);
@@ -156,10 +157,11 @@ export async function getLocationHistory(req: AuthenticatedRequest, res: Respons
     const elderlyId = Number(req.params.elderlyId);
     const limit = Math.min(Number(req.query.limit) || 50, 200);
 
-    const [rows]: any = await pool.query(
-      'SELECT * FROM locations WHERE elderly_id = ? ORDER BY timestamp DESC LIMIT ?',
-      [elderlyId, limit]
-    );
+    const rows = await Location.findAll({
+      where: { elderly_id: elderlyId },
+      order: [['timestamp', 'DESC']],
+      limit
+    });
 
     res.status(200).json({
       status: 'success',

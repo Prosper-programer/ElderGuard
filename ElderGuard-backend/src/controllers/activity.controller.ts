@@ -1,6 +1,6 @@
 import { Response } from 'express';
-import pool from '../config/database';
 import { AuthenticatedRequest } from '../middleware/auth.middleware';
+import { DailyActivity, ElderlyProfile } from '../models';
 
 /**
  * DAILY ACTIVITY CONTROLLER
@@ -33,12 +33,11 @@ export async function createActivity(req: AuthenticatedRequest, res: Response): 
     }
 
     // Verify parent manages this elderly person
-    const [profiles]: any = await pool.query(
-      'SELECT elderly_id FROM elderly_profiles WHERE elderly_id = ? AND parent_id = ?',
-      [elderlyId, parentId]
-    );
+    const profile = await ElderlyProfile.findOne({
+      where: { elderly_id: elderlyId, parent_id: parentId }
+    });
 
-    if (profiles.length === 0) {
+    if (!profile) {
       res.status(403).json({
         message: 'Forbidden: You do not manage this elderly person.',
         status: 'error'
@@ -46,25 +45,20 @@ export async function createActivity(req: AuthenticatedRequest, res: Response): 
       return;
     }
 
-    const [result]: any = await pool.query(
-      `INSERT INTO daily_activities (elderly_id, name, date, start_time, end_time, description, status)
-       VALUES (?, ?, ?, ?, ?, ?, 'pending')`,
-      [elderlyId, name.trim(), date, startTime, endTime, description ? description.trim() : null]
-    );
+    const newActivity = await DailyActivity.create({
+      elderly_id: elderlyId,
+      name: name.trim(),
+      date,
+      start_time: startTime,
+      end_time: endTime,
+      description: description ? description.trim() : null,
+      status: 'pending'
+    });
 
     res.status(201).json({
       message: 'Daily activity created successfully.',
       status: 'success',
-      data: {
-        activity_id: result.insertId,
-        elderly_id: elderlyId,
-        name: name.trim(),
-        date,
-        start_time: startTime,
-        end_time: endTime,
-        description: description || null,
-        status: 'pending'
-      }
+      data: newActivity.toJSON()
     });
   } catch (error: any) {
     console.error('Create activity error:', error);
@@ -84,17 +78,18 @@ export async function getActivitiesByElderly(req: AuthenticatedRequest, res: Res
     const elderlyId = Number(req.params.elderlyId);
     const { date } = req.query;
 
-    let query = 'SELECT * FROM daily_activities WHERE elderly_id = ?';
-    const params: any[] = [elderlyId];
-
+    const whereClause: any = { elderly_id: elderlyId };
     if (date) {
-      query += ' AND date = ?';
-      params.push(date);
+      whereClause.date = date;
     }
 
-    query += ' ORDER BY date ASC, start_time ASC';
-
-    const [rows]: any = await pool.query(query, params);
+    const rows = await DailyActivity.findAll({
+      where: whereClause,
+      order: [
+        ['date', 'ASC'],
+        ['start_time', 'ASC']
+      ]
+    });
 
     res.status(200).json({
       status: 'success',
@@ -119,20 +114,12 @@ export async function getActivityStatistics(req: AuthenticatedRequest, res: Resp
   try {
     const elderlyId = Number(req.params.elderlyId);
 
-    const [rows]: any = await pool.query(
-      `SELECT 
-        COUNT(*) AS total_activities,
-        SUM(CASE WHEN status = 'completed' THEN 1 ELSE 0 END) AS completed_activities,
-        SUM(CASE WHEN status = 'pending' THEN 1 ELSE 0 END) AS pending_activities
-       FROM daily_activities 
-       WHERE elderly_id = ?`,
-      [elderlyId]
-    );
+    const [total, completed, pending] = await Promise.all([
+      DailyActivity.count({ where: { elderly_id: elderlyId } }),
+      DailyActivity.count({ where: { elderly_id: elderlyId, status: 'completed' } }),
+      DailyActivity.count({ where: { elderly_id: elderlyId, status: 'pending' } }),
+    ]);
 
-    const stats = rows[0];
-    const total = Number(stats.total_activities) || 0;
-    const completed = Number(stats.completed_activities) || 0;
-    const pending = Number(stats.pending_activities) || 0;
     const completionRate = total > 0 ? Math.round((completed / total) * 100) : 0;
 
     res.status(200).json({
@@ -166,15 +153,13 @@ export async function recordActivity(req: AuthenticatedRequest, res: Response): 
 
     const newStatus = status === 'completed' ? 'completed' : 'pending';
 
-    const [result]: any = await pool.query(
-      'UPDATE daily_activities SET status = ? WHERE activity_id = ?',
-      [newStatus, activityId]
-    );
-
-    if (result.affectedRows === 0) {
+    const activity = await DailyActivity.findByPk(activityId);
+    if (!activity) {
       res.status(404).json({ message: 'Activity not found.', status: 'error' });
       return;
     }
+
+    await activity.update({ status: newStatus });
 
     res.status(200).json({
       message: `Activity marked as ${newStatus}.`,
@@ -201,27 +186,19 @@ export async function updateActivity(req: AuthenticatedRequest, res: Response): 
     const activityId = Number(req.params.id);
     const { name, date, startTime, endTime, description } = req.body;
 
-    const [existing]: any = await pool.query('SELECT * FROM daily_activities WHERE activity_id = ?', [activityId]);
-    if (existing.length === 0) {
+    const activity = await DailyActivity.findByPk(activityId);
+    if (!activity) {
       res.status(404).json({ message: 'Activity not found.', status: 'error' });
       return;
     }
 
-    const current = existing[0];
-
-    await pool.query(
-      `UPDATE daily_activities SET
-        name = ?, date = ?, start_time = ?, end_time = ?, description = ?
-       WHERE activity_id = ?`,
-      [
-        name !== undefined ? name.trim() : current.name,
-        date !== undefined ? date : current.date,
-        startTime !== undefined ? startTime : current.start_time,
-        endTime !== undefined ? endTime : current.end_time,
-        description !== undefined ? description : current.description,
-        activityId
-      ]
-    );
+    await activity.update({
+      name: name !== undefined ? name.trim() : activity.name,
+      date: date !== undefined ? date : activity.date,
+      start_time: startTime !== undefined ? startTime : activity.start_time,
+      end_time: endTime !== undefined ? endTime : activity.end_time,
+      description: description !== undefined ? description : activity.description,
+    });
 
     res.status(200).json({
       message: 'Activity updated successfully.',
@@ -245,8 +222,11 @@ export async function deleteActivity(req: AuthenticatedRequest, res: Response): 
   try {
     const activityId = Number(req.params.id);
 
-    const [result]: any = await pool.query('DELETE FROM daily_activities WHERE activity_id = ?', [activityId]);
-    if (result.affectedRows === 0) {
+    const deleted = await DailyActivity.destroy({
+      where: { activity_id: activityId }
+    });
+
+    if (deleted === 0) {
       res.status(404).json({ message: 'Activity not found.', status: 'error' });
       return;
     }

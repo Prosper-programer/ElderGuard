@@ -1,11 +1,11 @@
 import { Request, Response } from 'express';
 import bcrypt from 'bcrypt';
-import pool from '../config/database';
+import { User, Admin } from '../models';
 import { signToken } from '../utils/jwt';
 import { AuthenticatedRequest } from '../middleware/auth.middleware';
 
 /**
- * AUTHENTICATION CONTROLLER
+ * AUTHENTICATION CONTROLLER (Sequelize ORM)
  * 
  * Handles registration, login, logout, and profile retrieval for:
  * - Parents
@@ -59,13 +59,12 @@ export async function register(req: Request, res: Response): Promise<void> {
       return;
     }
 
-    // 5. Check if user already exists in the database
-    const [existingUsers]: any = await pool.query(
-      'SELECT user_id FROM users WHERE email = ?',
-      [email.toLowerCase().trim()]
-    );
+    const normalizedEmail = email.toLowerCase().trim();
 
-    if (existingUsers.length > 0) {
+    // 5. Check if user already exists using Sequelize
+    const existingUser = await User.findOne({ where: { email: normalizedEmail } });
+
+    if (existingUser) {
       res.status(400).json({
         message: 'An account with this email address already exists.',
         status: 'error'
@@ -73,24 +72,24 @@ export async function register(req: Request, res: Response): Promise<void> {
       return;
     }
 
-    // 6. Hash password using bcrypt (Cost factor / salt rounds: 10)
-    // NEVER save plain text passwords in the database!
+    // 6. Hash password using bcrypt
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // 7. Insert the new user into the database
-    const [result]: any = await pool.query(
-      `INSERT INTO users (full_name, email, phone_number, password, role, status) 
-       VALUES (?, ?, ?, ?, ?, 'active')`,
-      [fullName.trim(), email.toLowerCase().trim(), phoneNumber.trim(), hashedPassword, normalizedRole]
-    );
+    // 7. Insert new user via Sequelize
+    const newUser = await User.create({
+      full_name: fullName.trim(),
+      email: normalizedEmail,
+      phone_number: phoneNumber.trim(),
+      password: hashedPassword,
+      role: normalizedRole,
+      status: 'active',
+    });
 
-    const newUserId = result.insertId;
-
-    // 8. Generate a JWT token for the newly registered user
+    // 8. Generate JWT token
     const token = signToken({
-      userId: newUserId,
-      email: email.toLowerCase().trim(),
-      role: normalizedRole
+      userId: newUser.user_id,
+      email: newUser.email,
+      role: newUser.role,
     });
 
     res.status(201).json({
@@ -98,12 +97,12 @@ export async function register(req: Request, res: Response): Promise<void> {
       status: 'success',
       token,
       user: {
-        user_id: newUserId,
-        full_name: fullName.trim(),
-        email: email.toLowerCase().trim(),
-        phone_number: phoneNumber.trim(),
-        role: normalizedRole,
-        status: 'active'
+        user_id: newUser.user_id,
+        full_name: newUser.full_name,
+        email: newUser.email,
+        phone_number: newUser.phone_number,
+        role: newUser.role,
+        status: newUser.status,
       }
     });
   } catch (error: any) {
@@ -131,13 +130,12 @@ export async function login(req: Request, res: Response): Promise<void> {
       return;
     }
 
-    // 1. Fetch user from MySQL by email
-    const [users]: any = await pool.query(
-      'SELECT * FROM users WHERE email = ?',
-      [email.toLowerCase().trim()]
-    );
+    const normalizedEmail = email.toLowerCase().trim();
 
-    if (users.length === 0) {
+    // 1. Fetch user via Sequelize
+    const user = await User.findOne({ where: { email: normalizedEmail } });
+
+    if (!user) {
       res.status(401).json({
         message: 'Invalid email or password.',
         status: 'error'
@@ -145,9 +143,7 @@ export async function login(req: Request, res: Response): Promise<void> {
       return;
     }
 
-    const user = users[0];
-
-    // 2. Compare provided password with hashed password in database
+    // 2. Compare provided password with hashed password
     const isPasswordMatch = await bcrypt.compare(password, user.password);
     if (!isPasswordMatch) {
       res.status(401).json({
@@ -161,7 +157,7 @@ export async function login(req: Request, res: Response): Promise<void> {
     const token = signToken({
       userId: user.user_id,
       email: user.email,
-      role: user.role
+      role: user.role,
     });
 
     res.status(200).json({
@@ -174,7 +170,7 @@ export async function login(req: Request, res: Response): Promise<void> {
         email: user.email,
         phone_number: user.phone_number,
         role: user.role,
-        status: user.status || 'active'
+        status: user.status || 'active',
       }
     });
   } catch (error: any) {
@@ -202,12 +198,12 @@ export async function adminLogin(req: Request, res: Response): Promise<void> {
       return;
     }
 
-    const [admins]: any = await pool.query(
-      'SELECT * FROM admins WHERE email = ?',
-      [email.toLowerCase().trim()]
-    );
+    const normalizedEmail = email.toLowerCase().trim();
 
-    if (admins.length === 0) {
+    // 1. Fetch admin via Sequelize
+    const admin = await Admin.findOne({ where: { email: normalizedEmail } });
+
+    if (!admin) {
       res.status(401).json({
         message: 'Invalid admin credentials.',
         status: 'error'
@@ -215,9 +211,8 @@ export async function adminLogin(req: Request, res: Response): Promise<void> {
       return;
     }
 
-    const admin = admins[0];
+    // 2. Compare password
     const isPasswordMatch = await bcrypt.compare(password, admin.password);
-
     if (!isPasswordMatch) {
       res.status(401).json({
         message: 'Invalid admin credentials.',
@@ -226,10 +221,11 @@ export async function adminLogin(req: Request, res: Response): Promise<void> {
       return;
     }
 
+    // 3. Generate JWT token
     const token = signToken({
       userId: admin.admin_id,
       email: admin.email,
-      role: 'admin'
+      role: 'admin',
     });
 
     res.status(200).json({
@@ -240,7 +236,7 @@ export async function adminLogin(req: Request, res: Response): Promise<void> {
         admin_id: admin.admin_id,
         name: admin.name,
         email: admin.email,
-        role: 'admin'
+        role: 'admin',
       }
     });
   } catch (error: any) {
@@ -278,34 +274,40 @@ export async function getProfile(req: AuthenticatedRequest, res: Response): Prom
     }
 
     if (req.user.role === 'admin') {
-      const [admins]: any = await pool.query(
-        'SELECT admin_id, name, email, created_at FROM admins WHERE admin_id = ?',
-        [req.user.userId]
-      );
-      if (admins.length === 0) {
+      const admin = await Admin.findByPk(req.user.userId, {
+        attributes: ['admin_id', 'name', 'email', 'created_at'],
+      });
+
+      if (!admin) {
         res.status(404).json({ message: 'Admin not found', status: 'error' });
         return;
       }
+
       res.status(200).json({
         status: 'success',
-        data: { ...admins[0], role: 'admin' }
+        data: {
+          admin_id: admin.admin_id,
+          name: admin.name,
+          email: admin.email,
+          role: 'admin',
+          created_at: admin.created_at,
+        }
       });
       return;
     }
 
-    const [users]: any = await pool.query(
-      'SELECT user_id, full_name, email, phone_number, role, status, created_at FROM users WHERE user_id = ?',
-      [req.user.userId]
-    );
+    const user = await User.findByPk(req.user.userId, {
+      attributes: ['user_id', 'full_name', 'email', 'phone_number', 'role', 'status', 'created_at'],
+    });
 
-    if (users.length === 0) {
+    if (!user) {
       res.status(404).json({ message: 'User not found', status: 'error' });
       return;
     }
 
     res.status(200).json({
       status: 'success',
-      data: users[0]
+      data: user,
     });
   } catch (error: any) {
     console.error('Profile fetch error:', error);

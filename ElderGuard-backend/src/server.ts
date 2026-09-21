@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import pool from './config/database';
+import { sequelize, pool } from './config/database';
 
 // Load environment variables from .env
 dotenv.config();
@@ -62,15 +62,15 @@ app.get('/', (req: Request, res: Response) => {
 /**
  * Database Test Route
  * GET /api/test-db
- * Purpose: Verifies that our Node.js backend can successfully communicate with MySQL.
+ * Purpose: Verifies that our Node.js backend can successfully communicate with MySQL via Sequelize.
  */
 app.get('/api/test-db', async (req: Request, res: Response) => {
   try {
-    // Run a simple test calculation in MySQL
-    const [rows] = await pool.query('SELECT 1 + 1 AS result');
+    await sequelize.authenticate();
+    const [rows] = await sequelize.query('SELECT 1 + 1 AS result');
     
     res.status(200).json({
-      message: 'Database connection successful',
+      message: 'Database connection successful (Sequelize ORM)',
       status: 'success',
       data: rows
     });
@@ -95,14 +95,14 @@ server.listen(PORT, async () => {
   console.log(`=====================================================`);
   console.log(`  ElderGuard Backend Server is running on:`);
   console.log(`  http://localhost:${PORT}`);
+  console.log(`  Database ORM: Sequelize (MySQL)`);
   console.log(`  WebSocket (Socket.io) real-time events enabled`);
   console.log(`=====================================================`);
 
   // Verify database connection at startup
   try {
-    const connection = await pool.getConnection();
-    console.log('✅ Connected to MySQL database successfully!');
-    connection.release();
+    await sequelize.authenticate();
+    console.log('✅ Connected to MySQL database successfully via Sequelize ORM!');
   } catch (error: any) {
     console.error('❌ Failed to connect to MySQL database at startup:');
     console.error(error.message);

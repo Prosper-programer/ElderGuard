@@ -1,9 +1,9 @@
 import { Response } from 'express';
-import pool from '../config/database';
+import { Alert, ElderlyProfile, Notification } from '../models';
 import { AuthenticatedRequest } from '../middleware/auth.middleware';
 
 /**
- * ALERT CONTROLLER
+ * ALERT CONTROLLER (Sequelize ORM)
  * 
  * Maps to UML: Alert
  * Attributes: alertId, description, dateTime
@@ -13,25 +13,37 @@ import { AuthenticatedRequest } from '../middleware/auth.middleware';
 
 /**
  * GET /api/alerts/elderly/:elderlyId
- * Returns all alerts triggered for a specific elderly person.
+ * Returns all alerts triggered for a specific elderly person via Sequelize.
  */
 export async function getAlertsByElderly(req: AuthenticatedRequest, res: Response): Promise<void> {
   try {
     const elderlyId = Number(req.params.elderlyId);
 
-    const [rows]: any = await pool.query(
-      `SELECT a.*, e.full_name AS elderly_name
-       FROM alerts a
-       JOIN elderly_profiles e ON a.elderly_id = e.elderly_id
-       WHERE a.elderly_id = ?
-       ORDER BY a.date_time DESC`,
-      [elderlyId]
-    );
+    const alerts: any = await Alert.findAll({
+      where: { elderly_id: elderlyId },
+      include: [
+        {
+          model: ElderlyProfile,
+          as: 'elderly',
+          attributes: ['full_name'],
+        },
+      ],
+      order: [['date_time', 'DESC']],
+    });
+
+    const formattedAlerts = alerts.map((a: any) => ({
+      alert_id: a.alert_id,
+      elderly_id: a.elderly_id,
+      notification_id: a.notification_id,
+      description: a.description,
+      date_time: a.date_time,
+      elderly_name: a.elderly?.full_name || null,
+    }));
 
     res.status(200).json({
       status: 'success',
-      count: rows.length,
-      data: rows
+      count: formattedAlerts.length,
+      data: formattedAlerts,
     });
   } catch (error: any) {
     console.error('Get alerts error:', error);
@@ -44,28 +56,37 @@ export async function getAlertsByElderly(req: AuthenticatedRequest, res: Respons
 
 /**
  * GET /api/alerts/:id
- * Views details of a single alert.
+ * Views details of a single alert via Sequelize.
  */
 export async function getAlertById(req: AuthenticatedRequest, res: Response): Promise<void> {
   try {
     const alertId = Number(req.params.id);
 
-    const [rows]: any = await pool.query(
-      `SELECT a.*, e.full_name AS elderly_name
-       FROM alerts a
-       JOIN elderly_profiles e ON a.elderly_id = e.elderly_id
-       WHERE a.alert_id = ?`,
-      [alertId]
-    );
+    const alertRecord: any = await Alert.findByPk(alertId, {
+      include: [
+        {
+          model: ElderlyProfile,
+          as: 'elderly',
+          attributes: ['full_name'],
+        },
+      ],
+    });
 
-    if (rows.length === 0) {
+    if (!alertRecord) {
       res.status(404).json({ message: 'Alert not found.', status: 'error' });
       return;
     }
 
     res.status(200).json({
       status: 'success',
-      data: rows[0]
+      data: {
+        alert_id: alertRecord.alert_id,
+        elderly_id: alertRecord.elderly_id,
+        notification_id: alertRecord.notification_id,
+        description: alertRecord.description,
+        date_time: alertRecord.date_time,
+        elderly_name: alertRecord.elderly?.full_name || null,
+      },
     });
   } catch (error: any) {
     console.error('Get alert by id error:', error);
@@ -78,7 +99,7 @@ export async function getAlertById(req: AuthenticatedRequest, res: Response): Pr
 
 /**
  * POST /api/alerts
- * Sends a manual emergency alert for an elderly person.
+ * Sends a manual emergency alert for an elderly person via Sequelize.
  * Maps to UML: sendAlert()
  */
 export async function sendManualAlert(req: AuthenticatedRequest, res: Response): Promise<void> {
@@ -93,47 +114,48 @@ export async function sendManualAlert(req: AuthenticatedRequest, res: Response):
       return;
     }
 
-    // Get parent and caregiver to notify
-    const [profiles]: any = await pool.query(
-      'SELECT parent_id, caregiver_id, full_name FROM elderly_profiles WHERE elderly_id = ?',
-      [elderlyId]
-    );
-
-    if (profiles.length === 0) {
+    // Get parent and caregiver to notify via Sequelize
+    const profile = await ElderlyProfile.findByPk(elderlyId);
+    if (!profile) {
       res.status(404).json({ message: 'Elderly profile not found.', status: 'error' });
       return;
     }
 
-    const { parent_id, caregiver_id, full_name } = profiles[0];
-    const alertText = `[MANUAL ALERT for ${full_name}]: ${description.trim()}`;
+    const alertText = `[MANUAL ALERT for ${profile.full_name}]: ${description.trim()}`;
 
-    // Create Notification
-    const [notifResult]: any = await pool.query(
-      'INSERT INTO notifications (user_id, title, message, status) VALUES (?, "EMERGENCY ALERT", ?, "unread")',
-      [parent_id, alertText]
-    );
+    // Create Notification for Parent
+    const parentNotif = await Notification.create({
+      user_id: profile.parent_id,
+      title: 'EMERGENCY ALERT',
+      message: alertText,
+      status: 'unread',
+    });
 
-    if (caregiver_id) {
-      await pool.query(
-        'INSERT INTO notifications (user_id, title, message, status) VALUES (?, "EMERGENCY ALERT", ?, "unread")',
-        [caregiver_id, alertText]
-      );
+    // Create Notification for Caregiver if assigned
+    if (profile.caregiver_id) {
+      await Notification.create({
+        user_id: profile.caregiver_id,
+        title: 'EMERGENCY ALERT',
+        message: alertText,
+        status: 'unread',
+      });
     }
 
     // Create Alert record
-    const [alertResult]: any = await pool.query(
-      'INSERT INTO alerts (elderly_id, notification_id, description, date_time) VALUES (?, ?, ?, NOW())',
-      [elderlyId, notifResult.insertId, alertText]
-    );
+    const newAlert = await Alert.create({
+      elderly_id: Number(elderlyId),
+      notification_id: parentNotif.notification_id,
+      description: alertText,
+    });
 
     res.status(201).json({
       message: 'Emergency alert sent successfully.',
       status: 'success',
       data: {
-        alert_id: alertResult.insertId,
-        elderly_id: elderlyId,
-        description: alertText
-      }
+        alert_id: newAlert.alert_id,
+        elderly_id: newAlert.elderly_id,
+        description: newAlert.description,
+      },
     });
   } catch (error: any) {
     console.error('Send manual alert error:', error);

@@ -1,6 +1,6 @@
 import { Response } from 'express';
-import pool from '../config/database';
 import { AuthenticatedRequest } from '../middleware/auth.middleware';
+import { Report, ElderlyProfile, DailyActivity, Reminder, Alert, Location } from '../models';
 
 /**
  * REPORT CONTROLLER
@@ -31,47 +31,42 @@ export async function generateReport(req: AuthenticatedRequest, res: Response): 
     }
 
     // Verify parent owns this elderly profile
-    const [profiles]: any = await pool.query(
-      'SELECT * FROM elderly_profiles WHERE elderly_id = ? AND parent_id = ?',
-      [elderlyId, parentId]
-    );
+    const profile = await ElderlyProfile.findOne({
+      where: { elderly_id: elderlyId, parent_id: parentId }
+    });
 
-    if (profiles.length === 0) {
+    if (!profile) {
       res.status(403).json({ message: 'Forbidden: You do not manage this elderly person.', status: 'error' });
       return;
     }
 
-    const elderly = profiles[0];
+    const elderly = profile.toJSON();
 
-    // 1. Gather activities count
-    const [activities]: any = await pool.query(
-      'SELECT COUNT(*) AS total, SUM(CASE WHEN status = "completed" THEN 1 ELSE 0 END) AS completed FROM daily_activities WHERE elderly_id = ?',
-      [elderlyId]
-    );
-
-    // 2. Gather reminders count
-    const [reminders]: any = await pool.query(
-      'SELECT COUNT(*) AS total FROM reminders WHERE elderly_id = ?',
-      [elderlyId]
-    );
-
-    // 3. Gather alerts count
-    const [alerts]: any = await pool.query(
-      'SELECT COUNT(*) AS total FROM alerts WHERE elderly_id = ?',
-      [elderlyId]
-    );
-
-    // 4. Gather recent alerts
-    const [recentAlerts]: any = await pool.query(
-      'SELECT description, date_time FROM alerts WHERE elderly_id = ? ORDER BY date_time DESC LIMIT 5',
-      [elderlyId]
-    );
-
-    // 5. Gather latest location
-    const [latestLocation]: any = await pool.query(
-      'SELECT latitude, longitude, timestamp FROM locations WHERE elderly_id = ? ORDER BY timestamp DESC LIMIT 1',
-      [elderlyId]
-    );
+    // 1-5. Gather data concurrently with Sequelize models
+    const [
+      totalActivities,
+      completedActivities,
+      totalReminders,
+      totalAlerts,
+      recentAlerts,
+      latestLocation
+    ] = await Promise.all([
+      DailyActivity.count({ where: { elderly_id: elderlyId } }),
+      DailyActivity.count({ where: { elderly_id: elderlyId, status: 'completed' } }),
+      Reminder.count({ where: { elderly_id: elderlyId } }),
+      Alert.count({ where: { elderly_id: elderlyId } }),
+      Alert.findAll({
+        where: { elderly_id: elderlyId },
+        order: [['date_time', 'DESC']],
+        limit: 5,
+        attributes: ['description', 'date_time']
+      }),
+      Location.findOne({
+        where: { elderly_id: elderlyId },
+        order: [['timestamp', 'DESC']],
+        attributes: ['latitude', 'longitude', 'timestamp']
+      })
+    ]);
 
     const reportTitle = title || `${period.toUpperCase()} Care & Health Report for ${elderly.full_name}`;
 
@@ -84,28 +79,30 @@ export async function generateReport(req: AuthenticatedRequest, res: Response): 
         medical_conditions: elderly.medical_information || 'None reported'
       },
       statistics: {
-        total_activities: Number(activities[0].total) || 0,
-        completed_activities: Number(activities[0].completed) || 0,
-        active_reminders: Number(reminders[0].total) || 0,
-        total_alerts_recorded: Number(alerts[0].total) || 0
+        total_activities: totalActivities,
+        completed_activities: completedActivities,
+        active_reminders: totalReminders,
+        total_alerts_recorded: totalAlerts
       },
-      recent_alerts: recentAlerts,
-      latest_known_location: latestLocation[0] || null,
+      recent_alerts: recentAlerts.map(a => a.toJSON()),
+      latest_known_location: latestLocation ? latestLocation.toJSON() : null,
       generated_at: new Date().toISOString()
     };
 
     // Store in reports table
-    const [result]: any = await pool.query(
-      `INSERT INTO reports (elderly_id, parent_id, title, period, generated_date, content)
-       VALUES (?, ?, ?, ?, NOW(), ?)`,
-      [elderlyId, parentId, reportTitle, period, JSON.stringify(reportContent, null, 2)]
-    );
+    const newReport = await Report.create({
+      elderly_id: elderlyId,
+      parent_id: parentId!,
+      title: reportTitle,
+      period: period,
+      content: JSON.stringify(reportContent, null, 2)
+    });
 
     res.status(201).json({
       message: 'Report generated successfully.',
       status: 'success',
       data: {
-        report_id: result.insertId,
+        report_id: newReport.report_id,
         elderly_id: elderlyId,
         parent_id: parentId,
         title: reportTitle,
@@ -130,10 +127,11 @@ export async function getReportsByElderly(req: AuthenticatedRequest, res: Respon
   try {
     const elderlyId = Number(req.params.elderlyId);
 
-    const [rows]: any = await pool.query(
-      'SELECT report_id, elderly_id, parent_id, title, period, generated_date FROM reports WHERE elderly_id = ? ORDER BY generated_date DESC',
-      [elderlyId]
-    );
+    const rows = await Report.findAll({
+      where: { elderly_id: elderlyId },
+      attributes: ['report_id', 'elderly_id', 'parent_id', 'title', 'period', 'generated_date'],
+      order: [['generated_date', 'DESC']]
+    });
 
     res.status(200).json({
       status: 'success',
@@ -157,25 +155,25 @@ export async function viewReport(req: AuthenticatedRequest, res: Response): Prom
   try {
     const reportId = Number(req.params.id);
 
-    const [rows]: any = await pool.query('SELECT * FROM reports WHERE report_id = ?', [reportId]);
+    const report = await Report.findByPk(reportId);
 
-    if (rows.length === 0) {
+    if (!report) {
       res.status(404).json({ message: 'Report not found.', status: 'error' });
       return;
     }
 
-    const report = rows[0];
+    const data: any = report.toJSON();
 
     // Parse JSON string content back to object if possible
     try {
-      report.content = JSON.parse(report.content);
+      data.content = JSON.parse(data.content);
     } catch (e) {
       // keep as string
     }
 
     res.status(200).json({
       status: 'success',
-      data: report
+      data
     });
   } catch (error: any) {
     console.error('View report error:', error);
@@ -195,14 +193,13 @@ export async function downloadReport(req: AuthenticatedRequest, res: Response): 
   try {
     const reportId = Number(req.params.id);
 
-    const [rows]: any = await pool.query('SELECT * FROM reports WHERE report_id = ?', [reportId]);
+    const report = await Report.findByPk(reportId);
 
-    if (rows.length === 0) {
+    if (!report) {
       res.status(404).json({ message: 'Report not found.', status: 'error' });
       return;
     }
 
-    const report = rows[0];
     const filename = `ElderGuard_Report_${report.report_id}.txt`;
 
     res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);

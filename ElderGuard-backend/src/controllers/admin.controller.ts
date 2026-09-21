@@ -1,9 +1,11 @@
 import { Response } from 'express';
-import pool from '../config/database';
+import { Op } from 'sequelize';
+import { User, ElderlyProfile, IoTDevice } from '../models';
 import { AuthenticatedRequest } from '../middleware/auth.middleware';
+import { getSocketIO } from '../config/socket';
 
 /**
- * ADMIN CONTROLLER
+ * ADMIN CONTROLLER (Sequelize ORM)
  * 
  * Scope & Security Rules:
  * - Only users with role === 'admin' can access these endpoints.
@@ -14,7 +16,7 @@ import { AuthenticatedRequest } from '../middleware/auth.middleware';
 
 /**
  * GET /api/admin/parents
- * Retrieves a paginated, filterable list of Parent accounts with linked senior counts.
+ * Retrieves a paginated, filterable list of Parent accounts with linked senior counts via Sequelize.
  */
 export async function getParents(req: AuthenticatedRequest, res: Response): Promise<void> {
   try {
@@ -24,59 +26,55 @@ export async function getParents(req: AuthenticatedRequest, res: Response): Prom
     const search = (req.query.search as string || req.query.q as string || '').trim();
     const status = (req.query.status as string || 'all').toLowerCase();
 
-    let whereClauses = ["u.role = 'parent'"];
-    let queryParams: any[] = [];
-
-    if (search) {
-      whereClauses.push('(u.full_name LIKE ? OR u.email LIKE ? OR u.phone_number LIKE ?)');
-      const searchPattern = `%${search}%`;
-      queryParams.push(searchPattern, searchPattern, searchPattern);
-    }
+    const where: any = { role: 'parent' };
 
     if (status === 'active' || status === 'inactive') {
-      whereClauses.push('u.status = ?');
-      queryParams.push(status);
+      where.status = status;
     }
 
-    const whereSql = whereClauses.join(' AND ');
+    if (search) {
+      where[Op.or] = [
+        { full_name: { [Op.like]: `%${search}%` } },
+        { email: { [Op.like]: `%${search}%` } },
+        { phone_number: { [Op.like]: `%${search}%` } },
+      ];
+    }
 
-    // 1. Total count for pagination
-    const [countRows]: any = await pool.query(
-      `SELECT COUNT(*) AS total FROM users u WHERE ${whereSql}`,
-      queryParams
-    );
-    const total = Number(countRows[0]?.total || 0);
+    // Use Sequelize findAndCountAll with joined ElderlyProfiles for elderly_count
+    const { count, rows } = await User.findAndCountAll({
+      where,
+      attributes: ['user_id', 'full_name', 'email', 'phone_number', 'role', 'status', 'created_at'],
+      include: [
+        {
+          model: ElderlyProfile,
+          as: 'elderlyProfiles',
+          attributes: ['elderly_id'],
+        },
+      ],
+      order: [['created_at', 'DESC']],
+      limit,
+      offset,
+      distinct: true,
+    });
 
-    // 2. Fetch paginated parent accounts with elderly count
-    const [rows]: any = await pool.query(
-      `SELECT 
-        u.user_id, 
-        u.full_name, 
-        u.email, 
-        u.phone_number, 
-        u.role, 
-        u.status, 
-        u.created_at,
-        COUNT(e.elderly_id) AS elderly_count
-       FROM users u
-       LEFT JOIN elderly_profiles e ON u.user_id = e.parent_id
-       WHERE ${whereSql}
-       GROUP BY u.user_id
-       ORDER BY u.created_at DESC
-       LIMIT ? OFFSET ?`,
-      [...queryParams, limit, offset]
-    );
+    const formattedData = rows.map((parent: any) => ({
+      user_id: parent.user_id,
+      full_name: parent.full_name,
+      email: parent.email,
+      phone_number: parent.phone_number,
+      role: parent.role,
+      status: parent.status,
+      created_at: parent.created_at,
+      elderly_count: parent.elderlyProfiles ? parent.elderlyProfiles.length : 0,
+    }));
 
     res.status(200).json({
       status: 'success',
-      total,
+      total: count,
       page,
       limit,
-      totalPages: Math.ceil(total / limit),
-      data: rows.map((r: any) => ({
-        ...r,
-        elderly_count: Number(r.elderly_count) || 0
-      }))
+      totalPages: Math.ceil(count / limit),
+      data: formattedData,
     });
   } catch (error: any) {
     console.error('Admin get parents error:', error);
@@ -89,30 +87,25 @@ export async function getParents(req: AuthenticatedRequest, res: Response): Prom
 
 /**
  * GET /api/admin/parents/:id
- * Retrieves basic account information for a single parent.
+ * Retrieves basic account information for a single parent via Sequelize.
  */
 export async function getParentById(req: AuthenticatedRequest, res: Response): Promise<void> {
   try {
     const parentId = Number(req.params.id);
 
-    const [rows]: any = await pool.query(
-      `SELECT 
-        u.user_id, 
-        u.full_name, 
-        u.email, 
-        u.phone_number, 
-        u.role, 
-        u.status, 
-        u.created_at,
-        COUNT(e.elderly_id) AS elderly_count
-       FROM users u
-       LEFT JOIN elderly_profiles e ON u.user_id = e.parent_id
-       WHERE u.user_id = ? AND u.role = 'parent'
-       GROUP BY u.user_id`,
-      [parentId]
-    );
+    const parent: any = await User.findOne({
+      where: { user_id: parentId, role: 'parent' },
+      attributes: ['user_id', 'full_name', 'email', 'phone_number', 'role', 'status', 'created_at'],
+      include: [
+        {
+          model: ElderlyProfile,
+          as: 'elderlyProfiles',
+          attributes: ['elderly_id'],
+        },
+      ],
+    });
 
-    if (rows.length === 0) {
+    if (!parent) {
       res.status(404).json({ message: 'Parent account not found.', status: 'error' });
       return;
     }
@@ -120,8 +113,14 @@ export async function getParentById(req: AuthenticatedRequest, res: Response): P
     res.status(200).json({
       status: 'success',
       data: {
-        ...rows[0],
-        elderly_count: Number(rows[0].elderly_count) || 0
+        user_id: parent.user_id,
+        full_name: parent.full_name,
+        email: parent.email,
+        phone_number: parent.phone_number,
+        role: parent.role,
+        status: parent.status,
+        created_at: parent.created_at,
+        elderly_count: parent.elderlyProfiles ? parent.elderlyProfiles.length : 0,
       }
     });
   } catch (error: any) {
@@ -133,36 +132,30 @@ export async function getParentById(req: AuthenticatedRequest, res: Response): P
   }
 }
 
-import { getSocketIO } from '../config/socket';
-
 /**
  * PUT /api/admin/parents/:id/activate
- * Sets parent account status to active and pushes real-time WebSocket event.
+ * Sets parent account status to active and pushes real-time WebSocket event via Sequelize.
  */
 export async function activateParent(req: AuthenticatedRequest, res: Response): Promise<void> {
   try {
     const parentId = Number(req.params.id);
 
-    const [result]: any = await pool.query(
-      'UPDATE users SET status = "active" WHERE user_id = ? AND role = "parent"',
-      [parentId]
-    );
+    // Fetch and update parent via Sequelize
+    const parent = await User.findOne({ where: { user_id: parentId, role: 'parent' } });
 
-    if (result.affectedRows === 0) {
+    if (!parent) {
       res.status(404).json({ message: 'Parent account not found.', status: 'error' });
       return;
     }
 
-    // Fetch email so client can match either by ID or email
-    const [userRows]: any = await pool.query('SELECT email FROM users WHERE user_id = ?', [parentId]);
-    const userEmail = userRows[0]?.email;
+    await parent.update({ status: 'active' });
 
     // Push real-time event to mobile phone and admin consoles
     const io = getSocketIO();
     if (io) {
       const payload = {
         userId: parentId,
-        email: userEmail,
+        email: parent.email,
         status: 'active',
         message: 'Your account has been activated successfully.'
       };
@@ -170,7 +163,7 @@ export async function activateParent(req: AuthenticatedRequest, res: Response): 
       io.emit('account_status_changed', payload);
       io.to('admin_room').emit('parent_updated', {
         userId: parentId,
-        email: userEmail,
+        email: parent.email,
         status: 'active'
       });
     }
@@ -192,32 +185,28 @@ export async function activateParent(req: AuthenticatedRequest, res: Response): 
 
 /**
  * PUT /api/admin/parents/:id/deactivate
- * Sets parent account status to inactive, revokes active session, and pushes real-time event.
+ * Sets parent account status to inactive, revokes active session, and pushes real-time event via Sequelize.
  */
 export async function deactivateParent(req: AuthenticatedRequest, res: Response): Promise<void> {
   try {
     const parentId = Number(req.params.id);
 
-    const [result]: any = await pool.query(
-      'UPDATE users SET status = "inactive" WHERE user_id = ? AND role = "parent"',
-      [parentId]
-    );
+    // Fetch and update parent via Sequelize
+    const parent = await User.findOne({ where: { user_id: parentId, role: 'parent' } });
 
-    if (result.affectedRows === 0) {
+    if (!parent) {
       res.status(404).json({ message: 'Parent account not found.', status: 'error' });
       return;
     }
 
-    // Fetch email so client can match either by ID or email
-    const [userRows]: any = await pool.query('SELECT email FROM users WHERE user_id = ?', [parentId]);
-    const userEmail = userRows[0]?.email;
+    await parent.update({ status: 'inactive' });
 
     // Push real-time event to mobile phone immediately
     const io = getSocketIO();
     if (io) {
       const payload = {
         userId: parentId,
-        email: userEmail,
+        email: parent.email,
         status: 'inactive',
         message: 'Your account has been deactivated by a platform administrator.'
       };
@@ -225,7 +214,7 @@ export async function deactivateParent(req: AuthenticatedRequest, res: Response)
       io.emit('account_status_changed', payload);
       io.to('admin_room').emit('parent_updated', {
         userId: parentId,
-        email: userEmail,
+        email: parent.email,
         status: 'inactive'
       });
     }
@@ -247,52 +236,38 @@ export async function deactivateParent(req: AuthenticatedRequest, res: Response)
 
 /**
  * GET /api/admin/system-stats
- * Returns high-level aggregate platform statistics only (zero clinical or personal data).
+ * Returns high-level aggregate platform statistics only via Sequelize count queries.
  */
 export async function getSystemStats(req: AuthenticatedRequest, res: Response): Promise<void> {
   try {
     // 1. Parent counts
-    const [parentStats]: any = await pool.query(`
-      SELECT 
-        COUNT(*) AS total_parents,
-        SUM(CASE WHEN status = 'active' THEN 1 ELSE 0 END) AS active_parents,
-        SUM(CASE WHEN status = 'inactive' THEN 1 ELSE 0 END) AS inactive_parents
-      FROM users
-      WHERE role = 'parent'
-    `);
+    const totalParents = await User.count({ where: { role: 'parent' } });
+    const activeParents = await User.count({ where: { role: 'parent', status: 'active' } });
+    const inactiveParents = await User.count({ where: { role: 'parent', status: 'inactive' } });
 
     // 2. Elderly profiles count
-    const [elderlyStats]: any = await pool.query(
-      'SELECT COUNT(*) AS total_elderly FROM elderly_profiles'
-    );
+    const totalElderly = await ElderlyProfile.count();
 
     // 3. Device counts
-    const [deviceStats]: any = await pool.query(`
-      SELECT 
-        COUNT(*) AS total_devices,
-        SUM(CASE WHEN status = 'connected' THEN 1 ELSE 0 END) AS connected_devices,
-        SUM(CASE WHEN status = 'disconnected' THEN 1 ELSE 0 END) AS disconnected_devices
-      FROM iot_devices
-    `);
-
-    const p = parentStats[0] || {};
-    const d = deviceStats[0] || {};
+    const totalDevices = await IoTDevice.count();
+    const connectedDevices = await IoTDevice.count({ where: { status: 'connected' } });
+    const disconnectedDevices = await IoTDevice.count({ where: { status: 'disconnected' } });
 
     res.status(200).json({
       status: 'success',
       data: {
         parents: {
-          total: Number(p.total_parents) || 0,
-          active: Number(p.active_parents) || 0,
-          inactive: Number(p.inactive_parents) || 0
+          total: totalParents,
+          active: activeParents,
+          inactive: inactiveParents,
         },
         elderly_profiles: {
-          total: Number(elderlyStats[0]?.total_elderly) || 0
+          total: totalElderly,
         },
         devices: {
-          total: Number(d.total_devices) || 0,
-          connected: Number(d.connected_devices) || 0,
-          disconnected: Number(d.disconnected_devices) || 0
+          total: totalDevices,
+          connected: connectedDevices,
+          disconnected: disconnectedDevices,
         }
       }
     });

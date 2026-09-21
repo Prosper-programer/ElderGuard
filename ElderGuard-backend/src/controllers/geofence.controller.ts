@@ -1,7 +1,7 @@
 import { Response } from 'express';
-import pool from '../config/database';
 import { calculateDistanceMeters } from '../utils/geo';
 import { AuthenticatedRequest } from '../middleware/auth.middleware';
+import { Geofence, ElderlyProfile } from '../models';
 
 /**
  * GEOFENCE CONTROLLER
@@ -40,27 +40,34 @@ export async function createGeofence(req: AuthenticatedRequest, res: Response): 
     }
 
     // Verify parent manages this elderly person
-    const [profiles]: any = await pool.query(
-      'SELECT elderly_id FROM elderly_profiles WHERE elderly_id = ? AND parent_id = ?',
-      [elderlyId, parentId]
-    );
+    const profile = await ElderlyProfile.findOne({
+      where: { elderly_id: elderlyId, parent_id: parentId }
+    });
 
-    if (profiles.length === 0) {
+    if (!profile) {
       res.status(403).json({ message: 'Forbidden: You do not manage this elderly person.', status: 'error' });
       return;
     }
 
     // Upsert geofence (Insert or update if already exists)
-    await pool.query(
-      `INSERT INTO geofences (elderly_id, center_latitude, center_longitude, radius, is_enabled)
-       VALUES (?, ?, ?, ?, TRUE)
-       ON DUPLICATE KEY UPDATE
-        center_latitude = VALUES(center_latitude),
-        center_longitude = VALUES(center_longitude),
-        radius = VALUES(radius),
-        is_enabled = TRUE`,
-      [elderlyId, centerLatitude, centerLongitude, radius]
-    );
+    let geofence = await Geofence.findOne({ where: { elderly_id: elderlyId } });
+
+    if (geofence) {
+      await geofence.update({
+        center_latitude: centerLatitude,
+        center_longitude: centerLongitude,
+        radius: Number(radius),
+        is_enabled: true
+      });
+    } else {
+      geofence = await Geofence.create({
+        elderly_id: elderlyId,
+        center_latitude: centerLatitude,
+        center_longitude: centerLongitude,
+        radius: Number(radius),
+        is_enabled: true
+      });
+    }
 
     res.status(201).json({
       message: 'Geofence configured successfully.',
@@ -90,19 +97,18 @@ export async function getGeofence(req: AuthenticatedRequest, res: Response): Pro
   try {
     const elderlyId = Number(req.params.elderlyId);
 
-    const [rows]: any = await pool.query(
-      'SELECT * FROM geofences WHERE elderly_id = ?',
-      [elderlyId]
-    );
+    const geofence = await Geofence.findOne({
+      where: { elderly_id: elderlyId }
+    });
 
-    if (rows.length === 0) {
+    if (!geofence) {
       res.status(404).json({ message: 'No geofence configured for this elderly person.', status: 'error' });
       return;
     }
 
     res.status(200).json({
       status: 'success',
-      data: rows[0]
+      data: geofence.toJSON()
     });
   } catch (error: any) {
     console.error('Get geofence error:', error);
@@ -121,15 +127,14 @@ export async function enableGeofence(req: AuthenticatedRequest, res: Response): 
   try {
     const elderlyId = Number(req.params.elderlyId);
 
-    const [result]: any = await pool.query(
-      'UPDATE geofences SET is_enabled = TRUE WHERE elderly_id = ?',
-      [elderlyId]
-    );
+    const geofence = await Geofence.findOne({ where: { elderly_id: elderlyId } });
 
-    if (result.affectedRows === 0) {
+    if (!geofence) {
       res.status(404).json({ message: 'Geofence not found.', status: 'error' });
       return;
     }
+
+    await geofence.update({ is_enabled: true });
 
     res.status(200).json({
       message: 'Geofence enabled successfully.',
@@ -150,15 +155,14 @@ export async function disableGeofence(req: AuthenticatedRequest, res: Response):
   try {
     const elderlyId = Number(req.params.elderlyId);
 
-    const [result]: any = await pool.query(
-      'UPDATE geofences SET is_enabled = FALSE WHERE elderly_id = ?',
-      [elderlyId]
-    );
+    const geofence = await Geofence.findOne({ where: { elderly_id: elderlyId } });
 
-    if (result.affectedRows === 0) {
+    if (!geofence) {
       res.status(404).json({ message: 'Geofence not found.', status: 'error' });
       return;
     }
+
+    await geofence.update({ is_enabled: false });
 
     res.status(200).json({
       message: 'Geofence disabled successfully.',
@@ -181,14 +185,13 @@ export async function checkBoundary(req: AuthenticatedRequest, res: Response): P
     const elderlyId = Number(req.params.elderlyId);
     const { latitude, longitude } = req.body;
 
-    const [rows]: any = await pool.query('SELECT * FROM geofences WHERE elderly_id = ?', [elderlyId]);
+    const gf = await Geofence.findOne({ where: { elderly_id: elderlyId } });
 
-    if (rows.length === 0) {
+    if (!gf) {
       res.status(404).json({ message: 'No geofence configured for this elderly person.', status: 'error' });
       return;
     }
 
-    const gf = rows[0];
     const distance = calculateDistanceMeters(
       Number(latitude),
       Number(longitude),

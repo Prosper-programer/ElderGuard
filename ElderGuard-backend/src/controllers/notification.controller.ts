@@ -1,6 +1,6 @@
 import { Response } from 'express';
-import pool from '../config/database';
 import { AuthenticatedRequest } from '../middleware/auth.middleware';
+import { Notification } from '../models';
 
 /**
  * NOTIFICATION CONTROLLER
@@ -22,10 +22,10 @@ export async function getNotifications(req: AuthenticatedRequest, res: Response)
   try {
     const userId = req.user?.userId;
 
-    const [rows]: any = await pool.query(
-      'SELECT * FROM notifications WHERE user_id = ? ORDER BY date_time DESC',
-      [userId]
-    );
+    const rows = await Notification.findAll({
+      where: { user_id: userId },
+      order: [['date_time', 'DESC']]
+    });
 
     res.status(200).json({
       status: 'success',
@@ -51,19 +51,18 @@ export async function consultNotification(req: AuthenticatedRequest, res: Respon
     const notificationId = Number(req.params.id);
     const userId = req.user?.userId;
 
-    const [rows]: any = await pool.query(
-      'SELECT * FROM notifications WHERE notification_id = ? AND user_id = ?',
-      [notificationId, userId]
-    );
+    const notif = await Notification.findOne({
+      where: { notification_id: notificationId, user_id: userId }
+    });
 
-    if (rows.length === 0) {
+    if (!notif) {
       res.status(404).json({ message: 'Notification not found.', status: 'error' });
       return;
     }
 
     res.status(200).json({
       status: 'success',
-      data: rows[0]
+      data: notif.toJSON()
     });
   } catch (error: any) {
     console.error('Consult notification error:', error);
@@ -84,15 +83,16 @@ export async function markAsRead(req: AuthenticatedRequest, res: Response): Prom
     const notificationId = Number(req.params.id);
     const userId = req.user?.userId;
 
-    const [result]: any = await pool.query(
-      'UPDATE notifications SET status = "read" WHERE notification_id = ? AND user_id = ?',
-      [notificationId, userId]
-    );
+    const notif = await Notification.findOne({
+      where: { notification_id: notificationId, user_id: userId }
+    });
 
-    if (result.affectedRows === 0) {
+    if (!notif) {
       res.status(404).json({ message: 'Notification not found.', status: 'error' });
       return;
     }
+
+    await notif.update({ status: 'read' });
 
     res.status(200).json({
       message: 'Notification marked as read.',

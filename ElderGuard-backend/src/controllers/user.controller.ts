@@ -1,8 +1,7 @@
 import { Response } from 'express';
 import bcrypt from 'bcrypt';
-import pool from '../config/database';
 import { AuthenticatedRequest } from '../middleware/auth.middleware';
-
+import { User } from '../models';
 
 export async function updateUserProfile(req: AuthenticatedRequest, res: Response): Promise<void> {
   try {
@@ -21,11 +20,16 @@ export async function updateUserProfile(req: AuthenticatedRequest, res: Response
       return;
     }
 
-    // Update in users table
-    await pool.query(
-      'UPDATE users SET full_name = ?, phone_number = ? WHERE user_id = ?',
-      [fullName.trim(), phoneNumber.trim(), req.user.userId]
-    );
+    const user = await User.findByPk(req.user.userId);
+    if (!user) {
+      res.status(404).json({ message: 'User not found.', status: 'error' });
+      return;
+    }
+
+    await user.update({
+      full_name: fullName.trim(),
+      phone_number: phoneNumber.trim()
+    });
 
     res.status(200).json({
       message: 'User profile updated successfully.',
@@ -52,9 +56,10 @@ export async function updateUserProfile(req: AuthenticatedRequest, res: Response
  */
 export async function getCaregivers(req: AuthenticatedRequest, res: Response): Promise<void> {
   try {
-    const [rows]: any = await pool.query(
-      'SELECT user_id, full_name, email, phone_number, status FROM users WHERE role = "caregiver" AND status = "active"'
-    );
+    const rows = await User.findAll({
+      where: { role: 'caregiver', status: 'active' },
+      attributes: ['user_id', 'full_name', 'email', 'phone_number', 'status']
+    });
 
     res.status(200).json({
       status: 'success',
@@ -86,13 +91,11 @@ export async function createCaregiver(req: AuthenticatedRequest, res: Response):
       return;
     }
 
-    // Check if email already exists
-    const [existing]: any = await pool.query(
-      'SELECT user_id FROM users WHERE email = ?',
-      [email.toLowerCase().trim()]
-    );
+    const existing = await User.findOne({
+      where: { email: email.toLowerCase().trim() }
+    });
 
-    if (existing.length > 0) {
+    if (existing) {
       res.status(400).json({
         message: 'A user with this email address already exists.',
         status: 'error'
@@ -102,19 +105,20 @@ export async function createCaregiver(req: AuthenticatedRequest, res: Response):
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const [result]: any = await pool.query(
-      `INSERT INTO users (full_name, email, phone_number, password, role, status)
-       VALUES (?, ?, ?, ?, 'caregiver', 'active')`,
-      [fullName.trim(), email.toLowerCase().trim(), phoneNumber.trim(), hashedPassword]
-    );
-
-    const newCaregiverId = result.insertId;
+    const newCaregiver = await User.create({
+      full_name: fullName.trim(),
+      email: email.toLowerCase().trim(),
+      phone_number: phoneNumber.trim(),
+      password: hashedPassword,
+      role: 'caregiver',
+      status: 'active'
+    });
 
     res.status(201).json({
       message: 'Caregiver account created successfully.',
       status: 'success',
       data: {
-        user_id: newCaregiverId,
+        user_id: newCaregiver.user_id,
         full_name: fullName.trim(),
         email: email.toLowerCase().trim(),
         phone_number: phoneNumber.trim(),
@@ -138,9 +142,10 @@ export async function createCaregiver(req: AuthenticatedRequest, res: Response):
  */
 export async function getDoctors(req: AuthenticatedRequest, res: Response): Promise<void> {
   try {
-    const [rows]: any = await pool.query(
-      'SELECT user_id, full_name, email, phone_number, status FROM users WHERE role = "doctor" AND status = "active"'
-    );
+    const rows = await User.findAll({
+      where: { role: 'doctor', status: 'active' },
+      attributes: ['user_id', 'full_name', 'email', 'phone_number', 'status']
+    });
 
     res.status(200).json({
       status: 'success',
@@ -172,13 +177,11 @@ export async function createDoctor(req: AuthenticatedRequest, res: Response): Pr
       return;
     }
 
-    // Check if email already exists
-    const [existing]: any = await pool.query(
-      'SELECT user_id FROM users WHERE email = ?',
-      [email.toLowerCase().trim()]
-    );
+    const existing = await User.findOne({
+      where: { email: email.toLowerCase().trim() }
+    });
 
-    if (existing.length > 0) {
+    if (existing) {
       res.status(400).json({
         message: 'A user with this email address already exists.',
         status: 'error'
@@ -188,19 +191,20 @@ export async function createDoctor(req: AuthenticatedRequest, res: Response): Pr
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const [result]: any = await pool.query(
-      `INSERT INTO users (full_name, email, phone_number, password, role, status)
-       VALUES (?, ?, ?, ?, 'doctor', 'active')`,
-      [fullName.trim(), email.toLowerCase().trim(), phoneNumber.trim(), hashedPassword]
-    );
-
-    const newDoctorId = result.insertId;
+    const newDoctor = await User.create({
+      full_name: fullName.trim(),
+      email: email.toLowerCase().trim(),
+      phone_number: phoneNumber.trim(),
+      password: hashedPassword,
+      role: 'doctor',
+      status: 'active'
+    });
 
     res.status(201).json({
       message: 'Doctor account created successfully.',
       status: 'success',
       data: {
-        user_id: newDoctorId,
+        user_id: newDoctor.user_id,
         full_name: fullName.trim(),
         email: email.toLowerCase().trim(),
         phone_number: phoneNumber.trim(),
