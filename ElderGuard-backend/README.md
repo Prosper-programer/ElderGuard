@@ -175,6 +175,33 @@ The database schema directly maps to the **ElderGuard UML Class Diagram**:
 
 ## 6. How to Run the Backend
 
+### Quick start with Docker
+
+Requirements: Docker Desktop with Compose enabled.
+
+From this directory, start MySQL, initialize the schema, and launch the API with:
+
+```bash
+docker compose up --build
+```
+
+The API is then available at `http://localhost:5000` and the health check is `http://localhost:5000/`.
+MySQL is exposed on `localhost:3307` to avoid conflicts with an existing local MySQL server.
+The database data is persisted in the `mysql_data` Docker volume. The default development credentials are
+`elderguard` / `elderguard_dev_password`; override them in a local `.env` file if needed.
+
+To stop the services:
+
+```bash
+docker compose down
+```
+
+To stop them and delete the database volume:
+
+```bash
+docker compose down -v
+```
+
 ### 1. Install Dependencies
 ```bash
 npm install
