@@ -62,6 +62,24 @@ export default function EmergencyScreen() {
     });
   };
 
+  const handleYango = async () => {
+    const yangoUrl = 'yango://';
+    try {
+      const supported = await Linking.canOpenURL(yangoUrl);
+      if (supported) {
+        await Linking.openURL(yangoUrl);
+      } else {
+        if (Platform.OS === 'ios') {
+          Linking.openURL('https://apps.apple.com/app/yango/id1436984399');
+        } else {
+          Linking.openURL('https://play.google.com/store/apps/details?id=com.yandex.yango');
+        }
+      }
+    } catch (error) {
+      Alert.alert('Error', 'Unable to open Yango app.');
+    }
+  };
+
   const handleDoctorStatus = () => {
     router.push('/(parent)/doctor-status' as any);
   };
@@ -161,6 +179,18 @@ export default function EmergencyScreen() {
             <Phone size={19} color="#DC2626" />
             <Text style={styles.callBtnText}>
               {called ? 'Emergency Services Contacted' : 'Call Emergency Services \u2014 119'}
+            </Text>
+          </TouchableOpacity>
+
+          {/* Order Yango Button */}
+          <TouchableOpacity
+            style={[styles.callBtn, { backgroundColor: '#FCE000', height: 48 }]}
+            onPress={handleYango}
+            activeOpacity={0.88}
+          >
+            <Activity size={18} color="#000000" />
+            <Text style={[styles.callBtnText, { color: '#000000', fontSize: 15 }]}>
+              Order Yango to Patient
             </Text>
           </TouchableOpacity>
 

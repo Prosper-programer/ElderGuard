@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image, ImageBackground } from 'react-native';
 import { useRouter } from 'expo-router';
-import { Bell, MapPin, Pill, ShieldAlert, Shield, CheckCircle, UserPlus, Plus, Heart, Activity, Thermometer, Footprints } from 'lucide-react-native';
+import { Bell, MapPin, Pill, ShieldAlert, Shield, CheckCircle, UserPlus, Plus, Heart, Activity, Thermometer, Footprints, ChevronRight, Battery } from 'lucide-react-native';
 import { ScreenContainer, BottomTabBar, Card, VitalSparklineCard } from '@/components/ui';
 import { Colors, Typography, Spacing, BorderRadius, Shadows } from '@/constants/theme';
 
@@ -127,23 +127,33 @@ export default function ParentDashboardScreen() {
                  )}
                </View>
                <View style={styles.patientInfoCol}>
-                 <Text style={styles.patientName} numberOfLines={1}>{seniorName}</Text>
+                 <View style={styles.patientNameRow}>
+                   <Text style={styles.patientName} numberOfLines={1}>{seniorName}</Text>
+                   <View style={[styles.statusPillSmall, { backgroundColor: statusBg }]}>
+                      <View style={[styles.statusDotSmall, { backgroundColor: statusColor }]} />
+                      <Text style={[styles.statusPillTextSmall, { color: statusColor }]}>{currentStatusText}</Text>
+                   </View>
+                 </View>
                  <Text style={styles.patientSubtext}>{seniorAge} years · {activeProfile?.address || 'Unknown'}</Text>
+                 
+                 <View style={styles.deviceStatusRow}>
+                   <Text style={styles.lastUpdateText}>
+                      {vitals?.overallStatus === 'offline' 
+                        ? 'Last known data' 
+                        : `Updated ${vitals?.lastSyncTime || 'recently'}`}
+                   </Text>
+                   {vitals?.overallStatus !== 'offline' && (
+                     <View style={styles.batteryWrap}>
+                       <Battery size={14} color='rgba(255,255,255,0.7)' />
+                       <Text style={styles.batteryText}>84%</Text>
+                     </View>
+                   )}
+                 </View>
                </View>
-             </View>
-
-             <View style={styles.statusDivider} />
-
-             <View style={styles.statusRow}>
-               <View style={[styles.statusPill, { backgroundColor: statusBg }]}>
-                  <View style={[styles.statusDot, { backgroundColor: statusColor }]} />
-                  <Text style={[styles.statusPillText, { color: statusColor }]}>{currentStatusText}</Text>
+               
+               <View style={styles.chevronWrap}>
+                 <ChevronRight size={20} color='rgba(255,255,255,0.4)' />
                </View>
-               <Text style={styles.lastUpdateText}>
-                  {vitals?.overallStatus === 'offline' 
-                    ? 'Last known data' 
-                    : `Updated ${vitals?.lastSyncTime || 'recently'}`}
-               </Text>
              </View>
           </Card>
         </TouchableOpacity>
@@ -223,7 +233,7 @@ export default function ParentDashboardScreen() {
         )}
       </View>
 
-      {/* 5. HEALTH OVERVIEW (Upgraded with Sparklines) */}
+      {/* 5. HEALTH OVERVIEW (Clean Responsive List) */}
       <View style={styles.sectionWrap}>
         <View style={styles.sectionHeaderRow}>
           <Text style={styles.sectionOverline}>HEALTH OVERVIEW</Text>
@@ -231,70 +241,60 @@ export default function ParentDashboardScreen() {
             <Text style={styles.sectionActionText}>Full report {'>'}</Text>
           </TouchableOpacity>
         </View>
-        <View style={styles.sparklinesGrid}>
+        
+        <Card style={styles.healthListCard}>
           {vitals?.heartRate && (
-            <View style={styles.sparklineWrap}>
-              <VitalSparklineCard
-                label={vitals.heartRate.label}
-                value={vitals.heartRate.value}
-                unit={vitals.heartRate.unit}
-                status={vitals.heartRate.status as any}
-                statusLabel={vitals.heartRate.statusLabel}
-                normalRange={vitals.heartRate.normalRange}
-                icon={<Heart size={16} color={Colors.critical} />}
-                iconBg={Colors.criticalBg}
-                trend={vitals.heartRate.trend as any}
-              />
+            <View style={[styles.healthRow, styles.itemBorderBottom]}>
+              <View style={[styles.healthIconWrap, { backgroundColor: Colors.criticalBg }]}>
+                <Heart size={18} color={Colors.critical} />
+              </View>
+              <Text style={styles.healthRowTitle}>{vitals.heartRate.label || 'Heart Rate'}</Text>
+              <View style={styles.healthRowRight}>
+                <Text style={styles.healthRowValue}>{vitals.heartRate.value} <Text style={styles.healthRowUnit}>{vitals.heartRate.unit}</Text></Text>
+                <Text style={[styles.healthRowStatus, { color: getStatusColor(vitals.heartRate.status as any) }]}>{vitals.heartRate.statusLabel}</Text>
+              </View>
             </View>
           )}
+
           {vitals?.spo2 && (
-            <View style={styles.sparklineWrap}>
-              <VitalSparklineCard
-                label={vitals.spo2.label}
-                value={vitals.spo2.value}
-                unit={vitals.spo2.unit}
-                status={vitals.spo2.status as any}
-                statusLabel={vitals.spo2.statusLabel}
-                normalRange={vitals.spo2.normalRange}
-                icon={<Activity size={16} color={Colors.primary} />}
-                iconBg={Colors.primaryFaded}
-                trend={vitals.spo2.trend as any}
-              />
+            <View style={[styles.healthRow, styles.itemBorderBottom]}>
+              <View style={[styles.healthIconWrap, { backgroundColor: Colors.primaryFaded }]}>
+                <Activity size={18} color={Colors.primary} />
+              </View>
+              <Text style={styles.healthRowTitle}>{vitals.spo2.label || 'Blood Oxygen'}</Text>
+              <View style={styles.healthRowRight}>
+                <Text style={styles.healthRowValue}>{vitals.spo2.value} <Text style={styles.healthRowUnit}>{vitals.spo2.unit}</Text></Text>
+                <Text style={[styles.healthRowStatus, { color: getStatusColor(vitals.spo2.status as any) }]}>{vitals.spo2.statusLabel}</Text>
+              </View>
             </View>
           )}
-        </View>
-        <View style={[styles.sparklinesGrid, { marginTop: 12 }]}>
+
           {vitals?.temperature && (
-            <View style={styles.sparklineWrap}>
-              <VitalSparklineCard
-                label={vitals.temperature.label}
-                value={vitals.temperature.value}
-                unit={vitals.temperature.unit}
-                status={vitals.temperature.status as any}
-                statusLabel={vitals.temperature.statusLabel}
-                normalRange={vitals.temperature.normalRange}
-                icon={<Thermometer size={16} color={Colors.warning} />}
-                iconBg={Colors.warningBg}
-                trend={vitals.temperature.trend as any}
-              />
+            <View style={[styles.healthRow, styles.itemBorderBottom]}>
+              <View style={[styles.healthIconWrap, { backgroundColor: Colors.warningBg }]}>
+                <Thermometer size={18} color={Colors.warning} />
+              </View>
+              <Text style={styles.healthRowTitle}>{vitals.temperature.label || 'Body Temp'}</Text>
+              <View style={styles.healthRowRight}>
+                <Text style={styles.healthRowValue}>{vitals.temperature.value} <Text style={styles.healthRowUnit}>{vitals.temperature.unit}</Text></Text>
+                <Text style={[styles.healthRowStatus, { color: getStatusColor(vitals.temperature.status as any) }]}>{vitals.temperature.statusLabel}</Text>
+              </View>
             </View>
           )}
+
           {vitals?.steps && (
-            <View style={styles.sparklineWrap}>
-              <VitalSparklineCard
-                label={vitals.steps.label}
-                value={vitals.steps.value}
-                unit={vitals.steps.unit}
-                status={vitals.steps.status as any}
-                statusLabel={vitals.steps.statusLabel}
-                normalRange={vitals.steps.normalRange}
-                icon={<Footprints size={16} color={Colors.safe} />}
-                iconBg={Colors.safeBg}
-                trend={vitals.steps.trend as any}
-              />
+            <View style={styles.healthRow}>
+              <View style={[styles.healthIconWrap, { backgroundColor: Colors.safeBg }]}>
+                <Footprints size={18} color={Colors.safe} />
+              </View>
+              <Text style={styles.healthRowTitle}>{vitals.steps.label || 'Activity'}</Text>
+              <View style={styles.healthRowRight}>
+                <Text style={styles.healthRowValue}>{vitals.steps.value} <Text style={styles.healthRowUnit}>{vitals.steps.unit}</Text></Text>
+                <Text style={[styles.healthRowStatus, { color: getStatusColor(vitals.steps.status as any) }]}>{vitals.steps.statusLabel}</Text>
+              </View>
             </View>
           )}
-        </View>
+        </Card>
       </View>
 
       {/* 6. TODAY'S CARE */}
@@ -407,17 +407,16 @@ const styles = StyleSheet.create({
   
   // PATIENT STATUS CARD
   patientStatusCard: {
-    padding: Spacing.base,
-    backgroundColor: Colors.white,
+    padding: Spacing.lg,
+    backgroundColor: Colors.primary, // Changed to Brand Blue
     borderRadius: BorderRadius.lg,
-    borderWidth: 1,
-    borderColor: Colors.borderLight,
+    borderWidth: 0,
     marginBottom: Spacing.xl,
     shadowColor: Colors.primary,
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.05,
-    shadowRadius: 20,
-    elevation: 4,
+    shadowOffset: { width: 0, height: 12 },
+    shadowOpacity: 0.25,
+    shadowRadius: 30,
+    elevation: 8,
   },
   patientHeaderRow: {
     flexDirection: 'row',
@@ -426,17 +425,17 @@ const styles = StyleSheet.create({
   },
   avatarContainer: {
     position: 'relative',
-    padding: 3, // For breathing ring space
+    padding: 3,
   },
   patientAvatar: {
-    width: 52,
-    height: 52,
-    borderRadius: 26,
+    width: 60,
+    height: 60,
+    borderRadius: 30,
   },
   patientAvatarPlaceholder: {
-    width: 52,
-    height: 52,
-    borderRadius: 26,
+    width: 60,
+    height: 60,
+    borderRadius: 30,
     backgroundColor: Colors.primaryFaded,
     alignItems: 'center',
     justifyContent: 'center',
@@ -447,62 +446,80 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    borderRadius: 30,
-    borderWidth: 2,
-    opacity: 0.6,
+    borderRadius: 34,
+    borderWidth: 2.5,
+    opacity: 0.75,
   },
   patientAvatarInitials: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: '700',
     color: Colors.primary,
   },
   patientInfoCol: {
     flex: 1,
+    justifyContent: 'center',
+  },
+  patientNameRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    marginBottom: 2,
   },
   patientName: {
     fontSize: 20,
     fontWeight: '700',
-    color: Colors.textPrimary,
-    letterSpacing: -0.3,
+    color: Colors.white,
+    letterSpacing: -0.5,
+    flexShrink: 1,
   },
-  patientSubtext: {
-    fontSize: 13,
-    color: Colors.textSecondary,
-    marginTop: 2,
-    fontWeight: '500',
-  },
-  statusDivider: {
-    height: 1,
-    backgroundColor: Colors.borderLight,
-    marginVertical: 16,
-  },
-  statusRow: {
+  statusPillSmall: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  statusPill: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 10,
-    paddingVertical: 6,
-    borderRadius: BorderRadius.sm,
-    gap: 6,
-  },
-  statusDot: {
-    width: 8,
-    height: 8,
+    paddingHorizontal: 6,
+    paddingVertical: 2,
     borderRadius: 4,
+    gap: 4,
   },
-  statusPillText: {
-    fontSize: 12,
+  statusDotSmall: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+  },
+  statusPillTextSmall: {
+    fontSize: 10,
     fontWeight: '800',
     letterSpacing: 0.5,
   },
+  patientSubtext: {
+    fontSize: 13,
+    color: 'rgba(255, 255, 255, 0.7)',
+    fontWeight: '500',
+    marginBottom: 8,
+  },
+  deviceStatusRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
   lastUpdateText: {
     fontSize: 12,
-    color: Colors.textTertiary,
+    color: 'rgba(255, 255, 255, 0.6)',
     fontWeight: '500',
+  },
+  batteryWrap: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 2,
+  },
+  batteryText: {
+    fontSize: 12,
+    color: 'rgba(255, 255, 255, 0.8)',
+    fontWeight: '600',
+  },
+  chevronWrap: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginLeft: 4,
   },
 
   // EMPTY SENIOR
@@ -682,6 +699,11 @@ const styles = StyleSheet.create({
     fontWeight: '800',
     color: Colors.safe,
   },
+  statusDot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+  },
   noCaregiverCard: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -707,13 +729,59 @@ const styles = StyleSheet.create({
     color: Colors.white,
   },
 
-  // HEALTH OVERVIEW (SPARKLINES)
-  sparklinesGrid: {
-    flexDirection: 'row',
-    gap: 12,
+  // HEALTH OVERVIEW (LIST)
+  healthListCard: {
+    backgroundColor: Colors.white,
+    borderRadius: BorderRadius.lg,
+    borderWidth: 1,
+    borderColor: Colors.borderLight,
+    shadowColor: Colors.primary,
+    shadowOpacity: 0.04,
+    shadowRadius: 15,
+    elevation: 2,
+    overflow: 'hidden',
   },
-  sparklineWrap: {
+  healthRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 14,
+    paddingHorizontal: 16,
+  },
+  itemBorderBottom: {
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.borderLight,
+  },
+  healthIconWrap: {
+    width: 32,
+    height: 32,
+    borderRadius: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 12,
+  },
+  healthRowTitle: {
     flex: 1,
+    fontSize: 15,
+    fontWeight: '600',
+    color: Colors.textPrimary,
+  },
+  healthRowRight: {
+    alignItems: 'flex-end',
+  },
+  healthRowValue: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: Colors.textPrimary,
+  },
+  healthRowUnit: {
+    fontSize: 12,
+    color: Colors.textSecondary,
+    fontWeight: '500',
+  },
+  healthRowStatus: {
+    fontSize: 11,
+    fontWeight: '600',
+    marginTop: 2,
   },
 
   // TODAY'S CARE
