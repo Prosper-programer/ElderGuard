@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
-import { ArrowLeft, UserPlus, AlertCircle } from 'lucide-react-native';
+import { ArrowLeft, UserPlus, AlertCircle, Camera } from 'lucide-react-native';
+import * as ImagePicker from 'expo-image-picker';
+import { Image } from 'react-native';
 import { ScreenContainer, Button, TextInput, Card } from '@/components/ui';
 import { Colors, Typography, Spacing, BorderRadius } from '@/constants/theme';
 import { useElderly } from '@/context/ElderlyContext';
@@ -13,6 +15,7 @@ export default function CreateElderlyProfileScreen() {
   const { createProfile } = useElderly();
 
   const [fullName, setFullName] = useState('');
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [preferredName, setPreferredName] = useState('');
   const [age, setAge] = useState('');
   const [dateOfBirth, setDateOfBirth] = useState('');
@@ -39,6 +42,19 @@ export default function CreateElderlyProfileScreen() {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+    const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ['images'],
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 0.5,
+    });
+
+    if (!result.canceled && result.assets && result.assets.length > 0) {
+      setImageUrl(result.assets[0].uri);
+    }
+  };
 
   const handleCreate = async () => {
     setError(null);
@@ -74,6 +90,7 @@ export default function CreateElderlyProfileScreen() {
     const created = await createProfile({
       fullName: fullName.trim(),
       preferredName: preferredName.trim() || fullName.split(' ')[0],
+      imageUrl: imageUrl || undefined,
       age: parseInt(age, 10),
       dateOfBirth: dateOfBirth.trim() || '1950-01-01',
       gender,
@@ -147,7 +164,17 @@ export default function CreateElderlyProfileScreen() {
       </View>
 
       {/* Screen Intro */}
-      <View style={styles.introHeader}>
+            <View style={styles.introHeader}>
+        <TouchableOpacity onPress={pickImage} style={{ alignSelf: 'center', marginBottom: 20, width: 100, height: 100, borderRadius: 50, backgroundColor: '#E2E8F0', justifyContent: 'center', alignItems: 'center', overflow: 'hidden', borderWidth: 2, borderColor: '#CBD5E1' }}>
+          {imageUrl ? (
+            <Image source={{ uri: imageUrl }} style={{ width: '100%', height: '100%' }} />
+          ) : (
+            <>
+              <Camera size={32} color="#64748B" />
+              <Text style={{ fontSize: 10, color: '#64748B', marginTop: 4 }}>Add Photo</Text>
+            </>
+          )}
+        </TouchableOpacity>
         <Text style={styles.title}>Register Loved One</Text>
         <Text style={styles.subtitle}>
           Create a profile to begin real-time IoT monitoring, emergency alerts, and daily care records.

@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
-import { ArrowLeft, Check, Save } from 'lucide-react-native';
+import { ArrowLeft, Check, Save, Camera } from 'lucide-react-native';
+import * as ImagePicker from 'expo-image-picker';
+import { Image } from 'react-native';
 import { ScreenContainer, Button, TextInput, Card, TopBar } from '@/components/ui';
 import { Colors, Typography, Spacing, BorderRadius } from '@/constants/theme';
 import { useElderly } from '@/context/ElderlyContext';
@@ -21,6 +23,7 @@ export default function EditElderlyProfileScreen() {
     };
 
   const [fullName, setFullName] = useState(activeProfile?.fullName || '');
+  const [imageUrl, setImageUrl] = useState<string | null>(activeProfile?.imageUrl || null);
   const [preferredName, setPreferredName] = useState(activeProfile?.preferredName || '');
   const [age, setAge] = useState(activeProfile?.age ? activeProfile.age.toString() : '');
   const [address, setAddress] = useState(activeProfile?.address || '');
@@ -58,6 +61,19 @@ export default function EditElderlyProfileScreen() {
   const [error, setError] = useState<string | null>(null);
   const [savedSuccess, setSavedSuccess] = useState(false);
 
+    const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ['images'],
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 0.5,
+    });
+
+    if (!result.canceled && result.assets && result.assets.length > 0) {
+      setImageUrl(result.assets[0].uri);
+    }
+  };
+
   const handleSave = () => {
     if (!activeProfile) return;
     setError(null);
@@ -93,6 +109,7 @@ export default function EditElderlyProfileScreen() {
     updateProfile(activeProfile.id, {
       fullName: fullName.trim(),
       preferredName: preferredName.trim(),
+      imageUrl: imageUrl || undefined,
       age: parseInt(age, 10) || activeProfile.age,
       address: address.trim(),
       phone: phone.trim(),
@@ -173,9 +190,22 @@ export default function EditElderlyProfileScreen() {
             <Save size={18} color={Colors.primary} />
           )}
         </TouchableOpacity>
-      </View>
+      </View>      <TouchableOpacity onPress={pickImage} style={{ alignSelf: 'center', marginBottom: 20, width: 100, height: 100, borderRadius: 50, backgroundColor: '#E2E8F0', justifyContent: 'center', alignItems: 'center', overflow: 'hidden', borderWidth: 2, borderColor: '#CBD5E1' }}>
+        {imageUrl ? (
+          <Image source={{ uri: imageUrl }} style={{ width: '100%', height: '100%' }} />
+        ) : fullName ? (
+          <Text style={{ fontSize: 32, fontWeight: 'bold', color: '#64748B' }}>
+            {fullName.substring(0, 2).toUpperCase()}
+          </Text>
+        ) : (
+          <>
+            <Camera size={32} color="#64748B" />
+            <Text style={{ fontSize: 10, color: '#64748B', marginTop: 4 }}>Add Photo</Text>
+          </>
+        )}
+      </TouchableOpacity>
 
-      {/* ── 1. Personal Information ─────────────────────────── */}
+      {/* 🔹 1. Personal Information ─────────────────────────── */}
       <Text style={styles.sectionLabel}>PERSONAL DETAILS</Text>
       <Card style={styles.card}>
         <TextInput
