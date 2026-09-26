@@ -1,4 +1,6 @@
-import React from 'react';
+const fs = require('fs');
+
+const indexCode = \import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image, ImageBackground } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Bell, MapPin, Pill, ShieldAlert, Shield, CheckCircle, UserPlus, Plus, Heart, Activity, Thermometer, Footprints } from 'lucide-react-native';
@@ -48,8 +50,6 @@ export default function ParentDashboardScreen() {
   // Placeholders
   const caregiverImageUri = 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=200&auto=format&fit=crop';
   const mapImageUri = 'https://images.unsplash.com/photo-1524661135-423995f22d0b?q=80&w=400&auto=format&fit=crop';
-  const emptyHeroImgUri = 'https://images.unsplash.com/photo-1581579205115-0b5cb063c2c3?q=80&w=400&auto=format&fit=crop';
-  const emptyCareImgUri = 'https://images.unsplash.com/photo-1579684385127-1ef15d508118?q=80&w=400&auto=format&fit=crop';
 
   return (
     <ScreenContainer
@@ -58,9 +58,9 @@ export default function ParentDashboardScreen() {
       backgroundColor={Colors.background}
       bottomBar={<BottomTabBar activeTab="home" role="parent" />}
     >
-      {/* 1. HEADER */}
+      {/* 1. HEADER (Frosted Glass Effect Hint via light background) */}
       <View style={styles.topHeader}>
-        <Text style={styles.greetingTitle}>Good morning, {parentFirstName} ðŸ‘‹</Text>
+        <Text style={styles.greetingTitle}>Good morning, {parentFirstName} ??</Text>
         <TouchableOpacity
           onPress={() => router.push('/(parent)/alerts' as any)}
           style={styles.headerIconButton}
@@ -99,7 +99,7 @@ export default function ParentDashboardScreen() {
       {/* 2. PATIENT + SAFETY STATUS */}
       {!hasSenior ? (
         <Card style={styles.emptySeniorHeroCard}>
-          <Image source={{uri: emptyHeroImgUri}} style={styles.emptyHeroImg} />
+          <Image source={{uri: 'https://images.unsplash.com/photo-1581579205115-0b5cb063c2c3?q=80&w=400&auto=format&fit=crop'}} style={styles.emptyHeroImg} />
           <View style={styles.emptySeniorOverlay}>
             <Text style={styles.emptySeniorTitle}>Welcome to GUYNOVA GUARD</Text>
             <Text style={styles.emptySeniorSub}>Add your loved one to monitor their safety and vitals with premium care tools.</Text>
@@ -128,7 +128,7 @@ export default function ParentDashboardScreen() {
                </View>
                <View style={styles.patientInfoCol}>
                  <Text style={styles.patientName} numberOfLines={1}>{seniorName}</Text>
-                 <Text style={styles.patientSubtext}>{seniorAge} years Â· {activeProfile?.address || 'Unknown'}</Text>
+                 <Text style={styles.patientSubtext}>{seniorAge} years · {activeProfile?.address || 'Unknown'}</Text>
                </View>
              </View>
 
@@ -142,7 +142,7 @@ export default function ParentDashboardScreen() {
                <Text style={styles.lastUpdateText}>
                   {vitals?.overallStatus === 'offline' 
                     ? 'Last known data' 
-                    : `Updated ${vitals?.lastSyncTime || 'recently'}`}
+                    : \Updated \\}
                </Text>
              </View>
           </Card>
@@ -194,7 +194,7 @@ export default function ParentDashboardScreen() {
         <View style={styles.sectionHeaderRow}>
           <Text style={styles.sectionOverline}>CARE TEAM</Text>
           <TouchableOpacity onPress={() => router.push('/(parent)/caregivers' as any)}>
-            <Text style={styles.sectionActionText}>View all {'>'}</Text>
+            <Text style={styles.sectionActionText}>View all ></Text>
           </TouchableOpacity>
         </View>
         {hasCaregiver ? (
@@ -202,7 +202,7 @@ export default function ParentDashboardScreen() {
             <Image source={{ uri: caregiverImageUri }} style={styles.caregiverImage} />
             <View style={styles.caregiverInfo}>
               <Text style={styles.caregiverName}>{assignedCaregiverName || 'Sarah Mitchell'}</Text>
-              <Text style={styles.caregiverRole}>Primary Caregiver Â· 08:00â€“20:00</Text>
+              <Text style={styles.caregiverRole}>Primary Caregiver · 08:00–20:00</Text>
             </View>
             <View style={styles.caregiverStatus}>
               <View style={[styles.statusDot, { backgroundColor: Colors.safe }]} />
@@ -228,7 +228,7 @@ export default function ParentDashboardScreen() {
         <View style={styles.sectionHeaderRow}>
           <Text style={styles.sectionOverline}>HEALTH OVERVIEW</Text>
           <TouchableOpacity onPress={() => router.push('/(parent)/health' as any)}>
-            <Text style={styles.sectionActionText}>Full report {'>'}</Text>
+            <Text style={styles.sectionActionText}>Full report ></Text>
           </TouchableOpacity>
         </View>
         <View style={styles.sparklinesGrid}>
@@ -257,7 +257,7 @@ export default function ParentDashboardScreen() {
                 statusLabel={vitals.spo2.statusLabel}
                 normalRange={vitals.spo2.normalRange}
                 icon={<Activity size={16} color={Colors.primary} />}
-                iconBg={Colors.primaryFaded}
+                iconBg={Colors.primaryBg || Colors.primaryFaded}
                 trend={vitals.spo2.trend as any}
               />
             </View>
@@ -302,7 +302,7 @@ export default function ParentDashboardScreen() {
         <View style={styles.sectionHeaderRow}>
           <Text style={styles.sectionOverline}>TODAY'S CARE</Text>
           <TouchableOpacity onPress={() => router.push('/(parent)/care' as any)}>
-            <Text style={styles.sectionActionText}>View all {'>'}</Text>
+            <Text style={styles.sectionActionText}>View all ></Text>
           </TouchableOpacity>
         </View>
         <Card style={styles.careCard}>
@@ -324,7 +324,7 @@ export default function ParentDashboardScreen() {
              ))
            ) : (
              <View style={styles.emptyCareWrap}>
-               <Image source={{uri: emptyCareImgUri}} style={styles.emptyCareImg} />
+               <Image source={{uri: 'https://images.unsplash.com/photo-1579684385127-1ef15d508118?q=80&w=400&auto=format&fit=crop'}} style={styles.emptyCareImg} />
                <View style={styles.emptyCareOverlay}>
                  <Text style={styles.emptyStateText}>No care scheduled today.</Text>
                  <Text style={styles.emptyStateSub}>Take a moment to relax.</Text>
@@ -426,7 +426,6 @@ const styles = StyleSheet.create({
   },
   avatarContainer: {
     position: 'relative',
-    padding: 3, // For breathing ring space
   },
   patientAvatar: {
     width: 52,
@@ -443,13 +442,13 @@ const styles = StyleSheet.create({
   },
   breathingRing: {
     position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
+    top: -3,
+    left: -3,
+    right: -3,
+    bottom: -3,
     borderRadius: 30,
     borderWidth: 2,
-    opacity: 0.6,
+    opacity: 0.8,
   },
   patientAvatarInitials: {
     fontSize: 18,
@@ -764,8 +763,7 @@ const styles = StyleSheet.create({
   },
   emptyCareWrap: {
     width: '100%',
-    height: 120,
-    position: 'relative',
+    height: 100,
   },
   emptyCareImg: {
     width: '100%',
@@ -851,3 +849,6 @@ const styles = StyleSheet.create({
     lineHeight: 18,
   },
 });
+\
+
+fs.writeFileSync('app/(parent)/index.tsx', indexCode);
