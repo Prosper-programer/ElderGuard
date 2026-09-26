@@ -196,8 +196,14 @@ export function CareProvider({ children }: { children: React.ReactNode }) {
     []
   );
 
-  /**
-   * Adds a new prescribed medication and immediately schedules today's doses.
+      const addActivity = useCallback((activityData: Omit<CareActivity, 'id' | 'current' | 'status'>) => {
+      const newActivity: CareActivity = { ...activityData, id: 'act-' + Date.now(), current: 0, status: 'pending' };
+      setActivities((prev) => [...prev, newActivity]);
+      return newActivity;
+    }, []);
+
+    /**
+     * Adds a new prescribed medication and immediately schedules today's doses.
    */
   const addMedication = useCallback((medicationData: Omit<Medication, 'id'>) => {
     const newMed: Medication = {
@@ -229,7 +235,8 @@ export function CareProvider({ children }: { children: React.ReactNode }) {
         markDoseStatus,
         updateActivityProgress,
         addMedication,
-      }}
+          addActivity,
+        }}
     >
       {children}
     </CareContext.Provider>

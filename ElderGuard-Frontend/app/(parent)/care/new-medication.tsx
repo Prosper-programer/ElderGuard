@@ -5,10 +5,13 @@ import { ArrowLeft, Pill, AlertCircle } from 'lucide-react-native';
 import { ScreenContainer, Button, TextInput, Card } from '@/components/ui';
 import { Colors, Typography, Spacing, BorderRadius } from '@/constants/theme';
 import { useCare } from '@/context/CareContext';
+import { useElderly } from '@/context/ElderlyContext';
 
 export default function NewMedicationScreen() {
   const router = useRouter();
   const { addMedication } = useCare();
+  const { activeProfile } = useElderly();
+  const patientName = activeProfile?.fullName || 'the patient';
 
   const [name, setName] = useState('');
   const [dosage, setDosage] = useState('');
@@ -66,7 +69,7 @@ export default function NewMedicationScreen() {
       <View style={styles.header}>
         <Text style={styles.title}>New Prescription</Text>
         <Text style={styles.subtitle}>
-          Add a scheduled medication for Margaret Johnson&apos;s daily regimen.
+          Add a scheduled medication for {patientName}&apos;s daily regimen.
         </Text>
       </View>
 

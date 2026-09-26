@@ -158,7 +158,7 @@ export default function ParentCareScreen() {
         <Text style={styles.screenTitle}>Daily Programme</Text>
 
         <TouchableOpacity
-          onPress={() => router.push('/(parent)/care/new-medication' as any)}
+          onPress={() => activeTab === 'medications' ? router.push('/(parent)/care/new-medication' as any) : router.push('/(parent)/care/new-activity' as any)}
           style={styles.addBtn}
           activeOpacity={0.7}
         >

@@ -41,4 +41,5 @@ export interface CareContextValue {
   markDoseStatus: (doseId: string, status: DoseStatus, loggedByName: string) => void;
   updateActivityProgress: (activityId: string, incrementValue: number, loggedByName: string) => void;
   addMedication: (medication: Omit<Medication, 'id'>) => Medication;
+  addActivity: (activity: Omit<CareActivity, 'id' | 'current' | 'status'>) => CareActivity;
 }
