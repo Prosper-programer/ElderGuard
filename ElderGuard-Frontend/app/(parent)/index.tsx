@@ -66,7 +66,7 @@ export default function ParentDashboardScreen() {
           style={styles.headerIconButton}
           activeOpacity={0.7}
         >
-          <Bell size={20} color={Colors.textPrimary} />
+          <Bell size={20} color={Colors.primary} />
           {activeAlerts && activeAlerts.length > 0 && (
             <View style={styles.notificationBadge}>
               <Text style={styles.notificationBadgeText}>{activeAlerts.length}</Text>
@@ -181,13 +181,13 @@ export default function ParentDashboardScreen() {
 
           <View style={styles.quickActionsCol}>
             <TouchableOpacity onPress={() => router.push('/(parent)/alerts' as any)} style={styles.quickActionBtnSmall} activeOpacity={0.8}>
-              <Bell size={20} color={Colors.textPrimary} />
+              <Bell size={20} color={Colors.primary} />
               <Text style={styles.quickActionLabelSmall}>Alerts</Text>
             </TouchableOpacity>
             
             <View style={{flexDirection: 'row', gap: 12, flex: 1}}>
               <TouchableOpacity onPress={() => router.push('/(parent)/care' as any)} style={[styles.quickActionBtnSmall, {flex: 1}]} activeOpacity={0.8}>
-                <Pill size={20} color={Colors.textPrimary} />
+                <Pill size={20} color={Colors.primary} />
                 <Text style={styles.quickActionLabelSmall}>Care plan</Text>
               </TouchableOpacity>
               <TouchableOpacity onPress={() => router.push('/(parent)/emergency' as any)} style={[styles.quickActionBtnSmall, styles.quickActionDangerBorder, {flex: 1}]} activeOpacity={0.8}>
@@ -387,8 +387,8 @@ const styles = StyleSheet.create({
   },
   sectionOverline: {
     fontSize: 12,
-    fontWeight: '700',
-    color: Colors.textSecondary,
+    fontWeight: '800',
+    color: Colors.primary,
     letterSpacing: 1,
     marginBottom: 12,
     textTransform: 'uppercase',
@@ -615,7 +615,7 @@ const styles = StyleSheet.create({
   mapQuickActionLabel: {
     fontSize: 14,
     fontWeight: '700',
-    color: Colors.textPrimary,
+    color: Colors.white,
   },
   quickActionsCol: {
     flex: 1,
