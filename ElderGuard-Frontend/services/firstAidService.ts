@@ -11,7 +11,7 @@
 import { API_BASE_URL } from '../constants/api';
 import { FirstAidProtocol, getOfflineProtocol } from '../constants/firstAidProtocols';
 
-const FETCH_TIMEOUT_MS = 4000; // 4 seconds — fast enough for an emergency
+const FETCH_TIMEOUT_MS = 18000; // 18 seconds — to allow backend AI generation time
 
 /**
  * Fetch a first-aid protocol from the backend.

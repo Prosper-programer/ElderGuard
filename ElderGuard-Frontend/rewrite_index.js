@@ -1,4 +1,7 @@
-import React from 'react';
+const fs = require('fs');
+const path = 'app/(parent)/index.tsx';
+
+const code = import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image, Linking, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Bell, MapPin, Pill, ShieldAlert, HeartHandshake, Shield, CheckCircle, UserPlus, Plus } from 'lucide-react-native';
@@ -13,8 +16,7 @@ import { useAlerts } from '@/context/AlertContext';
 
 export default function ParentDashboardScreen() {
   const router = useRouter();
-  const { user, accountStatus } = useAuth();
-  const isDeactivated = accountStatus === 'inactive';
+  const { user, isDeactivated } = useAuth();
   const { activeProfile, hasSenior, assignedCaregiverName, hasCaregiver } = useElderly();
   const { vitals } = useVitals();
   const { todayDoses } = useCare();
@@ -32,13 +34,13 @@ export default function ParentDashboardScreen() {
   const seniorAge = activeProfile?.age || '';
   const seniorPhoto = activeProfile?.imageUrl || undefined;
 
-  const getStatusColor = (status: string) => {
+  const getStatusColor = (status) => {
     if (status === 'safe') return Colors.safe;
     if (status === 'warning') return Colors.warning;
     if (status === 'critical') return Colors.critical;
     return Colors.offline;
   };
-  const getStatusBg = (status: string) => {
+  const getStatusBg = (status) => {
     if (status === 'safe') return Colors.safeBg;
     if (status === 'warning') return Colors.warningBg;
     if (status === 'critical') return Colors.criticalBg;
@@ -61,7 +63,7 @@ export default function ParentDashboardScreen() {
     >
       {/* 1. HEADER */}
       <View style={styles.topHeader}>
-        <Text style={styles.greetingTitle}>Good morning, {parentFirstName} 👋</Text>
+        <Text style={styles.greetingTitle}>Good morning, {parentFirstName} ??</Text>
         <TouchableOpacity
           onPress={() => router.push('/(parent)/alerts' as any)}
           style={styles.headerIconButton}
@@ -123,7 +125,7 @@ export default function ParentDashboardScreen() {
                )}
                <View style={styles.patientInfoCol}>
                  <Text style={styles.patientName} numberOfLines={1}>{seniorName}</Text>
-                 <Text style={styles.patientSubtext}>{seniorAge} years · {activeProfile?.address || 'Unknown'}</Text>
+                 <Text style={styles.patientSubtext}>{seniorAge} years � {activeProfile?.address || 'Unknown'}</Text>
                </View>
              </View>
 
@@ -137,7 +139,7 @@ export default function ParentDashboardScreen() {
                <Text style={styles.lastUpdateText}>
                   {vitals?.overallStatus === 'offline' 
                     ? 'Last known data' 
-                    : `Updated ${vitals?.lastSyncTime || 'recently'}`}
+                    : \Updated \\}
                </Text>
              </View>
 
@@ -148,10 +150,10 @@ export default function ParentDashboardScreen() {
                 </View>
                 <View style={styles.vitalSummaryItem}>
                   <Text style={styles.vitalSummaryValue}>{vitals?.spo2?.value || '--'}<Text style={styles.vitalSummaryUnit}> %</Text></Text>
-                  <Text style={styles.vitalSummaryLabel}>SpO₂</Text>
+                  <Text style={styles.vitalSummaryLabel}>SpO2</Text>
                 </View>
                 <View style={styles.vitalSummaryItem}>
-                  <Text style={styles.vitalSummaryValue}>{vitals?.temperature?.value || '--'}<Text style={styles.vitalSummaryUnit}> °C</Text></Text>
+                  <Text style={styles.vitalSummaryValue}>{vitals?.temperature?.value || '--'}<Text style={styles.vitalSummaryUnit}> �C</Text></Text>
                   <Text style={styles.vitalSummaryLabel}>Temp</Text>
                 </View>
                 <View style={styles.vitalSummaryItem}>
@@ -191,7 +193,7 @@ export default function ParentDashboardScreen() {
         <View style={styles.sectionHeaderRow}>
           <Text style={styles.sectionOverline}>CARE TEAM</Text>
           <TouchableOpacity onPress={() => router.push('/(parent)/caregivers' as any)}>
-            <Text style={styles.sectionActionText}>View all {'>'}</Text>
+            <Text style={styles.sectionActionText}>View all ></Text>
           </TouchableOpacity>
         </View>
         {hasCaregiver ? (
@@ -201,7 +203,7 @@ export default function ParentDashboardScreen() {
             </View>
             <View style={styles.caregiverInfo}>
               <Text style={styles.caregiverName}>{assignedCaregiverName || 'Caregiver'}</Text>
-              <Text style={styles.caregiverRole}>Caregiver · 08:00–20:00</Text>
+              <Text style={styles.caregiverRole}>Caregiver � 08:00�20:00</Text>
             </View>
             <View style={styles.caregiverStatus}>
               <View style={[styles.statusDot, { backgroundColor: Colors.safe }]} />
@@ -226,13 +228,13 @@ export default function ParentDashboardScreen() {
         <View style={styles.sectionHeaderRow}>
           <Text style={styles.sectionOverline}>HEALTH OVERVIEW</Text>
           <TouchableOpacity onPress={() => router.push('/(parent)/health' as any)}>
-            <Text style={styles.sectionActionText}>Full report {'>'}</Text>
+            <Text style={styles.sectionActionText}>Full report ></Text>
           </TouchableOpacity>
         </View>
         <Card style={styles.healthOverviewCard}>
           {[
             { label: 'Heart rate', val: vitals?.heartRate },
-            { label: 'SpO₂', val: vitals?.spo2 },
+            { label: 'SpO2', val: vitals?.spo2 },
             { label: 'Temperature', val: vitals?.temperature },
             { label: 'Activity', val: vitals?.steps }
           ].map((metric, i) => (
@@ -249,7 +251,7 @@ export default function ParentDashboardScreen() {
                       <View style={[styles.statusDotSmall, { backgroundColor: getStatusColor(metric.val.status) }]} />
                       <Text style={styles.healthTrendText}>
                         {metric.val.statusLabel}
-                        {metric.val.trend === 'rising' ? ' ↗' : metric.val.trend === 'falling' ? ' ↘' : ''}
+                        {metric.val.trend === 'rising' ? ' ?' : metric.val.trend === 'falling' ? ' ?' : ''}
                       </Text>
                    </View>
                 ) : (
@@ -266,7 +268,7 @@ export default function ParentDashboardScreen() {
         <View style={styles.sectionHeaderRow}>
           <Text style={styles.sectionOverline}>TODAY'S CARE</Text>
           <TouchableOpacity onPress={() => router.push('/(parent)/care' as any)}>
-            <Text style={styles.sectionActionText}>View all {'>'}</Text>
+            <Text style={styles.sectionActionText}>View all ></Text>
           </TouchableOpacity>
         </View>
         <Card style={styles.careCard}>
@@ -344,7 +346,6 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: Colors.textSecondary,
     letterSpacing: 0.5,
-    marginBottom: 12,
   },
   sectionHeaderRow: {
     flexDirection: 'row',
@@ -772,3 +773,5 @@ const styles = StyleSheet.create({
     lineHeight: 18,
   },
 });
+;
+fs.writeFileSync(path, code, 'utf8');

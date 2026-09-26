@@ -291,21 +291,21 @@ export default function EditElderlyProfileScreen() {
       {/* ── 3. Health & Medical Notes ───────────────────────── */}
       <Text style={styles.sectionLabel}>HEALTH & MEDICAL PROFILE</Text>
       <Card style={styles.card}>
-        <Text style={styles.fieldLabel}>Blood Type</Text>
-        <View style={[styles.genderRow, { flexWrap: 'wrap', gap: 8, marginBottom: 16 }]}>
+        <Text style={(styles as any).fieldLabel}>Blood Type</Text>
+        <View style={[(styles as any).genderRow, { flexWrap: 'wrap', gap: 8, marginBottom: 16 }]}>
           {['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'].map((b) => (
             <TouchableOpacity
               key={b}
               onPress={() => setBloodType(b)}
               style={[
-                styles.genderChip, 
+                (styles as any).genderChip, 
                 { minWidth: '22%', flex: 0, paddingVertical: 10 },
-                bloodType === b && styles.genderChipActive
+                bloodType === b && (styles as any).genderChipActive
               ]}
               activeOpacity={0.8}
             >
               <Text
-                style={[styles.genderChipText, bloodType === b && styles.genderChipTextActive]}
+                style={[(styles as any).genderChipText, bloodType === b && (styles as any).genderChipTextActive]}
               >
                 {b}
               </Text>
@@ -464,4 +464,6 @@ const styles = StyleSheet.create({
     paddingBottom: Spacing['3xl'],
   },
 });
+
+
 

@@ -76,7 +76,7 @@ export default function AdminUsers() {
       <View style={styles.cardFooter}>
         <View style={styles.roleContainer}>
           {item.role === 'admin' && <Shield size={16} color={Colors.primary} />}
-          {item.role === 'parent' && <UserIcon size={16} color={Colors.textSecondary} />}
+          {((item.role as any) === 'parent' || (item.role as string) === 'Tutor') && <UserIcon size={16} color={Colors.textSecondary} />}
           {item.role === 'caregiver' && <Activity size={16} color={Colors.accent} />}
           <Text style={styles.roleText}>
             {item.role.charAt(0).toUpperCase() + item.role.slice(1)}

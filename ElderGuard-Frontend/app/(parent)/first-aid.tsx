@@ -174,8 +174,8 @@ export default function FirstAidScreen() {
             </Card>
           )}
 
-          {/* ── AI Contextual Tip (only when present & not offline) ── */}
-          {protocol?.contextualTip && !isOffline && (
+          {/* ── AI Contextual Tip (only on first step & not offline) ── */}
+          {protocol?.contextualTip && !isOffline && currentStep === 0 && (
             <View style={styles.aiTipBox}>
               <Lightbulb size={14} color="#6D28D9" />
               <View style={styles.aiTipContent}>
@@ -403,29 +403,36 @@ const styles = StyleSheet.create({
   aiTipBox: {
     flexDirection: 'row',
     alignItems: 'flex-start',
-    gap: 9,
+    gap: 12,
     backgroundColor: '#F5F3FF',
     borderRadius: 12,
     borderWidth: 1,
     borderColor: '#DDD6FE',
-    padding: 12,
-    marginBottom: 14,
+    padding: 16,
+    marginTop: 8,
+    marginBottom: 24,
+    zIndex: 10,
+    elevation: 2,
+    shadowColor: '#7C3AED',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
   },
   aiTipContent: {
     flex: 1,
   },
   aiTipLabel: {
-    fontSize: 9,
+    fontSize: 10,
     fontWeight: '800',
     color: '#7C3AED',
-    letterSpacing: 0.7,
-    marginBottom: 3,
+    letterSpacing: 0.8,
+    marginBottom: 4,
   },
   aiTipText: {
-    fontSize: 12,
+    fontSize: 13,
     color: '#4C1D95',
     fontWeight: '500',
-    lineHeight: 17,
+    lineHeight: 19,
   },
   navRow: {
     flexDirection: 'row',

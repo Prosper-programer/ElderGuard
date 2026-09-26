@@ -73,7 +73,7 @@ export async function apiSignup(
   name: string,
   email: string,
   password: string,
-  role: 'Tutor' | 'caregiver',
+  role: 'Tutor' | 'caregiver' | 'parent',
   phoneNumber: string = '690000000'
 ): Promise<{ success: boolean; user?: User; token?: string; error?: string }> {
   try {
