@@ -26,7 +26,7 @@ export interface FirstAidResponse {
   lastUpdated: string;
 }
 
-const GEMINI_TIMEOUT_MS = 5000; // 5 seconds — don't make emergencies wait for AI
+const GEMINI_TIMEOUT_MS = 15000; // 15 seconds to allow gemini-3.8-flash time to generate
 
 /**
  * Fetch an optional contextual tip from Gemini.
@@ -61,7 +61,7 @@ async function fetchGeminiContextualTip(emergencyType: string): Promise<string |
           contents: [{ parts: [{ text: prompt }] }],
           generationConfig: {
             temperature: 0.4,
-            maxOutputTokens: 80,
+            maxOutputTokens: 800,
           },
         }),
       }
@@ -74,7 +74,8 @@ async function fetchGeminiContextualTip(emergencyType: string): Promise<string |
     };
     const tip = data?.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
     return tip || undefined;
-  } catch {
+  } catch (err) {
+    console.error('Gemini Fetch Error:', err);
     // Timeout, network error, or invalid response — silently fail
     return undefined;
   } finally {
