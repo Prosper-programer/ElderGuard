@@ -4,19 +4,17 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
-  ScrollView,
   Switch,
   Alert,
   ActivityIndicator,
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import MapView, { Circle as MapCircle, Marker, PROVIDER_DEFAULT } from 'react-native-maps';
+import * as Location from 'expo-location';
 import {
   ChevronLeft,
   Shield,
   MapPin,
-  Plus,
-  Minus,
 } from 'lucide-react-native';
 import {
   ScreenContainer,
@@ -43,13 +41,69 @@ export default function GeofencingScreen() {
   const [radius, setRadius] = useState<number>(500);
   const [centerLocation, setCenterLocation] = useState(DEFAULT_CENTER);
 
+  // Real location state
+  const [locationName, setLocationName] = useState<string>('Fetching location...');
+  const [locationLoading, setLocationLoading] = useState(true);
+
   // Alerts
   const [alertExit, setAlertExit] = useState<boolean>(true);
   const [alertReturn, setAlertReturn] = useState<boolean>(true);
 
   useEffect(() => {
     loadGeofence();
+    fetchRealLocation();
   }, [elderlyId]);
+
+  /**
+   * Fetches the device's real GPS location and reverse-geocodes it to a
+   * human-readable string like "Bastos, Yaoundé, Cameroon".
+   */
+  const fetchRealLocation = async () => {
+    setLocationLoading(true);
+    try {
+      // 1. Ask for permission
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        setLocationName('Location permission denied');
+        setLocationLoading(false);
+        return;
+      }
+
+      // 2. Get current GPS coordinates
+      const loc = await Location.getCurrentPositionAsync({
+        accuracy: Location.Accuracy.Balanced,
+      });
+
+      // 3. Update the map centre to the real position
+      setCenterLocation({
+        latitude: loc.coords.latitude,
+        longitude: loc.coords.longitude,
+      });
+
+      // 4. Reverse-geocode to get a readable address
+      const [place] = await Location.reverseGeocodeAsync({
+        latitude: loc.coords.latitude,
+        longitude: loc.coords.longitude,
+      });
+
+      if (place) {
+        // Build a clean label from available parts
+        const parts: string[] = [];
+        if (place.district || place.subregion) parts.push(place.district || place.subregion || '');
+        if (place.city) parts.push(place.city);
+        if (place.country) parts.push(place.country);
+        setLocationName(parts.filter(Boolean).join(', ') || 'Current Location');
+      } else {
+        setLocationName(
+          `${loc.coords.latitude.toFixed(4)}, ${loc.coords.longitude.toFixed(4)}`
+        );
+      }
+    } catch (e) {
+      setLocationName('Unable to get location');
+    } finally {
+      setLocationLoading(false);
+    }
+  };
 
   const loadGeofence = async () => {
     if (!elderlyId) return;
@@ -63,7 +117,7 @@ export default function GeofencingScreen() {
         longitude: parseFloat(data.center_longitude) || DEFAULT_CENTER.longitude,
       });
     } else {
-      setIsEnabled(false); // No geofence yet
+      setIsEnabled(false);
     }
     setIsLoading(false);
   };
@@ -72,8 +126,7 @@ export default function GeofencingScreen() {
     setIsEnabled(val);
     if (!elderlyId) return;
     setIsSaving(true);
-    
-    // If no geofence exists and they turn it on, create it first
+
     const existing = await apiGetGeofence(elderlyId);
     if (!existing && val) {
       await apiCreateGeofence({
@@ -90,12 +143,10 @@ export default function GeofencingScreen() {
 
   const handleRadiusChange = (newRadius: number) => {
     setRadius(newRadius);
-    // Debounce save to backend could be added here
   };
 
   const saveRadiusToBackend = async (newRadius: number) => {
     if (!elderlyId) return;
-    // Overwrite with new radius by creating/updating
     await apiCreateGeofence({
       elderly_id: elderlyId,
       center_latitude: centerLocation.latitude,
@@ -136,8 +187,8 @@ export default function GeofencingScreen() {
           <Text style={styles.toggleTitle}>Safe Zone</Text>
           <Text style={styles.toggleSub}>
             {isEnabled
-              ? 'Active � Monitoring boundary'
-              : 'Off � No safe zone configured'}
+              ? 'Active — Monitoring boundary'
+              : 'Off — No safe zone configured'}
           </Text>
         </View>
 
@@ -216,6 +267,7 @@ export default function GeofencingScreen() {
         </View>
       </Card>
 
+      {/* Centre Point Card — shows real location */}
       <Card style={styles.centerCard}>
         <Text style={styles.cardHeading}>Centre Point</Text>
         <View style={styles.centerRow}>
@@ -224,8 +276,16 @@ export default function GeofencingScreen() {
           </View>
           <View style={styles.centerTextCol}>
             <Text style={styles.centerMainText}>Current Location</Text>
-            <Text style={styles.centerSubText}>Bastos, Yaound�</Text>
+            {locationLoading ? (
+              <ActivityIndicator size="small" color="#3C6FDB" style={{ alignSelf: 'flex-start', marginTop: 2 }} />
+            ) : (
+              <Text style={styles.centerSubText}>{locationName}</Text>
+            )}
           </View>
+          {/* Refresh button */}
+          <TouchableOpacity onPress={fetchRealLocation} style={styles.refreshBtn} activeOpacity={0.7}>
+            <Text style={styles.refreshText}>Refresh</Text>
+          </TouchableOpacity>
         </View>
       </Card>
 
@@ -267,4 +327,6 @@ const styles = StyleSheet.create({
   centerTextCol: { flex: 1 },
   centerMainText: { fontSize: 13.5, fontWeight: '700', color: '#1E293B' },
   centerSubText: { fontSize: 11.5, color: '#64748B', marginTop: 1 },
+  refreshBtn: { paddingHorizontal: 10, paddingVertical: 5, borderRadius: 8, backgroundColor: '#EEF5FF', borderWidth: 1, borderColor: '#3C6FDB' },
+  refreshText: { fontSize: 11, fontWeight: '700', color: '#3C6FDB' },
 });

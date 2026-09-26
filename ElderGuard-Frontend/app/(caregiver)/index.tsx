@@ -1048,10 +1048,11 @@ const styles = StyleSheet.create({
   vitals2ColGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 10,
+    justifyContent: 'space-between',
   },
   vitalCardItem: {
-    width: '48.5%',
+    width: '48%',
+    marginBottom: 12,
     backgroundColor: '#FFFFFF',
     borderRadius: 18,
     borderWidth: 1,
