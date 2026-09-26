@@ -215,7 +215,7 @@ export default function CaregiverSettingsScreen() {
           {/* Emergency First Aid Protocols */}
           <TouchableOpacity
             style={styles.menuRow}
-            onPress={() => router.push('/(Tutor)/first-aid' as any)}
+            onPress={() => router.push('/(parent)/first-aid' as any)}
             activeOpacity={0.7}
           >
             <View style={[styles.menuIconWrap, { backgroundColor: '#F0FDF4' }]}>

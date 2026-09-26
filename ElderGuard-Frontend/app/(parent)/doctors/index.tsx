@@ -101,7 +101,7 @@ export default function ManageDoctorsScreen() {
           <View style={{ height: 20 }} />
           <Button
             title="Provision a Doctor"
-            onPress={() => router.push('/(Tutor)/doctors/create' as any)}
+            onPress={() => router.push('/(parent)/doctors/create' as any)}
             variant="primary"
             leftIcon={<UserPlus size={18} color="#FFF" />}
           />
@@ -157,7 +157,7 @@ export default function ManageDoctorsScreen() {
 
           <Button
             title="Reassign Doctor"
-            onPress={() => router.push('/(Tutor)/doctors/create' as any)}
+            onPress={() => router.push('/(parent)/doctors/create' as any)}
             variant="outline"
             leftIcon={<UserPlus size={18} color="#2563EB" />}
           />

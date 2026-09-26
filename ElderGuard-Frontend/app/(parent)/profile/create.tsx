@@ -126,7 +126,7 @@ export default function CreateElderlyProfileScreen() {
     if (router.canGoBack()) {
       router.back();
     } else {
-      router.replace('/(Tutor)/profile' as any);
+      router.replace('/(parent)/profile' as any);
     }
   };
 

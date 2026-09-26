@@ -87,7 +87,7 @@ export default function AlertsListScreen() {
     >
       <TopBar
         title="Alerts & Incidents"
-        onBack={() => (router.canGoBack() ? router.back() : router.replace('/(Tutor)' as any))}
+        onBack={() => (router.canGoBack() ? router.back() : router.replace('/(parent)' as any))}
       />
 
       {/* Filter Tabs matching Figma */}
@@ -166,9 +166,9 @@ export default function AlertsListScreen() {
                 resolved={isResolved}
                 onPress={() => {
                   if (type === 'critical' || a.type === 'fall' || a.title?.toLowerCase().includes('fall')) {
-                    router.push('/(Tutor)/emergency' as any);
+                    router.push('/(parent)/emergency' as any);
                   } else {
-                    router.push(`/(Tutor)/alerts/${a.id}` as any);
+                    router.push(`/(parent)/alerts/${a.id}` as any);
                   }
                 }}
               />

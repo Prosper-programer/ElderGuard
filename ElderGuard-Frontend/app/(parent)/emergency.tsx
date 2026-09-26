@@ -63,7 +63,7 @@ export default function EmergencyScreen() {
   };
 
   const handleDoctorStatus = () => {
-    router.push('/(Tutor)/doctor-status' as any);
+    router.push('/(parent)/doctor-status' as any);
   };
 
   return (
@@ -168,7 +168,7 @@ export default function EmergencyScreen() {
           <View style={styles.subActionsRow}>
             <TouchableOpacity
               style={styles.subBtn}
-              onPress={() => router.push('/(Tutor)/first-aid' as any)}
+              onPress={() => router.push('/(parent)/first-aid' as any)}
               activeOpacity={0.8}
             >
               <Shield size={16} color="#FFFFFF" />
@@ -188,7 +188,7 @@ export default function EmergencyScreen() {
           {/* View Location link */}
           <TouchableOpacity
             style={styles.locationLink}
-            onPress={() => router.push('/(Tutor)/location' as any)}
+            onPress={() => router.push('/(parent)/location' as any)}
             activeOpacity={0.7}
           >
             <MapPin size={14} color="rgba(255, 255, 255, 0.6)" />

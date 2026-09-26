@@ -43,7 +43,7 @@ export default function NewMedicationScreen() {
     if (router.canGoBack()) {
       router.back();
     } else {
-      router.replace('/(Tutor)/care' as any);
+      router.replace('/(parent)/care' as any);
     }
   };
 

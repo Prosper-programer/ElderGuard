@@ -192,7 +192,7 @@ export default function HealthMonitoringScreen() {
       {/* ── 1. Header with Inline Period Switcher ───────────── */}
       <View style={styles.headerRow}>
         <TouchableOpacity
-          onPress={() => (router.canGoBack() ? router.back() : router.replace('/(Tutor)' as any))}
+          onPress={() => (router.canGoBack() ? router.back() : router.replace('/(parent)' as any))}
           style={styles.backBtn}
           activeOpacity={0.7}
         >

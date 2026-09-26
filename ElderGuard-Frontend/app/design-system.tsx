@@ -29,7 +29,7 @@ export default function DesignSystemScreen() {
     if (router.canGoBack()) {
       router.back();
     } else {
-      router.replace('/(Tutor)' as any);
+      router.replace('/(parent)' as any);
     }
   };
 

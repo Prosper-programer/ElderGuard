@@ -39,7 +39,7 @@ export default function AIHealthInsightsScreen() {
       {/* Top Header */}
       <View style={styles.topHeader}>
         <TouchableOpacity
-          onPress={() => (router.canGoBack() ? router.back() : router.replace('/(Tutor)/more' as any))}
+          onPress={() => (router.canGoBack() ? router.back() : router.replace('/(parent)/more' as any))}
           style={styles.backBtn}
           activeOpacity={0.7}
         >

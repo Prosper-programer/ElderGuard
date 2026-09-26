@@ -103,7 +103,7 @@ export default function ManageCaregiversScreen() {
           <View style={{ height: 20 }} />
           <Button
             title="Provision a Caregiver"
-            onPress={() => router.push('/(Tutor)/caregivers/create' as any)}
+            onPress={() => router.push('/(parent)/caregivers/create' as any)}
             variant="primary"
             leftIcon={<UserPlus size={18} color="#FFF" />}
           />
@@ -159,7 +159,7 @@ export default function ManageCaregiversScreen() {
 
           <Button
             title="Reassign Caregiver"
-            onPress={() => router.push('/(Tutor)/caregivers/create' as any)}
+            onPress={() => router.push('/(parent)/caregivers/create' as any)}
             variant="outline"
             leftIcon={<UserPlus size={18} color="#2563EB" />}
           />

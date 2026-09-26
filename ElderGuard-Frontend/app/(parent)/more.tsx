@@ -44,7 +44,7 @@ export default function ParentMoreScreen() {
       icon: User,
       iconColor: '#0284C7',
       iconBg: '#E0F2FE',
-      onPress: () => router.push('/(Tutor)/profile' as any),
+      onPress: () => router.push('/(parent)/profile' as any),
     },
     {
       id: 'daily_programme',
@@ -52,7 +52,7 @@ export default function ParentMoreScreen() {
       icon: Calendar,
       iconColor: '#16A34A',
       iconBg: '#DCFCE7',
-      onPress: () => router.push('/(Tutor)/care' as any),
+      onPress: () => router.push('/(parent)/care' as any),
     },
     {
       id: 'geofencing',
@@ -60,7 +60,7 @@ export default function ParentMoreScreen() {
       icon: Shield,
       iconColor: '#9333EA',
       iconBg: '#F3E8FF',
-      onPress: () => router.push('/(Tutor)/geofencing' as any),
+      onPress: () => router.push('/(parent)/geofencing' as any),
     },
     {
       id: 'manage_caregivers',
@@ -68,7 +68,7 @@ export default function ParentMoreScreen() {
       icon: Users,
       iconColor: '#0284C7',
       iconBg: '#E0F2FE',
-      onPress: () => router.push('/(Tutor)/caregivers' as any),
+      onPress: () => router.push('/(parent)/caregivers' as any),
     },
     {
       id: 'manage_doctors',
@@ -76,7 +76,7 @@ export default function ParentMoreScreen() {
       icon: Stethoscope,
       iconColor: '#059669',
       iconBg: '#D1FAE5',
-      onPress: () => router.push('/(Tutor)/doctors' as any),
+      onPress: () => router.push('/(parent)/doctors' as any),
     },
     {
       id: 'history',
@@ -84,7 +84,7 @@ export default function ParentMoreScreen() {
       icon: History,
       iconColor: '#475569',
       iconBg: '#F1F5F9',
-      onPress: () => router.push('/(Tutor)/history' as any),
+      onPress: () => router.push('/(parent)/history' as any),
     },
     {
       id: 'reports',
@@ -92,7 +92,7 @@ export default function ParentMoreScreen() {
       icon: BarChart2,
       iconColor: '#EA580C',
       iconBg: '#FFEDD5',
-      onPress: () => router.push('/(Tutor)/reports' as any),
+      onPress: () => router.push('/(parent)/reports' as any),
     },
     {
       id: 'ai_insights',
@@ -100,7 +100,7 @@ export default function ParentMoreScreen() {
       icon: Brain,
       iconColor: '#A855F7',
       iconBg: '#F3E8FF',
-      onPress: () => router.push('/(Tutor)/ai-insights' as any),
+      onPress: () => router.push('/(parent)/ai-insights' as any),
     },
     {
       id: 'device_status',
@@ -108,7 +108,7 @@ export default function ParentMoreScreen() {
       icon: Bluetooth,
       iconColor: '#06B6D4',
       iconBg: '#E0F2FE',
-      onPress: () => router.push('/(Tutor)/device' as any),
+      onPress: () => router.push('/(parent)/device' as any),
     },
     {
       id: 'settings',
@@ -116,7 +116,7 @@ export default function ParentMoreScreen() {
       icon: Settings,
       iconColor: '#64748B',
       iconBg: '#F1F5F9',
-      onPress: () => router.push('/(Tutor)/settings' as any),
+      onPress: () => router.push('/(parent)/settings' as any),
     },
   ];
 
@@ -198,7 +198,7 @@ export default function ParentMoreScreen() {
               style={styles.modalActionBtn}
               onPress={() => {
                 setAiModalVisible(false);
-                router.push('/(Tutor)/reports' as any);
+                router.push('/(parent)/reports' as any);
               }}
               activeOpacity={0.88}
             >

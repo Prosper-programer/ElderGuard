@@ -117,7 +117,7 @@ export default function EditElderlyProfileScreen() {
     setLoading(false);
     setSavedSuccess(true);
     setTimeout(() => {
-      router.replace('/(Tutor)/profile' as any);
+      router.replace('/(parent)/profile' as any);
     }, 400);
   };
 
@@ -125,7 +125,7 @@ export default function EditElderlyProfileScreen() {
     if (router.canGoBack()) {
       router.back();
     } else {
-      router.replace('/(Tutor)/profile' as any);
+      router.replace('/(parent)/profile' as any);
     }
   };
 
@@ -140,7 +140,7 @@ export default function EditElderlyProfileScreen() {
           </Text>
           <Button
             title="Create Senior Profile"
-            onPress={() => router.replace('/(Tutor)/profile/create' as any)}
+            onPress={() => router.replace('/(parent)/profile/create' as any)}
             style={{ marginTop: 16 }}
           />
         </Card>

@@ -163,7 +163,7 @@ export default function ParentSettingsScreen() {
           {/* Patient profile */}
           <TouchableOpacity
             style={styles.menuRow}
-            onPress={() => router.push('/(Tutor)/profile' as any)}
+            onPress={() => router.push('/(parent)/profile' as any)}
             activeOpacity={0.7}
           >
             <View style={styles.menuIconWrap}>
@@ -178,7 +178,7 @@ export default function ParentSettingsScreen() {
           {/* Add / Create Patient */}
           <TouchableOpacity
             style={styles.menuRow}
-            onPress={() => router.push('/(Tutor)/profile/create' as any)}
+            onPress={() => router.push('/(parent)/profile/create' as any)}
             activeOpacity={0.7}
           >
             <View style={[styles.menuIconWrap, { backgroundColor: '#EFF6FF' }]}>
@@ -193,7 +193,7 @@ export default function ParentSettingsScreen() {
           {/* Caregiver Provisioning */}
           <TouchableOpacity
             style={styles.menuRow}
-            onPress={() => router.push('/(Tutor)/caregivers/create' as any)}
+            onPress={() => router.push('/(parent)/caregivers/create' as any)}
             activeOpacity={0.7}
           >
             <View style={[styles.menuIconWrap, { backgroundColor: '#F0FDF4' }]}>
@@ -208,7 +208,7 @@ export default function ParentSettingsScreen() {
           {/* Doctor Provisioning */}
           <TouchableOpacity
             style={styles.menuRow}
-            onPress={() => router.push('/(Tutor)/doctors/create' as any)}
+            onPress={() => router.push('/(parent)/doctors/create' as any)}
             activeOpacity={0.7}
           >
             <View style={[styles.menuIconWrap, { backgroundColor: '#F5F3FF' }]}>
@@ -223,7 +223,7 @@ export default function ParentSettingsScreen() {
           {/* Clinical Health Summary for Doctor */}
           <TouchableOpacity
             style={styles.menuRow}
-            onPress={() => router.push('/(Tutor)/health-report' as any)}
+            onPress={() => router.push('/(parent)/health-report' as any)}
             activeOpacity={0.7}
           >
             <View style={[styles.menuIconWrap, { backgroundColor: '#EFF6FF' }]}>
@@ -238,7 +238,7 @@ export default function ParentSettingsScreen() {
           {/* Emergency contacts */}
           <TouchableOpacity
             style={styles.menuRow}
-            onPress={() => router.push('/(Tutor)/emergency' as any)}
+            onPress={() => router.push('/(parent)/emergency' as any)}
             activeOpacity={0.7}
           >
             <View style={styles.menuIconWrap}>
@@ -253,7 +253,7 @@ export default function ParentSettingsScreen() {
           {/* Device settings */}
           <TouchableOpacity
             style={styles.menuRow}
-            onPress={() => router.push('/(Tutor)/device' as any)}
+            onPress={() => router.push('/(parent)/device' as any)}
             activeOpacity={0.7}
           >
             <View style={styles.menuIconWrap}>
@@ -268,7 +268,7 @@ export default function ParentSettingsScreen() {
           {/* Reports & exports */}
           <TouchableOpacity
             style={styles.menuRow}
-            onPress={() => router.push('/(Tutor)/reports' as any)}
+            onPress={() => router.push('/(parent)/reports' as any)}
             activeOpacity={0.7}
           >
             <View style={styles.menuIconWrap}>

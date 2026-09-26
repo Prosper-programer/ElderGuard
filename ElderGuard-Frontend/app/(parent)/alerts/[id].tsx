@@ -35,7 +35,7 @@ export default function AlertDetailScreen() {
     if (router.canGoBack()) {
       router.back();
     } else {
-      router.replace('/(Tutor)/alerts' as any);
+      router.replace('/(parent)/alerts' as any);
     }
   };
 
@@ -58,7 +58,7 @@ export default function AlertDetailScreen() {
   }
 
   const handleAcknowledge = () => {
-    acknowledgeAlert(alert.id, `${user?.name || 'Eleanor Vance'} (Tutor)`);
+    acknowledgeAlert(alert.id, `${user?.name || 'Eleanor Vance'} (parent)`);
   };
 
   const handleResolve = () => {
@@ -67,7 +67,7 @@ export default function AlertDetailScreen() {
       return;
     }
     setIsSubmitting(true);
-    resolveAlert(alert.id, `${user?.name || 'Eleanor Vance'} (Tutor)`, notes.trim());
+    resolveAlert(alert.id, `${user?.name || 'Eleanor Vance'} (parent)`, notes.trim());
     setIsSubmitting(false);
     setShowNoteInput(false);
   };

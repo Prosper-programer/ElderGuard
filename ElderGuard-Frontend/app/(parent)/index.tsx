@@ -106,7 +106,7 @@ export default function ParentDashboardScreen() {
 
         <View style={styles.headerRightActions}>
           <TouchableOpacity
-            onPress={() => router.push('/(Tutor)/alerts' as any)}
+            onPress={() => router.push('/(parent)/alerts' as any)}
             style={styles.headerIconButton}
             activeOpacity={0.7}
           >
@@ -117,7 +117,7 @@ export default function ParentDashboardScreen() {
           </TouchableOpacity>
 
           <TouchableOpacity
-            onPress={() => router.push('/(Tutor)/settings' as any)}
+            onPress={() => router.push('/(parent)/settings' as any)}
             style={styles.avatarButton}
             activeOpacity={0.8}
           >
@@ -233,7 +233,7 @@ export default function ParentDashboardScreen() {
           </Text>
           <TouchableOpacity
             style={styles.addSeniorHeroBtn}
-            onPress={() => router.push('/(Tutor)/profile/create' as any)}
+            onPress={() => router.push('/(parent)/profile/create' as any)}
             activeOpacity={0.85}
           >
             <Plus size={16} color="#FFFFFF" />
@@ -242,7 +242,7 @@ export default function ParentDashboardScreen() {
         </Card>
       ) : (
         <TouchableOpacity
-          onPress={() => router.push('/(Tutor)/profile' as any)}
+          onPress={() => router.push('/(parent)/profile' as any)}
           activeOpacity={0.92}
           style={styles.heroCardContainer}
         >
@@ -333,28 +333,28 @@ export default function ParentDashboardScreen() {
             {
               icon: MapPin,
               label: 'Location',
-              route: '/(Tutor)/location',
+              route: '/(parent)/location',
               color: '#3C6FDB',
               bg: '#EEF5FF',
             },
             {
               icon: Bell,
               label: 'Alerts',
-              route: '/(Tutor)/alerts',
+              route: '/(parent)/alerts',
               color: '#F97316',
               bg: '#FFF7ED',
             },
             {
               icon: Pill,
               label: 'Programme',
-              route: '/(Tutor)/care',
+              route: '/(parent)/care',
               color: '#16A34A',
               bg: '#F0FDF4',
             },
             {
               icon: Shield,
               label: 'Emergency',
-              route: '/(Tutor)/emergency',
+              route: '/(parent)/emergency',
               color: '#EF4444',
               bg: '#FEF2F2',
             },
@@ -379,7 +379,7 @@ export default function ParentDashboardScreen() {
         <View style={styles.sectionHeaderRow}>
           <Text style={styles.sectionOverline}>ASSIGNED CAREGIVER</Text>
           <TouchableOpacity
-            onPress={() => router.push('/(Tutor)/caregivers/create' as any)}
+            onPress={() => router.push('/(parent)/caregivers/create' as any)}
             activeOpacity={0.7}
           >
             <Text style={styles.sectionActionText}>+ Provision caregiver →</Text>
@@ -415,7 +415,7 @@ export default function ParentDashboardScreen() {
             </View>
             <TouchableOpacity
               style={styles.addCaregiverBtn}
-              onPress={() => router.push('/(Tutor)/caregivers/create' as any)}
+              onPress={() => router.push('/(parent)/caregivers/create' as any)}
               activeOpacity={0.85}
             >
               <Plus size={14} color="#FFFFFF" />
@@ -430,7 +430,7 @@ export default function ParentDashboardScreen() {
         <View style={styles.sectionHeaderRow}>
           <Text style={styles.sectionOverline}>LIVE VITALS</Text>
           <TouchableOpacity
-            onPress={() => router.push('/(Tutor)/health' as any)}
+            onPress={() => router.push('/(parent)/health' as any)}
             activeOpacity={0.7}
           >
             <Text style={styles.sectionActionText}>Full report →</Text>
@@ -546,7 +546,7 @@ export default function ParentDashboardScreen() {
         <View style={styles.sectionHeaderRow}>
           <Text style={styles.sectionOverline}>TODAY'S PROGRAMME</Text>
           <TouchableOpacity
-            onPress={() => router.push('/(Tutor)/care' as any)}
+            onPress={() => router.push('/(parent)/care' as any)}
             activeOpacity={0.7}
           >
             <Text style={styles.sectionActionText}>Full view →</Text>
@@ -636,7 +636,7 @@ export default function ParentDashboardScreen() {
         <View style={styles.sectionHeaderRow}>
           <Text style={styles.sectionOverline}>RECENT ALERTS</Text>
           <TouchableOpacity
-            onPress={() => router.push('/(Tutor)/alerts' as any)}
+            onPress={() => router.push('/(parent)/alerts' as any)}
             activeOpacity={0.7}
           >
             <Text style={styles.sectionActionText}>See all →</Text>

@@ -77,7 +77,7 @@ const INITIAL_ALERTS: AlertIncident[] = [
     elderlyId: 'active',
     elderlyName: 'Patient',
     location: 'Bedroom',
-    resolvedBy: 'Eleanor Vance (Tutor)',
+    resolvedBy: 'Eleanor Vance (parent)',
     resolvedAt: 'Yesterday at 09:00 PM',
     resolutionNotes: 'Charged device on nightstand until 100%. Re-paired successfully.',
   },

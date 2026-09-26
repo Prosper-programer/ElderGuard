@@ -121,7 +121,7 @@ export default function FirstAidScreen() {
         ) : (
           <Button
             variant="primary"
-            onClick={() => router.push('/(Tutor)/emergency' as any)}
+            onClick={() => router.push('/(parent)/emergency' as any)}
             className="flex-1"
           >
             Finished

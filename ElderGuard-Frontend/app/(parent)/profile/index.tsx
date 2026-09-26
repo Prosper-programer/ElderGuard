@@ -95,18 +95,18 @@ export default function ParentElderlyProfileScreen() {
     >
       <TopBar
         title="Patient Profile"
-        onBack={() => (router.canGoBack() ? router.back() : router.replace('/(Tutor)' as any))}
+        onBack={() => (router.canGoBack() ? router.back() : router.replace('/(parent)' as any))}
         right={
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
             <TouchableOpacity
-              onPress={() => router.push('/(Tutor)/settings' as any)}
+              onPress={() => router.push('/(parent)/settings' as any)}
               style={styles.headerIconBtn}
               activeOpacity={0.7}
             >
               <Settings size={17} color="#475569" />
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={() => router.push('/(Tutor)/profile/edit' as any)}
+              onPress={() => router.push('/(parent)/profile/edit' as any)}
               style={styles.editBtn}
               activeOpacity={0.7}
             >
@@ -252,7 +252,7 @@ export default function ParentElderlyProfileScreen() {
         <View style={styles.sectionHeaderRow}>
           <Text style={styles.sectionOverline}>ACTIVE MEDICATIONS</Text>
           <TouchableOpacity
-            onPress={() => router.push('/(Tutor)/care' as any)}
+            onPress={() => router.push('/(parent)/care' as any)}
             activeOpacity={0.7}
           >
             <Text style={styles.sectionActionText}>Full list →</Text>
@@ -304,14 +304,14 @@ export default function ParentElderlyProfileScreen() {
             <View style={{ flex: 1 }}>
               <Text style={styles.accountName}>{user?.name || 'Robert Thompson'}</Text>
               <Text style={styles.accountEmail}>{user?.email || 'robert.thompson@email.com'}</Text>
-              <Text style={styles.accountRole}>Family Manager (Tutor)</Text>
+              <Text style={styles.accountRole}>Family Manager (parent)</Text>
             </View>
           </View>
 
           <View style={styles.accountActionsRow}>
             <TouchableOpacity
               style={styles.accountSettingsBtn}
-              onPress={() => router.push('/(Tutor)/settings' as any)}
+              onPress={() => router.push('/(parent)/settings' as any)}
               activeOpacity={0.7}
             >
               <Settings size={15} color="#3C6FDB" />

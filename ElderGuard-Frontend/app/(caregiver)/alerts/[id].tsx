@@ -194,7 +194,7 @@ export default function CaregiverAlertDetailScreen() {
             activeOpacity={0.85}
           >
             <Phone size={18} color={Colors.white} />
-            <Text style={styles.familyDialText}>Call Eleanor (Tutor)</Text>
+            <Text style={styles.familyDialText}>Call Eleanor (parent)</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
