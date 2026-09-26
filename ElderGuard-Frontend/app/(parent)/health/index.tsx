@@ -9,6 +9,9 @@ import {
   GestureResponderEvent,
 } from 'react-native';
 import { useRouter } from 'expo-router';
+import { Colors, Typography, Spacing, BorderRadius } from '@/constants/theme';
+import { useVitals } from '@/context/VitalsContext';
+import { useElderly } from '@/context/ElderlyContext';
 import Svg, {
   Path,
   Defs,
@@ -84,7 +87,17 @@ const TEMP_DATA: TempBarPoint[] = [
 ];
 
 export default function HealthMonitoringScreen() {
+  const { vitals } = useVitals();
+  const { activeProfile } = useElderly();
   const router = useRouter();
+
+  const getStatusColor = (status: string) => {
+    if (status === 'safe') return Colors.safe;
+    if (status === 'warning') return Colors.warning;
+    if (status === 'critical') return Colors.critical;
+    return Colors.offline;
+  };
+
   const [period, setPeriod] = useState<'24h' | '7d' | '30d'>('24h');
 
   // Interactive Hover / Scrub state for Heart Rate Chart
@@ -186,7 +199,7 @@ export default function HealthMonitoringScreen() {
     <ScreenContainer
       scrollable
       padded
-      backgroundColor="#F0F4FA"
+      
       bottomBar={<BottomTabBar activeTab="health" role="parent" />}
     >
       {/* ── 1. Header with Inline Period Switcher ───────────── */}
@@ -569,7 +582,7 @@ export default function HealthMonitoringScreen() {
                   height={bHeight}
                   rx={6}
                   ry={6}
-                  fill={isSelected ? '#2563EB' : '#5B8DEF'}
+                  fill={isSelected ? ''+Colors.primary+'' : '#5B8DEF'}
                   opacity={isSelected ? 1 : 0.85}
                   onPress={() => setTempActiveIdx(index)}
                 />
@@ -592,7 +605,7 @@ export default function HealthMonitoringScreen() {
               ]}
             >
               <Text style={styles.tooltipTime}>{TEMP_DATA[tempActiveIdx].time}</Text>
-              <Text style={[styles.tooltipValue, { color: '#2563EB' }]}>
+              <Text style={[styles.tooltipValue, { color: ''+Colors.primary+'' }]}>
                 Temp : {TEMP_DATA[tempActiveIdx].temp} °C
               </Text>
             </View>
@@ -618,7 +631,7 @@ export default function HealthMonitoringScreen() {
               <Text
                 style={[
                   styles.axisText,
-                  tempActiveIdx === index && { color: '#2563EB', fontWeight: '800' },
+                  tempActiveIdx === index && { color: ''+Colors.primary+'', fontWeight: '800' },
                 ]}
               >
                 {item.time}
@@ -665,6 +678,113 @@ export default function HealthMonitoringScreen() {
 }
 
 const styles = StyleSheet.create({
+  darkHeroHeader: {
+    backgroundColor: '#1E293B',
+    borderRadius: BorderRadius.lg,
+    padding: Spacing.lg,
+    marginBottom: Spacing.xl,
+    shadowColor: Colors.primary,
+    shadowOffset: { width: 0, height: 12 },
+    shadowOpacity: 0.2,
+    shadowRadius: 30,
+    elevation: 8,
+  },
+  heroContent: {
+    alignItems: 'center',
+    marginVertical: Spacing.md,
+  },
+  heroSubtitle: {
+    fontSize: 14,
+    color: 'rgba(255, 255, 255, 0.7)',
+    fontWeight: '600',
+    marginBottom: 4,
+  },
+  heroStatusRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    marginBottom: 4,
+  },
+  heroStatusText: {
+    fontSize: 28,
+    fontWeight: '800',
+    color: Colors.white,
+    letterSpacing: -0.5,
+  },
+  statusDotSmall: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+  },
+  heroUpdateText: {
+    fontSize: 12,
+    color: 'rgba(255, 255, 255, 0.6)',
+  },
+  vitalsListContainer: {
+    marginBottom: Spacing.xl,
+  },
+  sectionOverline: {
+    fontSize: 12,
+    fontWeight: '800',
+    color: Colors.primary,
+    marginBottom: 12,
+    marginLeft: 4,
+    letterSpacing: 0.5,
+  },
+  healthListCard: {
+    backgroundColor: Colors.white,
+    borderRadius: BorderRadius.lg,
+    borderWidth: 1,
+    borderColor: Colors.borderLight,
+    shadowColor: Colors.primary,
+    shadowOpacity: 0.04,
+    shadowRadius: 15,
+    elevation: 2,
+    overflow: 'hidden',
+  },
+  healthRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 14,
+    paddingHorizontal: 16,
+  },
+  itemBorderBottom: {
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.borderLight,
+  },
+  healthIconWrap: {
+    width: 32,
+    height: 32,
+    borderRadius: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 12,
+  },
+  healthRowTitle: {
+    flex: 1,
+    fontSize: 15,
+    fontWeight: '600',
+    color: Colors.textPrimary,
+  },
+  healthRowRight: {
+    alignItems: 'flex-end',
+  },
+  healthRowValue: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: Colors.textPrimary,
+  },
+  healthRowUnit: {
+    fontSize: 12,
+    color: Colors.textSecondary,
+    fontWeight: '500',
+  },
+  healthRowStatus: {
+    fontSize: 11,
+    fontWeight: '600',
+    marginTop: 2,
+  },
+
   headerRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -672,13 +792,7 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     marginBottom: 12,
   },
-  backBtn: {
-    width: 38,
-    height: 38,
-    borderRadius: 12,
-    backgroundColor: '#FFFFFF',
-    borderWidth: 1,
-    borderColor: '#E2E8F0',
+  backBtn: { width: 38, height: 38, borderRadius: 12, backgroundColor: 'rgba(255,255,255,0.1)', borderWidth: 0,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -688,9 +802,7 @@ const styles = StyleSheet.create({
     color: '#0F172A',
     letterSpacing: -0.3,
   },
-  periodSwitcher: {
-    flexDirection: 'row',
-    backgroundColor: '#E2E8F0',
+  periodSwitcher: { flexDirection: 'row', backgroundColor: 'rgba(255,255,255,0.1)', alignSelf: 'center',
     borderRadius: 999,
     padding: 3,
   },
