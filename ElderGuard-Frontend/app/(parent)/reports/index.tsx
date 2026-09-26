@@ -195,7 +195,7 @@ export default function ReportsScreen() {
       </ScrollView>
 
       {/* Bottom Tab Bar */}
-      <BottomTabBar activeTab="more" role="Tutor" />
+      <BottomTabBar activeTab="more" role="parent" />
     </SafeAreaView>
   );
 }

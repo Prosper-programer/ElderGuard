@@ -116,7 +116,7 @@ export default function CreateElderlyProfileScreen() {
 
     setLoading(false);
     if (created) {
-      router.replace('/(Tutor)');
+      router.replace('/(parent)');
     } else {
       setError('Failed to create Patient Profile. Please try again.');
     }

@@ -42,7 +42,7 @@ export default function ParentLocationScreen() {
       scrollable
       padded
       backgroundColor="#F0F4FA"
-      bottomBar={<BottomTabBar activeTab="location" role="Tutor" />}
+      bottomBar={<BottomTabBar activeTab="location" role="parent" />}
     >
       {/* ── 1. Header with Geofencing Quick Link ────────────── */}
       <View style={styles.headerRow}>

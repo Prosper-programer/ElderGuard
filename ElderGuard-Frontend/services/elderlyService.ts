@@ -1,6 +1,6 @@
 import { API_BASE_URL } from '../constants/api';
 import { getAuthToken } from './authService';
-import { ElderlyProfile } from '../types/Patient';
+import { ElderlyProfile } from '../types/elderly';
 
 export interface BackendElderlyProfile {
   elderly_id: number;

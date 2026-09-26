@@ -2,7 +2,7 @@
  * GUYNOVA GUARD Authentication & User Types
  */
 
-export type UserRole = 'Tutor' | 'caregiver' | 'doctor' | 'admin';
+export type UserRole = 'parent' | 'caregiver' | 'doctor' | 'admin';
 
 export interface User {
   id: string;
@@ -28,7 +28,7 @@ export interface AuthContextValue extends AuthState {
     name: string,
     email: string,
     password: string,
-    role: 'Tutor' | 'caregiver',
+    role: 'parent' | 'caregiver',
     phone?: string
   ) => Promise<{ success: boolean; error?: string }>;
   quickLogin: (role: UserRole) => Promise<void>;

@@ -121,7 +121,7 @@ export default function LoginScreen() {
     } else {
       const activeRole = result.user?.role || selectedRole;
       if (activeRole === 'parent') {
-        router.replace('/(Tutor)');
+        router.replace('/(parent)');
       } else if (activeRole === 'caregiver') {
         router.replace('/(caregiver)');
       } else if (activeRole === 'doctor') {

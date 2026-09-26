@@ -201,7 +201,7 @@ export default function AIHealthInsightsScreen() {
       </ScrollView>
 
       {/* Bottom Tab Bar with More active */}
-      <BottomTabBar activeTab="more" role="Tutor" />
+      <BottomTabBar activeTab="more" role="parent" />
     </SafeAreaView>
   );
 }

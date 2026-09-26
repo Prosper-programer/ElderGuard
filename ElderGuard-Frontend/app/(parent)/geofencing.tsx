@@ -117,7 +117,7 @@ export default function GeofencingScreen() {
       scrollable
       padded
       backgroundColor="#F0F4FA"
-      bottomBar={<BottomTabBar activeTab="location" role="Tutor" />}
+      bottomBar={<BottomTabBar activeTab="location" role="parent" />}
     >
       <View style={styles.headerRow}>
         <TouchableOpacity onPress={() => router.back()} style={styles.backBtn} activeOpacity={0.7}>

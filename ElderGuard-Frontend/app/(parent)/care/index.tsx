@@ -143,7 +143,7 @@ export default function ParentCareScreen() {
       scrollable
       padded
       backgroundColor="#F0F4FA"
-      bottomBar={<BottomTabBar activeTab="care" role="Tutor" />}
+      bottomBar={<BottomTabBar activeTab="care" role="parent" />}
     >
       {/* ── 1. Top Bar ──────────────────────────────────────── */}
       <View style={styles.topBarRow}>

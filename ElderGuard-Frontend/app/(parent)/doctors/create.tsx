@@ -64,7 +64,7 @@ export default function CreateDoctorScreen() {
     } else {
       setSuccess(true);
       setTimeout(() => {
-        router.replace('/(Tutor)');
+        router.replace('/(parent)');
       }, 1200);
     }
   };
@@ -73,7 +73,7 @@ export default function CreateDoctorScreen() {
     if (router.canGoBack()) {
       router.back();
     } else {
-      router.replace('/(Tutor)' as any);
+      router.replace('/(parent)' as any);
     }
   };
 

@@ -13,7 +13,7 @@ export const MOCK_USERS: Record<string, User> = {
     id: '6', // Matches Robert Ngu in MySQL DB
     name: 'Robert Ngu',
     email: 'robert.ngu@GUYNOVA GUARD.cm',
-    role: 'Tutor',
+    role: 'parent',
     phone: '+237 671 23 45 67',
     assignedElderlyCount: 1,
     createdAt: '2026-01-15T08:00:00.000Z',

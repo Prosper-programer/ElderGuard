@@ -210,7 +210,7 @@ export default function ParentMoreScreen() {
       </Modal>
 
       {/* Bottom Tab Bar */}
-      <BottomTabBar activeTab="more" role="Tutor" />
+      <BottomTabBar activeTab="more" role="parent" />
     </SafeAreaView>
   );
 }

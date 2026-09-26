@@ -82,7 +82,7 @@ export default function ParentDashboardScreen() {
       scrollable
       padded
       backgroundColor="#F0F4FA"
-      bottomBar={<BottomTabBar activeTab="home" role="Tutor" />}
+      bottomBar={<BottomTabBar activeTab="home" role="parent" />}
     >
       {/* ── 1. Top Header Bar ───────────────────────────────── */}
       <View style={styles.topHeader}>

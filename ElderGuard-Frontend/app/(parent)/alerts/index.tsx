@@ -1,3 +1,4 @@
+import { useElderly } from '@/context/ElderlyContext';
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
@@ -26,6 +27,7 @@ import { MOCK_ALERTS_LIST } from '@/services/mockData';
 
 export default function AlertsListScreen() {
   const router = useRouter();
+    const { activeProfile } = useElderly();
   const { alerts, triggerAlert, acknowledgeAlert, resolveAlert } = useAlerts();
   const { simulateAnomaly, resetToNormal } = useVitals();
 
@@ -81,7 +83,7 @@ export default function AlertsListScreen() {
       scrollable
       padded
       backgroundColor="#F0F4FA"
-      bottomBar={<BottomTabBar activeTab="alerts" role="Tutor" />}
+      bottomBar={<BottomTabBar activeTab="alerts" role="parent" />}
     >
       <TopBar
         title="Alerts & Incidents"

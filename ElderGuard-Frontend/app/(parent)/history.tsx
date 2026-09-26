@@ -209,7 +209,7 @@ export default function HistoryScreen() {
       </ScrollView>
 
       {/* Bottom Bar with More tab highlighted */}
-      <BottomTabBar activeTab="more" role="Tutor" />
+      <BottomTabBar activeTab="more" role="parent" />
     </SafeAreaView>
   );
 }

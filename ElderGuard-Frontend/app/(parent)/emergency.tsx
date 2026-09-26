@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
 import { useElderly } from '@/context/ElderlyContext';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   View,
   Text,
@@ -12,11 +12,8 @@ import {
   Animated,
   Easing,
 } from 'react-native';
-import { useElderly } from '@/context/ElderlyContext';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useElderly } from '@/context/ElderlyContext';
 import { useRouter } from 'expo-router';
-import { useElderly } from '@/context/ElderlyContext';
 import {
   AlertTriangle,
   Phone,
@@ -26,7 +23,6 @@ import {
   Check,
   X,
 } from 'lucide-react-native';
-import { useElderly } from '@/context/ElderlyContext';
 import { MOCK_ELDERLY_PERSON, MOCK_DOCTOR, MOCK_CAREGIVER } from '@/services/mockData';
 
 export default function EmergencyScreen() {

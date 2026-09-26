@@ -187,7 +187,7 @@ export default function HealthMonitoringScreen() {
       scrollable
       padded
       backgroundColor="#F0F4FA"
-      bottomBar={<BottomTabBar activeTab="health" role="Tutor" />}
+      bottomBar={<BottomTabBar activeTab="health" role="parent" />}
     >
       {/* ── 1. Header with Inline Period Switcher ───────────── */}
       <View style={styles.headerRow}>

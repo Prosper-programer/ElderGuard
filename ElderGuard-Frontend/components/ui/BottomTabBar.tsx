@@ -29,7 +29,7 @@ export type TabKey =
 
 interface BottomTabBarProps {
   activeTab: TabKey;
-  role: 'Tutor' | 'caregiver';
+  role: 'parent' | 'caregiver';
 }
 
 export function BottomTabBar({ activeTab, role }: BottomTabBarProps) {

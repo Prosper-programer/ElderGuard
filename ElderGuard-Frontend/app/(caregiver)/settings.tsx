@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
 import { useElderly } from '@/context/ElderlyContext';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -11,11 +11,8 @@ import {
   Alert,
   Platform,
 } from 'react-native';
-import { useElderly } from '@/context/ElderlyContext';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useElderly } from '@/context/ElderlyContext';
 import { useRouter } from 'expo-router';
-import { useElderly } from '@/context/ElderlyContext';
 import {
   ChevronLeft,
   Pencil,
@@ -27,11 +24,8 @@ import {
   HeartHandshake,
   CheckCircle,
 } from 'lucide-react-native';
-import { useElderly } from '@/context/ElderlyContext';
 import { BottomTabBar } from '@/components/ui';
-import { useElderly } from '@/context/ElderlyContext';
 import { useAuth } from '@/context/AuthContext';
-import { useElderly } from '@/context/ElderlyContext';
 import { MOCK_CAREGIVER, MOCK_ELDERLY_PERSON } from '@/services/mockData';
 
 export default function CaregiverSettingsScreen() {

@@ -1,3 +1,4 @@
+import { useElderly } from '@/context/ElderlyContext';
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';

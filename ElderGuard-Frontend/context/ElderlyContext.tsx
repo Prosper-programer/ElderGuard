@@ -13,7 +13,7 @@
  */
 
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import { ElderlyProfile, ElderlyContextValue } from '@/types/Patient';
+import { ElderlyProfile, ElderlyContextValue } from '@/types/elderly';
 import { useAuth } from '@/context/AuthContext';
 import {
   apiGetElderlyProfiles,
