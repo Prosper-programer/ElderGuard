@@ -310,96 +310,88 @@ export default function CaregiverHomeScreen() {
         </View>
 
         <View style={styles.vitals2ColGrid}>
-          {/* Heart Rate */}
-          <Card style={styles.vitalCardItem}>
-            <View style={[styles.vitalAccentBar, { backgroundColor: '#10B981' }]} />
-            <View style={styles.vitalCardInner}>
-              <View style={styles.vitalCardHeader}>
-                <View style={[styles.vitalIconWrap, { backgroundColor: 'rgba(16, 185, 129, 0.12)' }]}>
-                  <Heart size={14} color="#10B981" />
+          {/* Row 1 */}
+          <View style={styles.vitalsRow}>
+            <Card style={[styles.vitalCardItem]}>
+              <View style={[styles.vitalAccentBar, { backgroundColor: '#10B981' }]} />
+              <View style={styles.vitalCardInner}>
+                <View style={styles.vitalCardHeader}>
+                  <View style={[styles.vitalIconWrap, { backgroundColor: 'rgba(16, 185, 129, 0.12)' }]}>
+                    <Heart size={14} color="#10B981" />
+                  </View>
+                  <Text style={styles.vitalTypeLabel}>HEART RATE</Text>
+                  <View style={styles.cyanLiveDot} />
                 </View>
-                <Text style={styles.vitalTypeLabel}>HEART RATE</Text>
-                <View style={styles.cyanLiveDot} />
-              </View>
-
-              <View style={styles.vitalValueRow}>
-                <Text style={styles.vitalValueText}>{hrValue}</Text>
-                <Text style={styles.vitalUnitText}> bpm</Text>
-              </View>
-
-              <View style={styles.vitalStatusRow}>
-                <View style={[styles.statusDotSmall, { backgroundColor: '#10B981' }]} />
-                <Text style={[styles.vitalStatusText, { color: '#10B981' }]}>Safe</Text>
-              </View>
-            </View>
-          </Card>
-
-          {/* Blood Oxygen */}
-          <Card style={styles.vitalCardItem}>
-            <View style={[styles.vitalAccentBar, { backgroundColor: '#10B981' }]} />
-            <View style={styles.vitalCardInner}>
-              <View style={styles.vitalCardHeader}>
-                <View style={[styles.vitalIconWrap, { backgroundColor: 'rgba(16, 185, 129, 0.12)' }]}>
-                  <Activity size={14} color="#10B981" />
+                <View style={styles.vitalValueRow}>
+                  <Text style={styles.vitalValueText}>{hrValue}</Text>
+                  <Text style={styles.vitalUnitText}> bpm</Text>
                 </View>
-                <Text style={styles.vitalTypeLabel}>SPO₂ OXYGEN</Text>
-                <View style={styles.cyanLiveDot} />
-              </View>
-
-              <View style={styles.vitalValueRow}>
-                <Text style={styles.vitalValueText}>{spo2Value}</Text>
-                <Text style={styles.vitalUnitText}> %</Text>
-              </View>
-
-              <View style={styles.vitalStatusRow}>
-                <View style={[styles.statusDotSmall, { backgroundColor: '#10B981' }]} />
-                <Text style={[styles.vitalStatusText, { color: '#10B981' }]}>Safe</Text>
-              </View>
-            </View>
-          </Card>
-
-          {/* Temperature */}
-          <Card style={styles.vitalCardItem}>
-            <View style={[styles.vitalAccentBar, { backgroundColor: '#10B981' }]} />
-            <View style={styles.vitalCardInner}>
-              <View style={styles.vitalCardHeader}>
-                <View style={[styles.vitalIconWrap, { backgroundColor: 'rgba(16, 185, 129, 0.12)' }]}>
-                  <Thermometer size={14} color="#10B981" />
+                <View style={styles.vitalStatusRow}>
+                  <View style={[styles.statusDotSmall, { backgroundColor: '#10B981' }]} />
+                  <Text style={[styles.vitalStatusText, { color: '#10B981' }]}>Safe</Text>
                 </View>
-                <Text style={styles.vitalTypeLabel}>TEMPERATURE</Text>
-                <View style={styles.cyanLiveDot} />
               </View>
-
-              <View style={styles.vitalValueRow}>
-                <Text style={styles.vitalValueText}>{tempValue}</Text>
-                <Text style={styles.vitalUnitText}> °C</Text>
-              </View>
-
-              <View style={styles.vitalStatusRow}>
-                <View style={[styles.statusDotSmall, { backgroundColor: '#10B981' }]} />
-                <Text style={[styles.vitalStatusText, { color: '#10B981' }]}>Safe</Text>
-              </View>
-            </View>
-          </Card>
-
-          {/* Activity / Steps */}
-          <Card style={styles.vitalCardItem}>
-            <View style={[styles.vitalAccentBar, { backgroundColor: '#16A34A' }]} />
-            <View style={styles.vitalCardInner}>
-              <View style={styles.vitalCardHeader}>
-                <View style={[styles.vitalIconWrap, { backgroundColor: 'rgba(22, 163, 74, 0.12)' }]}>
-                  <Activity size={14} color="#16A34A" />
+            </Card>
+            <Card style={[styles.vitalCardItem]}>
+              <View style={[styles.vitalAccentBar, { backgroundColor: '#10B981' }]} />
+              <View style={styles.vitalCardInner}>
+                <View style={styles.vitalCardHeader}>
+                  <View style={[styles.vitalIconWrap, { backgroundColor: 'rgba(16, 185, 129, 0.12)' }]}>
+                    <Activity size={14} color="#10B981" />
+                  </View>
+                  <Text style={styles.vitalTypeLabel}>SPO{'\u2082'} OXYGEN</Text>
+                  <View style={styles.cyanLiveDot} />
                 </View>
-                <Text style={styles.vitalTypeLabel}>ACTIVITY</Text>
+                <View style={styles.vitalValueRow}>
+                  <Text style={styles.vitalValueText}>{spo2Value}</Text>
+                  <Text style={styles.vitalUnitText}> %</Text>
+                </View>
+                <View style={styles.vitalStatusRow}>
+                  <View style={[styles.statusDotSmall, { backgroundColor: '#10B981' }]} />
+                  <Text style={[styles.vitalStatusText, { color: '#10B981' }]}>Safe</Text>
+                </View>
               </View>
-
-              <View style={styles.vitalValueRow}>
-                <Text style={[styles.vitalValueText, { fontSize: 22 }]}>Active</Text>
+            </Card>
+          </View>
+          {/* Row 2 */}
+          <View style={styles.vitalsRow}>
+            <Card style={[styles.vitalCardItem]}>
+              <View style={[styles.vitalAccentBar, { backgroundColor: '#10B981' }]} />
+              <View style={styles.vitalCardInner}>
+                <View style={styles.vitalCardHeader}>
+                  <View style={[styles.vitalIconWrap, { backgroundColor: 'rgba(16, 185, 129, 0.12)' }]}>
+                    <Thermometer size={14} color="#10B981" />
+                  </View>
+                  <Text style={styles.vitalTypeLabel}>TEMPERATURE</Text>
+                  <View style={styles.cyanLiveDot} />
+                </View>
+                <View style={styles.vitalValueRow}>
+                  <Text style={styles.vitalValueText}>{tempValue}</Text>
+                  <Text style={styles.vitalUnitText}> {'\u00b0'}C</Text>
+                </View>
+                <View style={styles.vitalStatusRow}>
+                  <View style={[styles.statusDotSmall, { backgroundColor: '#10B981' }]} />
+                  <Text style={[styles.vitalStatusText, { color: '#10B981' }]}>Safe</Text>
+                </View>
               </View>
-
-              <Text style={styles.stepsSubText}>1,247 steps recorded</Text>
-            </View>
-          </Card>
+            </Card>
+            <Card style={[styles.vitalCardItem]}>
+              <View style={[styles.vitalAccentBar, { backgroundColor: '#16A34A' }]} />
+              <View style={styles.vitalCardInner}>
+                <View style={styles.vitalCardHeader}>
+                  <View style={[styles.vitalIconWrap, { backgroundColor: 'rgba(22, 163, 74, 0.12)' }]}>
+                    <Activity size={14} color="#16A34A" />
+                  </View>
+                  <Text style={styles.vitalTypeLabel}>ACTIVITY</Text>
+                </View>
+                <View style={styles.vitalValueRow}>
+                  <Text style={[styles.vitalValueText, { fontSize: 20 }]}>Resting</Text>
+                </View>
+                <Text style={styles.stepsSubText}>1,247 steps today</Text>
+              </View>
+            </Card>
+          </View>
+        </View>
         </View>
       </View>
 
@@ -1045,22 +1037,9 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: '#475569',
   },
-  vitals2ColGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
-  },
-  vitalCardItem: {
-    width: '48%',
-    marginBottom: 12,
-    backgroundColor: '#FFFFFF',
-    borderRadius: 18,
-    borderWidth: 1,
-    borderColor: '#E2E8F0',
-    overflow: 'hidden',
-    position: 'relative',
-    padding: 0,
-  },
+  vitals2ColGrid: { flexDirection: 'column', gap: 12 },
+  vitalsRow: { flexDirection: 'row', gap: 12 },
+  vitalCardItem: { flex: 1, backgroundColor: '#FFFFFF', borderRadius: 18, borderWidth: 1, borderColor: '#E2E8F0', overflow: 'hidden', position: 'relative', padding: 0 },
   vitalAccentBar: {
     position: 'absolute',
     left: 0,
