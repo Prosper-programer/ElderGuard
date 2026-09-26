@@ -32,6 +32,7 @@ import reportRoutes from './routes/report.routes';
 import adminRoutes from './routes/admin.routes';
 import clinicalNoteRoutes from './routes/clinicalNote.routes';
 import prescriptionRoutes from './routes/prescription.routes';
+import firstAidRoutes from './routes/firstAid.routes';
 
 // Mount API Routes
 app.use('/api/auth', authRoutes);
@@ -48,6 +49,7 @@ app.use('/api/reports', reportRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/clinical-notes', clinicalNoteRoutes);
 app.use('/api/prescriptions', prescriptionRoutes);
+app.use('/api/first-aid', firstAidRoutes);  // Public — no auth required for emergency access
 
 /**
  * Basic Root Health Check Route

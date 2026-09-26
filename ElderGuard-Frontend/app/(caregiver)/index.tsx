@@ -392,7 +392,6 @@ export default function CaregiverHomeScreen() {
             </Card>
           </View>
         </View>
-        </View>
       </View>
 
       {/* ── 5.5 Medication Schedule & Quick Administration ── */}

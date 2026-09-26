@@ -168,7 +168,7 @@ export default function EmergencyScreen() {
           <View style={styles.subActionsRow}>
             <TouchableOpacity
               style={styles.subBtn}
-              onPress={() => router.push('/(parent)/first-aid' as any)}
+              onPress={() => router.push('/(parent)/first-aid?type=fall' as any)}
               activeOpacity={0.8}
             >
               <Shield size={16} color="#FFFFFF" />
