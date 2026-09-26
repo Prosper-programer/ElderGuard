@@ -323,12 +323,27 @@ export default function CreateElderlyProfileScreen() {
       {/* ── 3. Medical Profile ──────────────────────────────── */}
       <Text style={styles.sectionLabel}>HEALTH & MEDICAL PROFILE</Text>
       <Card style={styles.card}>
-        <TextInput
-          label="Blood Type"
-          value={bloodType}
-          onChangeText={setBloodType}
-          placeholder="e.g. O+, A+, B-"
-        />
+        <Text style={styles.fieldLabel}>Blood Type</Text>
+        <View style={[styles.genderRow, { flexWrap: 'wrap', gap: 8, marginBottom: 16 }]}>
+          {['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'].map((b) => (
+            <TouchableOpacity
+              key={b}
+              onPress={() => setBloodType(b)}
+              style={[
+                styles.genderChip, 
+                { minWidth: '22%', flex: 0, paddingVertical: 10 },
+                bloodType === b && styles.genderChipActive
+              ]}
+              activeOpacity={0.8}
+            >
+              <Text
+                style={[styles.genderChipText, bloodType === b && styles.genderChipTextActive]}
+              >
+                {b}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </View>
 
         <View style={styles.spacing} />
 
