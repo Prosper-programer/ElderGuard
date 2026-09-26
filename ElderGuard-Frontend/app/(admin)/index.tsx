@@ -75,7 +75,7 @@ export default function AdminDashboard() {
                 </Text>
                 <Text style={styles.bannerDescription}>
                   {isSystemHealthy 
-                    ? 'There are currently no active critical alerts in the system. Elder care monitoring is running smoothly.'
+                    ? 'There are currently no active critical alerts in the system. Patient care monitoring is running smoothly.'
                     : `There ${stats?.criticalAlerts === 1 ? 'is' : 'are'} ${stats?.criticalAlerts} unresolved critical ${stats?.criticalAlerts === 1 ? 'alert' : 'alerts'} requiring immediate review.`}
                 </Text>
               </View>
@@ -98,7 +98,7 @@ export default function AdminDashboard() {
                 <Heart size={20} color={Colors.primary} />
               </View>
               <Text style={styles.kpiValue}>{stats?.activeElderly || 0}</Text>
-              <Text style={styles.kpiLabel}>Elderly Profiles</Text>
+              <Text style={styles.kpiLabel}>Patient Profiles</Text>
             </Card>
 
             <Card style={styles.kpiCard}>

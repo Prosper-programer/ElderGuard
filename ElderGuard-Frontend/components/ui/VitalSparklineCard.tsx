@@ -1,6 +1,6 @@
 /**
  * ============================================================================
- * ElderGuard — VitalSparklineCard.tsx
+ * GUYNOVA GUARD — VitalSparklineCard.tsx
  * ============================================================================
  * 
  * PURPOSE:
@@ -173,3 +173,4 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
 });
+

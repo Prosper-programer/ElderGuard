@@ -27,7 +27,7 @@ export const LoginPage = () => {
   };
 
   const handleUseSandbox = () => {
-    setEmail('admin@elderguard.com');
+    setEmail('admin@GUYNOVA GUARD.com');
     setPassword('admin123456');
   };
 
@@ -67,7 +67,7 @@ export const LoginPage = () => {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="admin@elderguard.com"
+                  placeholder="admin@GUYNOVA GUARD.com"
                   className="w-full pl-10 pr-4 py-2.5 text-xs rounded-xl border border-slate-300 bg-white text-slate-900 placeholder-slate-400 focus:outline-none focus:border-[#3C6FDB] focus:ring-1 focus:ring-[#3C6FDB] transition-colors"
                 />
               </div>
@@ -123,8 +123,9 @@ export const LoginPage = () => {
 
       {/* Footer */}
       <div className="relative z-10 text-center text-[11px] text-slate-400 font-mono">
-        ElderGuard Health Platform • Strict Role Segregation & Privacy Protection
+        GUYNOVA GUARD Health Platform • Strict Role Segregation & Privacy Protection
       </div>
     </div>
   );
 };
+

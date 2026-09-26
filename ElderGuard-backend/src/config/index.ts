@@ -6,7 +6,7 @@ dotenv.config({ path: path.resolve(process.cwd(), '.env') });
 export const config = {
   env: process.env.NODE_ENV || 'development',
   port: parseInt(process.env.PORT || '4000', 10),
-  jwtSecret: process.env.JWT_SECRET || 'elderguard_jwt_super_secret_key_2026_dev_secure',
+  jwtSecret: process.env.JWT_SECRET || 'GUYNOVA GUARD_jwt_super_secret_key_2026_dev_secure',
   jwtExpiresIn: process.env.JWT_EXPIRES_IN || '7d',
   corsOrigin: process.env.CORS_ORIGIN || '*',
   databaseUrl: process.env.DATABASE_URL || 'file:./dev.db',
@@ -22,3 +22,4 @@ export const config = {
     lowBatteryPct: 20,
   },
 };
+

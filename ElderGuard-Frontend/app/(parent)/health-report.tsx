@@ -51,7 +51,7 @@ export default function HealthReportScreen() {
     try {
       const summaryText =
         `========================================\n` +
-        `  ELDERGUARD CLINICAL HEALTH SUMMARY\n` +
+        `  GUYNOVA GUARD CLINICAL HEALTH SUMMARY\n` +
         `========================================\n` +
         `Patient: ${seniorName} (${activeProfile?.age || 78} yrs, ${activeProfile?.gender || 'Female'})\n` +
         `Primary Doctor: ${doctorName} (${doctorSpecialty}, ${doctorHospital})\n` +
@@ -70,10 +70,10 @@ export default function HealthReportScreen() {
         `• Conditions: ${activeProfile?.medicalInfo?.chronicConditions?.join(', ') || 'Hypertension, Type 2 Diabetes'}\n` +
         `• Allergies: ${activeProfile?.medicalInfo?.allergies?.join(', ') || 'Penicillin'}\n` +
         `\n========================================\n` +
-        `Generated via ElderGuard Family Care Platform`;
+        `Generated via GUYNOVA GUARD Family Care Platform`;
 
       await Share.share({
-        title: `ElderGuard Clinical Report — ${seniorName}`,
+        title: `GUYNOVA GUARD Clinical Report — ${seniorName}`,
         message: summaryText,
       });
       setExported(true);
@@ -566,3 +566,4 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
 });
+

@@ -1,5 +1,5 @@
 /**
- * ElderGuard UI Components — Barrel Export
+ * GUYNOVA GUARD UI Components — Barrel Export
  *
  * Import all reusable components from a single path:
  * import { Button, TextInput, Card } from '@/components/ui';
@@ -23,3 +23,4 @@ export { DeviceIndicator } from './DeviceIndicator';
 export { AlertItem } from './AlertItem';
 export { MapView } from './MapView';
 export { TopBar } from './TopBar';
+

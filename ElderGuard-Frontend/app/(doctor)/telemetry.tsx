@@ -45,7 +45,7 @@ export default function DoctorTelemetryScreen() {
         <Text style={styles.headerOverline}>CLINICAL TELEMETRY MONITOR</Text>
         <Text style={styles.headerTitle}>{seniorName}</Text>
         <Text style={styles.headerSubtitle}>
-          Continuous sensor feed from ElderGuard Band (EG-IOT-4892)
+          Continuous sensor feed from GUYNOVA GUARD Band (EG-IOT-4892)
         </Text>
       </View>
 
@@ -437,3 +437,4 @@ const styles = StyleSheet.create({
     marginVertical: 12,
   },
 });
+

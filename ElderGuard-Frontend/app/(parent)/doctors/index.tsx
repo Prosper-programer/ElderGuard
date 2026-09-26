@@ -101,7 +101,7 @@ export default function ManageDoctorsScreen() {
           <View style={{ height: 20 }} />
           <Button
             title="Provision a Doctor"
-            onPress={() => router.push('/(parent)/doctors/create' as any)}
+            onPress={() => router.push('/(Tutor)/doctors/create' as any)}
             variant="primary"
             leftIcon={<UserPlus size={18} color="#FFF" />}
           />
@@ -142,7 +142,7 @@ export default function ManageDoctorsScreen() {
             <View style={styles.detailRow}>
               <Mail size={16} color="#64748B" />
               <Text style={styles.detailText}>
-                {doctorName.toLowerCase().replace(/[^a-z0-9]/g, '.')}@elderguard.cm
+                {doctorName.toLowerCase().replace(/[^a-z0-9]/g, '.')}@GUYNOVA GUARD.cm
               </Text>
             </View>
             <View style={styles.detailRow}>
@@ -157,7 +157,7 @@ export default function ManageDoctorsScreen() {
 
           <Button
             title="Reassign Doctor"
-            onPress={() => router.push('/(parent)/doctors/create' as any)}
+            onPress={() => router.push('/(Tutor)/doctors/create' as any)}
             variant="outline"
             leftIcon={<UserPlus size={18} color="#2563EB" />}
           />
@@ -312,3 +312,4 @@ const styles = StyleSheet.create({
     color: '#0F172A',
   },
 });
+

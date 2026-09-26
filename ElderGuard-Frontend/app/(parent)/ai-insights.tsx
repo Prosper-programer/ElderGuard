@@ -39,7 +39,7 @@ export default function AIHealthInsightsScreen() {
       {/* Top Header */}
       <View style={styles.topHeader}>
         <TouchableOpacity
-          onPress={() => (router.canGoBack() ? router.back() : router.replace('/(parent)/more' as any))}
+          onPress={() => (router.canGoBack() ? router.back() : router.replace('/(Tutor)/more' as any))}
           style={styles.backBtn}
           activeOpacity={0.7}
         >
@@ -53,12 +53,12 @@ export default function AIHealthInsightsScreen() {
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        {/* ElderGuard AI Dark Banner */}
+        {/* GUYNOVA GUARD AI Dark Banner */}
         <View style={styles.aiBanner}>
           <View style={styles.aiIconBox}>
             <Brain size={20} color="#00FBFB" />
           </View>
-          <Text style={styles.aiBannerText}>ElderGuard AI</Text>
+          <Text style={styles.aiBannerText}>GUYNOVA GUARD AI</Text>
         </View>
 
         {/* Card 1: Morning heart rate spikes */}
@@ -201,7 +201,7 @@ export default function AIHealthInsightsScreen() {
       </ScrollView>
 
       {/* Bottom Tab Bar with More active */}
-      <BottomTabBar activeTab="more" role="parent" />
+      <BottomTabBar activeTab="more" role="Tutor" />
     </SafeAreaView>
   );
 }
@@ -388,3 +388,4 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
 });
+

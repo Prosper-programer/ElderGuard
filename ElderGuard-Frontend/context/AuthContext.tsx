@@ -1,20 +1,20 @@
 /**
  * ============================================================================
- * ElderGuard — AuthContext.tsx
+ * GUYNOVA GUARD â€” AuthContext.tsx
  * ============================================================================
  * 
  * PURPOSE:
  * Manages user authentication, session state, and role-based permissions:
  * 
  * THE 2 USER ROLES:
- * 1. `parent`    : Family member / Senior Care Manager (Theme: Blue #3C6FDB)
+ * 1. `Tutor`    : Family member / Senior Care Manager (Theme: Blue #3C6FDB)
  *                   - Full permissions: Vitals, prescriptions, doctor reports, configuration.
  * 2. `caregiver` : Professional nurse, aide, or assisted living staff (Theme: Green #22C55E)
  *                   - Care administration: Vitals, daypart dose logging, incident responses.
  * 
  * PRODUCTION API POINT:
  * In production, replace the simulated credential check with your JWT endpoint:
- *   const res = await fetch('https://api.elderguard.com/v1/auth/login', { ... });
+ *   const res = await fetch('https://api.GUYNOVA GUARD.com/v1/auth/login', { ... });
  *   await SecureStore.setItemAsync('user_token', res.data.token);
  */
 
@@ -81,7 +81,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         (event.email && user.email && event.email.toLowerCase() === user.email.toLowerCase());
 
       if (isTargetUser) {
-        console.log(`⚡ Real-time account status updated for ${user.email || user.id}: ${event.status}`);
+        console.log(`âš¡ Real-time account status updated for ${user.email || user.id}: ${event.status}`);
         
         setUser((prev) => {
           if (!prev) return null;
@@ -119,17 +119,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
 
     // Offline / demo fallback if backend is unreachable or demo accounts are used
-    if (normalizedEmail === 'parent@elderguard.com' || normalizedEmail === 'robert.thompson@email.com') {
-      setUser(MOCK_USERS.parent);
+    if (normalizedEmail === 'Tutor@GUYNOVA GUARD.com' || normalizedEmail === 'robert.thompson@email.com') {
+      setUser(MOCK_USERS.Tutor);
       setIsLoading(false);
-      return { success: true, user: MOCK_USERS.parent };
+      return { success: true, user: MOCK_USERS.Tutor };
     }
-    if (normalizedEmail === 'caregiver@elderguard.com' || normalizedEmail === 'sarah.mitchell@elderguard.com') {
+    if (normalizedEmail === 'caregiver@GUYNOVA GUARD.com' || normalizedEmail === 'sarah.mitchell@GUYNOVA GUARD.com') {
       setUser(MOCK_USERS.caregiver);
       setIsLoading(false);
       return { success: true, user: MOCK_USERS.caregiver };
     }
-    if (normalizedEmail === 'doctor@elderguard.com') {
+    if (normalizedEmail === 'doctor@GUYNOVA GUARD.com') {
       setUser(MOCK_USERS.doctor);
       setIsLoading(false);
       return { success: true, user: MOCK_USERS.doctor };
@@ -176,7 +176,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const quickLogin = async (role: UserRole): Promise<void> => {
     setIsLoading(true);
     await new Promise((resolve) => setTimeout(resolve, 300));
-    setUser(MOCK_USERS[role] || MOCK_USERS.parent);
+    setUser(MOCK_USERS[role] || MOCK_USERS.Tutor);
     setIsLoading(false);
   };
 
@@ -224,3 +224,4 @@ export function useAuth(): AuthContextValue {
   }
   return context;
 }
+

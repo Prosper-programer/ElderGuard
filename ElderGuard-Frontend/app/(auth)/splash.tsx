@@ -1,12 +1,12 @@
 /**
  * ============================================================================
- * ElderGuard — Splash Screen (app/(auth)/splash.tsx)
+ * GUYNOVA GUARD — Splash Screen (app/(auth)/splash.tsx)
  * ============================================================================
  * 
  * DESIGN SPECIFICATION:
  * - Background   : Clean Slate (#F8FAFC) with subtle #3C6FDB ambient accents.
  * - Center Emblem: Shield (#3C6FDB) + White Heart + Smart IoT Pulse Line (#00FBFB).
- * - Typography   : "ElderGuard" in dark charcoal (#0F172A),
+ * - Typography   : "GUYNOVA GUARD" in dark charcoal (#0F172A),
  *                  "Smart Care. Safer Living." in soft slate (#64748B).
  * - Footer Loader: Minimal 3-dot animated pulse in primary blue (#3C6FDB).
  * - Feeling      : Safety + Trust + Care + Technology (Warm & Professional).
@@ -117,7 +117,7 @@ export default function SplashScreen() {
             },
           ]}
         >
-          {/* ElderGuard Emblem: Shield + Heart + Pulse */}
+          {/* GUYNOVA GUARD Emblem: Shield + Heart + Pulse */}
           <View style={styles.logoWrap}>
             <Svg width={80} height={90} viewBox="0 0 80 90" fill="none">
               {/* 1. Guardian Shield (#3C6FDB) */}
@@ -126,7 +126,7 @@ export default function SplashScreen() {
                 fill="#3C6FDB"
               />
 
-              {/* 2. Pure White Heart (Elderly Care & Health) */}
+              {/* 2. Pure White Heart (Patient Care & Health) */}
               <Path
                 d="M40 56 C38.5 54.5 25 43.5 25 33.5 C25 27.5 29.5 23 35.5 23 C38.5 23 40 24.5 40 24.5 C40 24.5 41.5 23 44.5 23 C50.5 23 55 27.5 55 33.5 C55 43.5 41.5 54.5 40 56 Z"
                 fill="#FFFFFF"
@@ -147,7 +147,7 @@ export default function SplashScreen() {
           </View>
 
           {/* App Name */}
-          <Text style={styles.brandTitle}>ElderGuard</Text>
+          <Text style={styles.brandTitle}>GUYNOVA GUARD</Text>
 
           {/* Short Reassuring Tagline */}
           <Text style={styles.tagline}>Smart Care. Safer Living.</Text>
@@ -284,3 +284,4 @@ const styles = StyleSheet.create({
     backgroundColor: '#3C6FDB', // Primary Blue
   },
 });
+

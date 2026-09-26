@@ -46,7 +46,7 @@ export const DashboardPage = ({ onNavigateToParents }) => {
           <div className="flex items-center gap-2">
             <h2 className="text-base font-bold text-slate-900 tracking-tight">Platform Overview & Telemetry</h2>
             <span className="px-2 py-0.5 rounded-full bg-blue-50 text-[#3C6FDB] border border-blue-200 font-mono text-[10px] font-bold">
-              ElderGuard Live
+              GUYNOVA GUARD Live
             </span>
           </div>
           <p className="text-xs text-slate-500 mt-0.5">
@@ -286,3 +286,4 @@ export const DashboardPage = ({ onNavigateToParents }) => {
     </div>
   );
 };
+

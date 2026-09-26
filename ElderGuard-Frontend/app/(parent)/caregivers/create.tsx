@@ -63,7 +63,7 @@ export default function CreateCaregiverScreen() {
     } else {
       setSuccess(true);
       setTimeout(() => {
-        router.replace('/(parent)');
+        router.replace('/(Tutor)');
       }, 1200);
     }
   };
@@ -72,7 +72,7 @@ export default function CreateCaregiverScreen() {
     if (router.canGoBack()) {
       router.back();
     } else {
-      router.replace('/(parent)' as any);
+      router.replace('/(Tutor)' as any);
     }
   };
 
@@ -86,7 +86,7 @@ export default function CreateCaregiverScreen() {
           <Shield size={20} color="#16A34A" />
         </View>
         <View style={{ flex: 1 }}>
-          <Text style={styles.bannerTitle}>Parent Account Provisioning</Text>
+          <Text style={styles.bannerTitle}>Tutor Account Provisioning</Text>
           <Text style={styles.bannerSub}>
             Caregivers do not sign up independently. You create their credentials here. They will sign in using this email and password.
           </Text>
@@ -131,7 +131,7 @@ export default function CreateCaregiverScreen() {
 
         <TextInput
           label="Email Address (Login ID)"
-          placeholder="e.g. sarah.mitchell@elderguard.com"
+          placeholder="e.g. sarah.mitchell@GUYNOVA GUARD.com"
           value={email}
           onChangeText={(t) => {
             setEmail(t);
@@ -300,3 +300,4 @@ const styles = StyleSheet.create({
     color: '#1E40AF',
   },
 });
+

@@ -143,12 +143,12 @@ export default function ParentCareScreen() {
       scrollable
       padded
       backgroundColor="#F0F4FA"
-      bottomBar={<BottomTabBar activeTab="care" role="parent" />}
+      bottomBar={<BottomTabBar activeTab="care" role="Tutor" />}
     >
       {/* ── 1. Top Bar ──────────────────────────────────────── */}
       <View style={styles.topBarRow}>
         <TouchableOpacity
-          onPress={() => (router.canGoBack() ? router.back() : router.replace('/(parent)' as any))}
+          onPress={() => (router.canGoBack() ? router.back() : router.replace('/(Tutor)' as any))}
           style={styles.backBtn}
           activeOpacity={0.7}
         >
@@ -158,7 +158,7 @@ export default function ParentCareScreen() {
         <Text style={styles.screenTitle}>Daily Programme</Text>
 
         <TouchableOpacity
-          onPress={() => router.push('/(parent)/care/new-medication' as any)}
+          onPress={() => router.push('/(Tutor)/care/new-medication' as any)}
           style={styles.addBtn}
           activeOpacity={0.7}
         >

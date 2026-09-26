@@ -37,7 +37,7 @@ export const Sidebar = ({ currentTab, onSelectTab }) => {
             </div>
             <div className="leading-tight">
               <div className="flex items-center gap-1.5">
-                <span className="font-bold text-xs tracking-tight text-slate-800">ElderGuard</span>
+                <span className="font-bold text-xs tracking-tight text-slate-800">GUYNOVA GUARD</span>
                 <span className="text-[9px] font-mono font-bold uppercase px-1.5 py-0.2 rounded bg-blue-100 text-[#3C6FDB] border border-blue-200">
                   Admin
                 </span>
@@ -130,3 +130,4 @@ export const Sidebar = ({ currentTab, onSelectTab }) => {
     </aside>
   );
 };
+

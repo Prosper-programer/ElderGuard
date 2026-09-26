@@ -1,5 +1,5 @@
 /**
- * ElderGuard Typography Scale
+ * GUYNOVA GUARD Typography Scale
  *
  * Uses Inter font family for a clean, modern, highly readable mobile experience.
  * All sizes are optimized for smartphone screens.
@@ -120,3 +120,4 @@ export const Typography: Record<string, TextStyle> = {
     lineHeight: 18,
   },
 } as const;
+

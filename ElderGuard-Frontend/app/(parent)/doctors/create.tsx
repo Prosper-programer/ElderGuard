@@ -64,7 +64,7 @@ export default function CreateDoctorScreen() {
     } else {
       setSuccess(true);
       setTimeout(() => {
-        router.replace('/(parent)');
+        router.replace('/(Tutor)');
       }, 1200);
     }
   };
@@ -73,7 +73,7 @@ export default function CreateDoctorScreen() {
     if (router.canGoBack()) {
       router.back();
     } else {
-      router.replace('/(parent)' as any);
+      router.replace('/(Tutor)' as any);
     }
   };
 
@@ -176,7 +176,7 @@ export default function CreateDoctorScreen() {
           keyboardType="email-address"
           autoCapitalize="none"
           autoCorrect={false}
-          placeholder="e.g. doctor@elderguard.com"
+          placeholder="e.g. doctor@GUYNOVA GUARD.com"
           leftIcon={<Mail size={16} color="#64748B" />}
           helperText="The physician will use this email address to log into their portal"
         />
@@ -317,3 +317,4 @@ const styles = StyleSheet.create({
     marginTop: Spacing.lg,
   },
 });
+

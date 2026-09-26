@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useElderly } from '@/context/ElderlyContext';
 import {
   View,
   Text,
@@ -11,8 +12,11 @@ import {
   Animated,
   Easing,
 } from 'react-native';
+import { useElderly } from '@/context/ElderlyContext';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useElderly } from '@/context/ElderlyContext';
 import { useRouter } from 'expo-router';
+import { useElderly } from '@/context/ElderlyContext';
 import {
   AlertTriangle,
   Phone,
@@ -22,10 +26,12 @@ import {
   Check,
   X,
 } from 'lucide-react-native';
+import { useElderly } from '@/context/ElderlyContext';
 import { MOCK_ELDERLY_PERSON, MOCK_DOCTOR, MOCK_CAREGIVER } from '@/services/mockData';
 
 export default function EmergencyScreen() {
   const router = useRouter();
+  const { activeProfile } = useElderly();
   const [called, setCalled] = useState(false);
   const bounceAnim = useRef(new Animated.Value(1)).current;
 
@@ -61,7 +67,7 @@ export default function EmergencyScreen() {
   };
 
   const handleDoctorStatus = () => {
-    router.push('/(parent)/doctor-status' as any);
+    router.push('/(Tutor)/doctor-status' as any);
   };
 
   return (
@@ -110,7 +116,7 @@ export default function EmergencyScreen() {
           </View>
 
           <Text style={styles.fallLabel}>FALL DETECTED</Text>
-          <Text style={styles.seniorName}>{MOCK_ELDERLY_PERSON.fullName}</Text>
+          <Text style={styles.seniorName}>{(activeProfile?.fullName || 'Patient')}</Text>
           <Text style={styles.seniorLocation}>
             {MOCK_ELDERLY_PERSON.address} · 10:15 AM
           </Text>
@@ -166,7 +172,7 @@ export default function EmergencyScreen() {
           <View style={styles.subActionsRow}>
             <TouchableOpacity
               style={styles.subBtn}
-              onPress={() => router.push('/(parent)/first-aid' as any)}
+              onPress={() => router.push('/(Tutor)/first-aid' as any)}
               activeOpacity={0.8}
             >
               <Shield size={16} color="#FFFFFF" />
@@ -186,7 +192,7 @@ export default function EmergencyScreen() {
           {/* View Location link */}
           <TouchableOpacity
             style={styles.locationLink}
-            onPress={() => router.push('/(parent)/location' as any)}
+            onPress={() => router.push('/(Tutor)/location' as any)}
             activeOpacity={0.7}
           >
             <MapPin size={14} color="rgba(255, 255, 255, 0.6)" />

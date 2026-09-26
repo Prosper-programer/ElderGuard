@@ -22,6 +22,7 @@ import { MOCK_ALERTS_LIST, MOCK_ELDERLY_PERSON, MOCK_CAREGIVER } from '@/service
 
 export default function CaregiverAlertsScreen() {
   const router = useRouter();
+    const { activeProfile } = useElderly();
   const { alerts } = useAlerts();
 
   const [activeTab, setActiveTab] = useState<'all' | 'critical' | 'warning' | 'info'>('all');
@@ -48,7 +49,7 @@ export default function CaregiverAlertsScreen() {
         onBack={() => (router.canGoBack() ? router.back() : router.replace('/(caregiver)' as any))}
       />
 
-      {/* Filter Tabs matching Figma & Parent design */}
+      {/* Filter Tabs matching Figma & Tutor design */}
       <View style={styles.tabContainer}>
         {(['all', 'critical', 'warning', 'info'] as const).map((tab) => (
           <TouchableOpacity
@@ -64,28 +65,28 @@ export default function CaregiverAlertsScreen() {
         ))}
       </View>
 
-      {/* Caregiver Duty Status Banner (Replaces parent simulation controls) */}
+      {/* Caregiver Duty Status Banner (Replaces Tutor simulation controls) */}
       <Card style={styles.dutyCard}>
         <View style={styles.dutyHeader}>
           <View style={styles.dutyBadge}>
             <View style={styles.activeDot} />
             <Text style={styles.dutyBadgeText}>ON DUTY · RESPONSE READY</Text>
           </View>
-          <Text style={styles.dutySeniorName}>{MOCK_ELDERLY_PERSON.fullName}</Text>
+          <Text style={styles.dutySeniorName}>{(activeProfile?.fullName || 'Patient')}</Text>
         </View>
         <Text style={styles.dutySubtext}>
           Assigned to {MOCK_CAREGIVER.name} ({MOCK_CAREGIVER.shiftStart}–{MOCK_CAREGIVER.shiftEnd}). Real-time telemetry monitored.
         </Text>
       </Card>
 
-      {/* Alert Feed matching parent UI */}
+      {/* Alert Feed matching Tutor UI */}
       <View style={{ marginTop: 8 }}>
         {filteredAlerts.length === 0 ? (
           <Card style={styles.emptyCard}>
             <CheckCircle2 size={36} color={Colors.safe} />
             <Text style={styles.emptyTitle}>No Incidents Found</Text>
             <Text style={styles.emptySub}>
-              {MOCK_ELDERLY_PERSON.fullName} is safe and vitals are normal.
+              {(activeProfile?.fullName || 'Patient')} is safe and vitals are normal.
             </Text>
           </Card>
         ) : (

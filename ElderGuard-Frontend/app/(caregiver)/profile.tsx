@@ -250,7 +250,7 @@ export default function CaregiverElderlyProfileScreen() {
       <View style={styles.noticeCard}>
         <Info size={18} color={Colors.primary} />
         <Text style={styles.noticeText}>
-          You are viewing this profile as an assigned Caregiver. Core profile details, IoT hardware pairing, and emergency policies are managed by the parent administrator.
+          You are viewing this profile as an assigned Caregiver. Core profile details, IoT hardware pairing, and emergency policies are managed by the Tutor administrator.
         </Text>
       </View>
 

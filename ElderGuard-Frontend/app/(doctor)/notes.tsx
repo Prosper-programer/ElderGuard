@@ -49,7 +49,7 @@ const DEMO_NOTES: ClinicalNoteRecord[] = [
     doctor_id: 11,
     title: 'Initial Intake & Fall Risk Stratification',
     note_content:
-      'Baseline evaluation completed. Mild osteoporosis noted. ElderGuard wearable fall-detection accelerometer calibrated to High Sensitivity. Gait steady with walking aid.',
+      'Baseline evaluation completed. Mild osteoporosis noted. GUYNOVA GUARD wearable fall-detection accelerometer calibrated to High Sensitivity. Gait steady with walking aid.',
     recommendations:
       'Ensure obstacle-free hallway lighting at night. Caregiver instructed to log all medication doses promptly.',
     doctor_name: 'Dr. Jean-Paul Mbarga',
@@ -242,7 +242,7 @@ export default function DoctorNotesScreen() {
                 label="Actionable Recommendations / Next Steps"
                 value={recommendations}
                 onChangeText={setRecommendations}
-                placeholder="Directives for parent manager and attending caregiver..."
+                placeholder="Directives for Tutor manager and attending caregiver..."
                 multiline
               />
             </ScrollView>
@@ -451,3 +451,4 @@ const styles = StyleSheet.create({
     marginTop: 16,
   },
 });
+

@@ -10,16 +10,16 @@ export const AdminAuthProvider = ({ children }) => {
 
   useEffect(() => {
     // Check saved session on mount
-    const savedToken = localStorage.getItem('elderguard_admin_token');
-    const savedUser = localStorage.getItem('elderguard_admin_user');
+    const savedToken = localStorage.getItem('GUYNOVA GUARD_admin_token');
+    const savedUser = localStorage.getItem('GUYNOVA GUARD_admin_user');
 
     if (savedToken && savedUser) {
       try {
         setToken(savedToken);
         setAdmin(JSON.parse(savedUser));
       } catch (e) {
-        localStorage.removeItem('elderguard_admin_token');
-        localStorage.removeItem('elderguard_admin_user');
+        localStorage.removeItem('GUYNOVA GUARD_admin_token');
+        localStorage.removeItem('GUYNOVA GUARD_admin_user');
       }
     }
     setIsLoading(false);
@@ -29,15 +29,15 @@ export const AdminAuthProvider = ({ children }) => {
     const data = await adminApi.login(email, password);
     setToken(data.token);
     setAdmin(data.admin);
-    localStorage.setItem('elderguard_admin_token', data.token);
-    localStorage.setItem('elderguard_admin_user', JSON.stringify(data.admin));
+    localStorage.setItem('GUYNOVA GUARD_admin_token', data.token);
+    localStorage.setItem('GUYNOVA GUARD_admin_user', JSON.stringify(data.admin));
   };
 
   const logout = () => {
     setToken(null);
     setAdmin(null);
-    localStorage.removeItem('elderguard_admin_token');
-    localStorage.removeItem('elderguard_admin_user');
+    localStorage.removeItem('GUYNOVA GUARD_admin_token');
+    localStorage.removeItem('GUYNOVA GUARD_admin_user');
   };
 
   return (
@@ -63,3 +63,4 @@ export const useAdminAuth = () => {
   }
   return context;
 };
+

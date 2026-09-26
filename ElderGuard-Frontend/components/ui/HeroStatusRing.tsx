@@ -1,10 +1,10 @@
 /**
  * ============================================================================
- * ElderGuard — HeroStatusRing.tsx
+ * GUYNOVA GUARD — HeroStatusRing.tsx
  * ============================================================================
  * 
  * PURPOSE:
- * The primary visual focal point of the Parent and Caregiver dashboards.
+ * The primary visual focal point of the Tutor and Caregiver dashboards.
  * Designed to communicate the senior's holistic safety status in under 0.5 seconds.
  * 
  * DESIGN PRINCIPLES (Apple-Health Inspired):
@@ -255,3 +255,4 @@ const styles = StyleSheet.create({
     color: Colors.textPrimary,
   },
 });
+

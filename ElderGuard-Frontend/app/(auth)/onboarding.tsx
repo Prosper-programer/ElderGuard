@@ -35,7 +35,7 @@ interface OnboardingSlide {
 const SLIDES: OnboardingSlide[] = [
   {
     id: 'safety',
-    category: 'ELDERLY SAFETY',
+    category: 'Patient SAFETY',
     title: 'Protecting Your Loved Ones 24/7',
     description:
       'Wearable IoT tracking automatically detects unexpected falls and critical movements, giving your family complete peace of mind at every moment.',
@@ -127,7 +127,7 @@ export default function OnboardingScreen() {
         {/* Brand Pill */}
         <View style={styles.brandPill}>
           <Shield size={16} color={Colors.accent} />
-          <Text style={styles.brandTitle}>ElderGuard</Text>
+          <Text style={styles.brandTitle}>GUYNOVA GUARD</Text>
         </View>
 
         {/* Skip Action */}
@@ -212,7 +212,7 @@ export default function OnboardingScreen() {
               activeOpacity={0.85}
             >
               <Text style={[styles.primaryActionText, isLastSlide && styles.getStartedText]}>
-                {isLastSlide ? 'Enter ElderGuard' : 'Continue'}
+                {isLastSlide ? 'Enter GUYNOVA GUARD' : 'Continue'}
               </Text>
               {isLastSlide ? (
                 <Sparkles size={18} color="#0B132B" />
@@ -431,3 +431,4 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
+

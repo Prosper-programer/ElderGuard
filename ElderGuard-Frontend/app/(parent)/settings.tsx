@@ -97,13 +97,13 @@ export default function ParentSettingsScreen() {
           </View>
           <View style={styles.profileInfo}>
             <Text style={styles.profileName}>{user?.name || 'Robert Ngu'}</Text>
-            <Text style={styles.profileEmail}>{user?.email || 'robert.ngu@elderguard.cm'}</Text>
+            <Text style={styles.profileEmail}>{user?.email || 'robert.ngu@GUYNOVA GUARD.cm'}</Text>
             <Text style={styles.profilePhone}>{user?.phone || '+237 671 23 45 67'}</Text>
           </View>
           <TouchableOpacity
             style={styles.editBtn}
             activeOpacity={0.8}
-            onPress={() => Alert.alert('Edit Profile', `Profile editor for ${user?.name || 'Parent'}.`)}
+            onPress={() => Alert.alert('Edit Profile', `Profile editor for ${user?.name || 'Tutor'}.`)}
           >
             <Pencil size={18} color="#FFFFFF" />
           </TouchableOpacity>
@@ -160,31 +160,31 @@ export default function ParentSettingsScreen() {
 
         {/* Navigation Options List */}
         <View style={[styles.card, styles.cardMenu]}>
-          {/* Elderly person profile */}
+          {/* Patient profile */}
           <TouchableOpacity
             style={styles.menuRow}
-            onPress={() => router.push('/(parent)/profile' as any)}
+            onPress={() => router.push('/(Tutor)/profile' as any)}
             activeOpacity={0.7}
           >
             <View style={styles.menuIconWrap}>
               <User size={18} color="#2563EB" />
             </View>
-            <Text style={styles.menuLabel}>Elderly Person Profile</Text>
+            <Text style={styles.menuLabel}>Patient Profile</Text>
             <ChevronRight size={18} color="#CBD5E1" />
           </TouchableOpacity>
 
           <View style={styles.menuDivider} />
 
-          {/* Add / Create Elderly Person */}
+          {/* Add / Create Patient */}
           <TouchableOpacity
             style={styles.menuRow}
-            onPress={() => router.push('/(parent)/profile/create' as any)}
+            onPress={() => router.push('/(Tutor)/profile/create' as any)}
             activeOpacity={0.7}
           >
             <View style={[styles.menuIconWrap, { backgroundColor: '#EFF6FF' }]}>
               <User size={18} color="#3C6FDB" />
             </View>
-            <Text style={styles.menuLabel}>+ Add Elderly Loved One</Text>
+            <Text style={styles.menuLabel}>+ Add Patient Loved One</Text>
             <ChevronRight size={18} color="#CBD5E1" />
           </TouchableOpacity>
 
@@ -193,7 +193,7 @@ export default function ParentSettingsScreen() {
           {/* Caregiver Provisioning */}
           <TouchableOpacity
             style={styles.menuRow}
-            onPress={() => router.push('/(parent)/caregivers/create' as any)}
+            onPress={() => router.push('/(Tutor)/caregivers/create' as any)}
             activeOpacity={0.7}
           >
             <View style={[styles.menuIconWrap, { backgroundColor: '#F0FDF4' }]}>
@@ -208,7 +208,7 @@ export default function ParentSettingsScreen() {
           {/* Doctor Provisioning */}
           <TouchableOpacity
             style={styles.menuRow}
-            onPress={() => router.push('/(parent)/doctors/create' as any)}
+            onPress={() => router.push('/(Tutor)/doctors/create' as any)}
             activeOpacity={0.7}
           >
             <View style={[styles.menuIconWrap, { backgroundColor: '#F5F3FF' }]}>
@@ -223,7 +223,7 @@ export default function ParentSettingsScreen() {
           {/* Clinical Health Summary for Doctor */}
           <TouchableOpacity
             style={styles.menuRow}
-            onPress={() => router.push('/(parent)/health-report' as any)}
+            onPress={() => router.push('/(Tutor)/health-report' as any)}
             activeOpacity={0.7}
           >
             <View style={[styles.menuIconWrap, { backgroundColor: '#EFF6FF' }]}>
@@ -238,7 +238,7 @@ export default function ParentSettingsScreen() {
           {/* Emergency contacts */}
           <TouchableOpacity
             style={styles.menuRow}
-            onPress={() => router.push('/(parent)/emergency' as any)}
+            onPress={() => router.push('/(Tutor)/emergency' as any)}
             activeOpacity={0.7}
           >
             <View style={styles.menuIconWrap}>
@@ -253,7 +253,7 @@ export default function ParentSettingsScreen() {
           {/* Device settings */}
           <TouchableOpacity
             style={styles.menuRow}
-            onPress={() => router.push('/(parent)/device' as any)}
+            onPress={() => router.push('/(Tutor)/device' as any)}
             activeOpacity={0.7}
           >
             <View style={styles.menuIconWrap}>
@@ -268,7 +268,7 @@ export default function ParentSettingsScreen() {
           {/* Reports & exports */}
           <TouchableOpacity
             style={styles.menuRow}
-            onPress={() => router.push('/(parent)/reports' as any)}
+            onPress={() => router.push('/(Tutor)/reports' as any)}
             activeOpacity={0.7}
           >
             <View style={styles.menuIconWrap}>
@@ -293,7 +293,7 @@ export default function ParentSettingsScreen() {
       </ScrollView>
 
       {/* Bottom Tab Bar */}
-      <BottomTabBar activeTab="more" role="parent" />
+      <BottomTabBar activeTab="more" role="Tutor" />
     </SafeAreaView>
   );
 }
@@ -462,3 +462,4 @@ const styles = StyleSheet.create({
     color: '#EF4444',
   },
 });
+

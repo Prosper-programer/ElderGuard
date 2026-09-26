@@ -26,14 +26,14 @@ export default function CreateElderlyProfileScreen() {
   const [medicationNotes, setMedicationNotes] = useState('');
 
   const [emergencyName, setEmergencyName] = useState(user?.name || '');
-  const [emergencyRelation, setEmergencyRelation] = useState('Parent Manager');
+  const [emergencyRelation, setEmergencyRelation] = useState('Tutor Manager');
   const [emergencyPhone, setEmergencyPhone] = useState('+237 671 23 45 67');
 
   const [doctorName, setDoctorName] = useState('Dr. Jean-Paul Mbarga');
   const [doctorSpecialty, setDoctorSpecialty] = useState('Cardiologie & Médecine Gériatrique');
   const [doctorHospital, setDoctorHospital] = useState('Hôpital Central de Yaoundé');
   const [doctorPhone, setDoctorPhone] = useState('+237 655 89 12 34');
-  const [doctorEmail, setDoctorEmail] = useState('doctor.mbarga@elderguard.cm');
+  const [doctorEmail, setDoctorEmail] = useState('doctor.mbarga@GUYNOVA GUARD.cm');
 
   const [deviceId, setDeviceId] = useState(`EG-IOT-${Math.floor(1000 + Math.random() * 9000)}`);
 
@@ -79,12 +79,12 @@ export default function CreateElderlyProfileScreen() {
       gender,
       address: address.trim(),
       phone: phone.trim(),
-      parentManagerId: user?.id || 'usr-parent-01',
+      parentManagerId: user?.id || 'usr-Tutor-01',
       doctorName: doctorName.trim() || 'Dr. Jean-Paul Mbarga',
       doctorSpecialty: doctorSpecialty.trim() || 'Geriatric Medicine',
       doctorHospital: doctorHospital.trim() || "St. Thomas' Hospital, London",
       doctorPhone: doctorPhone.trim() || '+44 20 7946 0000',
-      doctorEmail: doctorEmail.trim() || 'doctor@elderguard.com',
+      doctorEmail: doctorEmail.trim() || 'doctor@GUYNOVA GUARD.com',
       medicalInfo: {
         bloodType: bloodType.trim(),
         allergies: parsedAllergies,
@@ -105,7 +105,7 @@ export default function CreateElderlyProfileScreen() {
       ],
       deviceStatus: {
         deviceId: deviceId.trim(),
-        deviceName: 'ElderGuard Smart Wearable',
+        deviceName: 'GUYNOVA GUARD Smart Wearable',
         connected: true,
         batteryLevel: 95,
         lastSync: 'Just now',
@@ -116,9 +116,9 @@ export default function CreateElderlyProfileScreen() {
 
     setLoading(false);
     if (created) {
-      router.replace('/(parent)');
+      router.replace('/(Tutor)');
     } else {
-      setError('Failed to create elderly profile. Please try again.');
+      setError('Failed to create Patient Profile. Please try again.');
     }
   };
 
@@ -126,7 +126,7 @@ export default function CreateElderlyProfileScreen() {
     if (router.canGoBack()) {
       router.back();
     } else {
-      router.replace('/(parent)/profile' as any);
+      router.replace('/(Tutor)/profile' as any);
     }
   };
 
@@ -142,7 +142,7 @@ export default function CreateElderlyProfileScreen() {
           <ArrowLeft size={22} color={Colors.textPrimary} />
         </TouchableOpacity>
 
-        <Text style={styles.navTitle}>Add Elderly Profile</Text>
+        <Text style={styles.navTitle}>Add Patient Profile</Text>
         <View style={{ width: 40 }} />
       </View>
 
@@ -380,7 +380,7 @@ export default function CreateElderlyProfileScreen() {
           onChangeText={setDoctorEmail}
           keyboardType="email-address"
           autoCapitalize="none"
-          placeholder="e.g. doctor@elderguard.com"
+          placeholder="e.g. doctor@GUYNOVA GUARD.com"
         />
       </Card>
 
@@ -394,14 +394,14 @@ export default function CreateElderlyProfileScreen() {
           value={deviceId}
           onChangeText={setDeviceId}
           placeholder="e.g. EG-IOT-4892"
-          helperText="Unique identifier printed on the ElderGuard smart wearable band"
+          helperText="Unique identifier printed on the GUYNOVA GUARD smart wearable band"
         />
       </Card>
 
       {/* ── Bottom Actions ──────────────────────────────────── */}
       <View style={styles.bottomActions}>
         <Button
-          title="Create Elderly Profile"
+          title="Create Patient Profile"
           onPress={handleCreate}
           variant="primary"
           size="lg"
@@ -523,3 +523,4 @@ const styles = StyleSheet.create({
     paddingBottom: Spacing['3xl'],
   },
 });
+

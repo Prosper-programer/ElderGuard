@@ -33,7 +33,7 @@ export default function CaregiverLocationScreen() {
 
   const handleCallParent = () => {
     Linking.openURL(
-      `tel:${(MOCK_USERS.parent.phone || '+15551234567').replace(/[^0-9+]/g, '')}`
+      `tel:${(MOCK_USERS.Tutor.phone || '+15551234567').replace(/[^0-9+]/g, '')}`
     ).catch(() => {});
   };
 
@@ -158,7 +158,7 @@ export default function CaregiverLocationScreen() {
           fullWidth
           onPress={handleCallParent}
           leftIcon={<Phone size={16} color={Colors.primary} />}
-          title={`Call Family (${MOCK_USERS.parent.name})`}
+          title={`Call Family (${MOCK_USERS.Tutor.name})`}
         />
       </View>
 

@@ -1,5 +1,5 @@
 /**
- * ElderGuard Spacing & Layout Tokens
+ * GUYNOVA GUARD Spacing & Layout Tokens
  *
  * Consistent spacing scale used across all screens and components.
  * Based on a 4px base unit for pixel-perfect alignment.
@@ -80,3 +80,4 @@ export const Shadows = {
     elevation: 5,
   },
 } as const;
+

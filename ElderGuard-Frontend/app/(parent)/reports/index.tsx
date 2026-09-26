@@ -53,7 +53,7 @@ export default function ReportsScreen() {
     if (Platform.OS === 'web') {
       Alert.alert(
         'Report Generated',
-        `ElderGuard Care Summary Report (${periodLabel})\n${activeCount} modules included.\nPrinting / download dialog prepared.`,
+        `GUYNOVA GUARD Care Summary Report (${periodLabel})\n${activeCount} modules included.\nPrinting / download dialog prepared.`,
         [
           {
             text: 'Print / Save PDF',
@@ -65,7 +65,7 @@ export default function ReportsScreen() {
     } else {
       Alert.alert(
         'Report Generated',
-        `ElderGuard Care Summary Report (${periodLabel}) has been generated with ${activeCount} data sections and saved to your device.`
+        `GUYNOVA GUARD Care Summary Report (${periodLabel}) has been generated with ${activeCount} data sections and saved to your device.`
       );
     }
   };
@@ -195,7 +195,7 @@ export default function ReportsScreen() {
       </ScrollView>
 
       {/* Bottom Tab Bar */}
-      <BottomTabBar activeTab="more" role="parent" />
+      <BottomTabBar activeTab="more" role="Tutor" />
     </SafeAreaView>
   );
 }
@@ -328,3 +328,4 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
   },
 });
+

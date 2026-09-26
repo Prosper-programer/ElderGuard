@@ -12,7 +12,7 @@ dotenv.config();
  * (User.findAll, User.findOne, ElderlyProfile.create, etc.)
  */
 export const sequelize = new Sequelize(
-  process.env.DB_NAME || 'elderguard',
+  process.env.DB_NAME || 'GUYNOVA GUARD',
   process.env.DB_USER || 'root',
   process.env.DB_PASSWORD || '',
   {
@@ -55,7 +55,7 @@ export const pool = mysql.createPool({
   host: process.env.DB_HOST || 'localhost',
   user: process.env.DB_USER || 'root',
   password: process.env.DB_PASSWORD || '',
-  database: process.env.DB_NAME || 'elderguard',
+  database: process.env.DB_NAME || 'GUYNOVA GUARD',
   port: Number(process.env.DB_PORT) || 3306,
   waitForConnections: true,
   connectionLimit: 10,
@@ -63,3 +63,4 @@ export const pool = mysql.createPool({
 });
 
 export default pool;
+

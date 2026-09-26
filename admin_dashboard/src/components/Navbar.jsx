@@ -10,7 +10,7 @@ export const Navbar = ({ title, subtitle }) => {
       {/* Title & Breadcrumbs */}
       <div>
         <div className="flex items-center gap-1.5 text-[11px] text-slate-400 font-mono">
-          <span className="cursor-default">ElderGuard</span>
+          <span className="cursor-default">GUYNOVA GUARD</span>
           <span>/</span>
           <span className="text-[#3C6FDB] font-semibold">{title}</span>
         </div>
@@ -49,3 +49,4 @@ export const Navbar = ({ title, subtitle }) => {
     </header>
   );
 };
+

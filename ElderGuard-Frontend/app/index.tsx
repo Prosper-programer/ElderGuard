@@ -4,10 +4,10 @@ import { ScreenContainer, LoadingSpinner } from '@/components/ui';
 import { useAuth } from '@/context/AuthContext';
 
 /**
- * Root Gateway — Authentication & Role-Based Router
+ * Root Gateway â€” Authentication & Role-Based Router
  *
  * Directs users to the appropriate flow depending on their authentication
- * status and role (Parent, Caregiver).
+ * status and role (Tutor, Caregiver).
  */
 export default function IndexGateway() {
   const { user, isAuthenticated, isLoading } = useAuth();
@@ -15,7 +15,7 @@ export default function IndexGateway() {
   if (isLoading) {
     return (
       <ScreenContainer scrollable={false} padded={false}>
-        <LoadingSpinner size="large" label="Initializing ElderGuard..." />
+        <LoadingSpinner size="large" label="Initializing GUYNOVA GUARD..." />
       </ScreenContainer>
     );
   }
@@ -37,3 +37,4 @@ export default function IndexGateway() {
       return <Redirect href="/(auth)/welcome" />;
   }
 }
+

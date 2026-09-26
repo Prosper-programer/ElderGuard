@@ -1,6 +1,6 @@
 /**
  * ============================================================================
- * ElderGuard — VitalsContext.tsx
+ * GUYNOVA GUARD — VitalsContext.tsx
  * ============================================================================
  * 
  * PURPOSE:
@@ -8,14 +8,14 @@
  * Body Temperature, and Daily Step Activity) for the monitored senior.
  * 
  * ARCHITECTURAL ROLE:
- * - Acts as the single source of truth for vitals across Parent and Caregiver dashboards.
+ * - Acts as the single source of truth for vitals across Tutor and Caregiver dashboards.
  * - Powers the Apple-Health style Hero Status Ring and SVG 24-hr Sparkline Cards.
  * - Implements the Anomaly Simulation Engine (allowing developers and testers to
  *   trigger realistic 3.4G falls or tachycardia states on demand without physical hardware).
  * 
  * PRODUCTION HARDWARE INTEGRATION POINT:
  * - In production, replace the local mock state with a WebSocket listener:
- *     const socket = new WebSocket('wss://api.elderguard.com/v1/stream');
+ *     const socket = new WebSocket('wss://api.GUYNOVA GUARD.com/v1/stream');
  *     socket.onmessage = (e) => setVitals(JSON.parse(e.data));
  * - Or connect directly to Bluetooth Low Energy (BLE) using `react-native-ble-plx`.
  */
@@ -201,3 +201,4 @@ export function useVitals(): VitalsContextValue {
   }
   return context;
 }
+

@@ -54,7 +54,7 @@ export default function DeviceStatusScreen() {
           <Shield size={32} color={Colors.primary} />
         </View>
 
-        <Text style={styles.bandModel}>ElderGuard Smart Band</Text>
+        <Text style={styles.bandModel}>GUYNOVA GUARD Smart Band</Text>
         <Text style={styles.bandSerial}>ID: {MOCK_ELDERLY_PERSON.deviceId}</Text>
 
         <View style={styles.statusPill}>
@@ -315,3 +315,4 @@ const styles = StyleSheet.create({
     color: Colors.safe,
   },
 });
+

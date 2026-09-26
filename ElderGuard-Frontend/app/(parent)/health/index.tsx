@@ -187,12 +187,12 @@ export default function HealthMonitoringScreen() {
       scrollable
       padded
       backgroundColor="#F0F4FA"
-      bottomBar={<BottomTabBar activeTab="health" role="parent" />}
+      bottomBar={<BottomTabBar activeTab="health" role="Tutor" />}
     >
       {/* ── 1. Header with Inline Period Switcher ───────────── */}
       <View style={styles.headerRow}>
         <TouchableOpacity
-          onPress={() => (router.canGoBack() ? router.back() : router.replace('/(parent)' as any))}
+          onPress={() => (router.canGoBack() ? router.back() : router.replace('/(Tutor)' as any))}
           style={styles.backBtn}
           activeOpacity={0.7}
         >

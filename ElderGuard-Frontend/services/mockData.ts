@@ -1,5 +1,5 @@
 /**
- * ElderGuard Centralized Mock Data
+ * GUYNOVA GUARD Centralized Mock Data
  *
  * Enriched with the complete Figma design datasets for Margaret, Robert,
  * Sarah Mitchell, Dr. Hargreaves, vitals telemetry history, medications,
@@ -9,11 +9,11 @@
 import { User } from '@/types/auth';
 
 export const MOCK_USERS: Record<string, User> = {
-  parent: {
+  Tutor: {
     id: '6', // Matches Robert Ngu in MySQL DB
     name: 'Robert Ngu',
-    email: 'robert.ngu@elderguard.cm',
-    role: 'parent',
+    email: 'robert.ngu@GUYNOVA GUARD.cm',
+    role: 'Tutor',
     phone: '+237 671 23 45 67',
     assignedElderlyCount: 1,
     createdAt: '2026-01-15T08:00:00.000Z',
@@ -22,7 +22,7 @@ export const MOCK_USERS: Record<string, User> = {
   caregiver: {
     id: 'usr-caregiver-01',
     name: 'Amara Biya',
-    email: 'amara.biya@elderguard.cm',
+    email: 'amara.biya@GUYNOVA GUARD.cm',
     role: 'caregiver',
     phone: '+237 699 45 23 10',
     assignedElderlyCount: 1,
@@ -32,7 +32,7 @@ export const MOCK_USERS: Record<string, User> = {
   doctor: {
     id: 'usr-doctor-01',
     name: 'Dr. Jean-Paul Mbarga',
-    email: 'doctor.mbarga@elderguard.cm',
+    email: 'doctor.mbarga@GUYNOVA GUARD.cm',
     role: 'doctor',
     phone: '+237 655 89 12 34',
     assignedElderlyCount: 1,
@@ -52,7 +52,7 @@ export const MOCK_ELDERLY_PERSON = {
   weight: '72 kg',
   bloodType: 'O+',
   primaryCaregiverId: 'usr-caregiver-01',
-  parentManagerId: 'usr-parent-01',
+  parentManagerId: 'usr-Tutor-01',
   emergencyContact: {
     name: 'Robert Ngu',
     relationship: 'Son (Primary)',
@@ -70,7 +70,7 @@ export const MOCK_ELDERLY_PERSON = {
 export const MOCK_CAREGIVER = {
   name: 'Amara Biya',
   firstName: 'Amara',
-  email: 'amara.biya@elderguard.cm',
+  email: 'amara.biya@GUYNOVA GUARD.cm',
   phone: '+237 699 45 23 10',
   qualification: 'Infirmière Diplômée d’État (IDE)',
   experience: '7 ans',
@@ -343,3 +343,4 @@ export const MOCK_TIMELINE_EVENTS = [
     ],
   },
 ];
+

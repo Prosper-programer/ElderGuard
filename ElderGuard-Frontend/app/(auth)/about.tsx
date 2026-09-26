@@ -26,7 +26,7 @@ const STEPS = [
     step: '01',
     icon: Smartphone,
     title: 'Connect the wearable',
-    desc: 'The elderly person wears the ElderGuard smart band. It continuously monitors heart rate, SpO₂, temperature, activity and fall detection.',
+    desc: 'The Patient wears the GUYNOVA GUARD smart band. It continuously monitors heart rate, SpO₂, temperature, activity and fall detection.',
     color: '#3C6FDB',
   },
   {
@@ -61,13 +61,13 @@ const STEPS = [
 
 const USER_ROLES = [
   {
-    role: 'Parent / Family',
+    role: 'Tutor / Family',
     desc: 'Monitor health, manage care, receive alerts and generate reports.',
     color: '#3C6FDB',
   },
   {
     role: 'Caregiver',
-    desc: 'View assigned elderly vitals, log care activities and respond to alerts.',
+    desc: 'View assigned Patient vitals, log care activities and respond to alerts.',
     color: '#16A34A',
   },
   {
@@ -113,7 +113,7 @@ export default function AboutScreen() {
               <Shield size={18} color="#FFFFFF" />
             </View>
             <Text style={styles.brandTitle}>
-              Elder<Text style={styles.brandAccent}>Guard</Text>
+              Patient<Text style={styles.brandAccent}>Guard</Text>
             </Text>
           </View>
 
@@ -156,9 +156,9 @@ export default function AboutScreen() {
             })}
           </View>
 
-          {/* Who uses ElderGuard */}
+          {/* Who uses GUYNOVA GUARD */}
           <Card style={styles.rolesCard}>
-            <Text style={styles.rolesHeading}>Who uses ElderGuard?</Text>
+            <Text style={styles.rolesHeading}>Who uses GUYNOVA GUARD?</Text>
             {USER_ROLES.map((user, idx) => (
               <View
                 key={user.role}
@@ -406,3 +406,4 @@ const styles = StyleSheet.create({
     color: '#3C6FDB',
   },
 });
+

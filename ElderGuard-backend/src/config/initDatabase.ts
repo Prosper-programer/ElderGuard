@@ -9,14 +9,14 @@ import pool from './database';
  * What this file does:
  * 1. Connects to MySQL using our connection pool.
  * 2. Reads the SQL statements from schema.sql.
- * 3. Creates all 11 tables matching the ElderGuard UML class diagram.
+ * 3. Creates all 11 tables matching the GUYNOVA GUARD UML class diagram.
  * 4. Seeds a default Admin user if none exists (with a securely hashed password).
  * 
  * Why we need it:
  * To set up or reset our relational database tables cleanly and automatically.
  */
 export async function initializeDatabase() {
-  console.log('🔄 Initializing ElderGuard database tables...');
+  console.log('🔄 Initializing GUYNOVA GUARD database tables...');
 
   try {
     const schemaPath = path.join(__dirname, 'schema.sql');
@@ -42,14 +42,14 @@ export async function initializeDatabase() {
       console.log('✅ All 11 tables created successfully matching UML class diagram!');
 
       // Check if a default Admin account exists, if not, create one
-      const [adminRows]: any = await connection.query('SELECT * FROM admins WHERE email = ?', ['admin@elderguard.com']);
+      const [adminRows]: any = await connection.query('SELECT * FROM admins WHERE email = ?', ['admin@GUYNOVA GUARD.com']);
       if (adminRows.length === 0) {
         const defaultAdminPassword = await bcrypt.hash('admin123456', 10);
         await connection.query(
           'INSERT INTO admins (name, email, password) VALUES (?, ?, ?)',
-          ['System Administrator', 'admin@elderguard.com', defaultAdminPassword]
+          ['System Administrator', 'admin@GUYNOVA GUARD.com', defaultAdminPassword]
         );
-        console.log('👤 Default Admin created: admin@elderguard.com / admin123456');
+        console.log('👤 Default Admin created: admin@GUYNOVA GUARD.com / admin123456');
       } else {
         console.log('👤 Admin account already exists.');
       }
@@ -76,3 +76,4 @@ if (require.main === module) {
       process.exit(1);
     });
 }
+

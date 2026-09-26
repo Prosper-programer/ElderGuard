@@ -1,5 +1,5 @@
 /**
- * ElderGuard Elderly Person Data Types
+ * GUYNOVA GUARD Patient Data Types
  */
 
 export interface EmergencyContact {
@@ -71,3 +71,4 @@ export interface ElderlyContextValue {
   provisionCaregiver: (data: { fullName: string; email: string; phoneNumber: string; password?: string }) => Promise<{ success: boolean; error?: string }>;
   provisionDoctor: (data: { fullName: string; email: string; phoneNumber: string; password?: string }) => Promise<{ success: boolean; error?: string }>;
 }
+

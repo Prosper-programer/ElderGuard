@@ -1,6 +1,6 @@
 /**
  * ============================================================================
- * ElderGuard — CareContext.tsx
+ * GUYNOVA GUARD — CareContext.tsx
  * ============================================================================
  * 
  * PURPOSE:
@@ -247,3 +247,4 @@ export function useCare(): CareContextValue {
   }
   return context;
 }
+

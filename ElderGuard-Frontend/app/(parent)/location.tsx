@@ -42,12 +42,12 @@ export default function ParentLocationScreen() {
       scrollable
       padded
       backgroundColor="#F0F4FA"
-      bottomBar={<BottomTabBar activeTab="location" role="parent" />}
+      bottomBar={<BottomTabBar activeTab="location" role="Tutor" />}
     >
       {/* ── 1. Header with Geofencing Quick Link ────────────── */}
       <View style={styles.headerRow}>
         <TouchableOpacity
-          onPress={() => (router.canGoBack() ? router.back() : router.replace('/(parent)' as any))}
+          onPress={() => (router.canGoBack() ? router.back() : router.replace('/(Tutor)' as any))}
           style={styles.backBtn}
           activeOpacity={0.7}
         >
@@ -57,7 +57,7 @@ export default function ParentLocationScreen() {
         <Text style={styles.screenTitle}>Location</Text>
 
         <TouchableOpacity
-          onPress={() => router.push('/(parent)/geofencing' as any)}
+          onPress={() => router.push('/(Tutor)/geofencing' as any)}
           activeOpacity={0.7}
         >
           <Text style={styles.geofencingLink}>Geofencing</Text>
@@ -253,7 +253,7 @@ export default function ParentLocationScreen() {
       {/* ── 5. Configure Safe Zone Button ───────────────────── */}
       <TouchableOpacity
         style={styles.configureSafeZoneBtn}
-        onPress={() => router.push('/(parent)/geofencing' as any)}
+        onPress={() => router.push('/(Tutor)/geofencing' as any)}
         activeOpacity={0.8}
       >
         <Shield size={16} color="#3C6FDB" />

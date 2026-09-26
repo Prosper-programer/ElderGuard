@@ -73,16 +73,16 @@ export default function ParentDashboardScreen() {
     .slice(0, 2)
     .toUpperCase();
 
-  const seniorName = activeProfile?.fullName || MOCK_ELDERLY_PERSON.fullName;
-  const seniorAge = activeProfile?.age || MOCK_ELDERLY_PERSON.age;
-  const seniorPhoto = activeProfile?.imageUrl || MOCK_ELDERLY_PERSON.photo;
+  const seniorName = activeProfile?.fullName || 'Patient';
+  const seniorAge = activeProfile?.age || '';
+  const seniorPhoto = activeProfile?.imageUrl || undefined;
 
   return (
     <ScreenContainer
       scrollable
       padded
       backgroundColor="#F0F4FA"
-      bottomBar={<BottomTabBar activeTab="home" role="parent" />}
+      bottomBar={<BottomTabBar activeTab="home" role="Tutor" />}
     >
       {/* ── 1. Top Header Bar ───────────────────────────────── */}
       <View style={styles.topHeader}>
@@ -106,7 +106,7 @@ export default function ParentDashboardScreen() {
 
         <View style={styles.headerRightActions}>
           <TouchableOpacity
-            onPress={() => router.push('/(parent)/alerts' as any)}
+            onPress={() => router.push('/(Tutor)/alerts' as any)}
             style={styles.headerIconButton}
             activeOpacity={0.7}
           >
@@ -117,7 +117,7 @@ export default function ParentDashboardScreen() {
           </TouchableOpacity>
 
           <TouchableOpacity
-            onPress={() => router.push('/(parent)/settings' as any)}
+            onPress={() => router.push('/(Tutor)/settings' as any)}
             style={styles.avatarButton}
             activeOpacity={0.8}
           >
@@ -149,7 +149,7 @@ export default function ParentDashboardScreen() {
             <View style={styles.deactivatedTextWrap}>
               <Text style={styles.deactivatedTitle}>Account Deactivated by Administrator</Text>
               <Text style={styles.deactivatedMessage}>
-                Your parent account has been deactivated by a platform administrator. Live emergency escalations, sensor telemetry, and modifying actions are currently paused.
+                Your Tutor account has been deactivated by a platform administrator. Live emergency escalations, sensor telemetry, and modifying actions are currently paused.
               </Text>
             </View>
           </View>
@@ -175,11 +175,11 @@ export default function ParentDashboardScreen() {
               activeOpacity={0.85}
               onPress={() => {
                 Linking.openURL(
-                  `mailto:support@elderguard.com?subject=ElderGuard%20Account%20Reactivation%20Request%20(${encodeURIComponent(user?.email || 'Parent')})&body=Hello%20Administrator,%0D%0A%0D%0AMy%20ElderGuard%20account%20(ID:%20${user?.id},%20Email:%20${user?.email})%20is%20currently%20deactivated.%20Please%20review%20and%20reactivate%20my%20account%20access.%0D%0A%0D%0AThank%20you.`
+                  `mailto:support@GUYNOVA GUARD.com?subject=GUYNOVA GUARD%20Account%20Reactivation%20Request%20(${encodeURIComponent(user?.email || 'Tutor')})&body=Hello%20Administrator,%0D%0A%0D%0AMy%20GUYNOVA GUARD%20account%20(ID:%20${user?.id},%20Email:%20${user?.email})%20is%20currently%20deactivated.%20Please%20review%20and%20reactivate%20my%20account%20access.%0D%0A%0D%0AThank%20you.`
                 ).catch(() => {
                   Alert.alert(
                     'Contact Administrator',
-                    'Please email support@elderguard.com with your account email (' +
+                    'Please email support@GUYNOVA GUARD.com with your account email (' +
                       (user?.email || 'your registered email') +
                       ') to request reactivation.'
                   );
@@ -195,7 +195,7 @@ export default function ParentDashboardScreen() {
               onPress={() => {
                 Alert.alert(
                   'Account Status: Deactivated',
-                  `User: ${user?.name || 'Parent'}\nEmail: ${user?.email || 'N/A'}\nStatus: Inactive\n\nWhen an administrator reactivates your account in the Admin Console, this dashboard will immediately unlock in real time without refreshing.`,
+                  `User: ${user?.name || 'Tutor'}\nEmail: ${user?.email || 'N/A'}\nStatus: Inactive\n\nWhen an administrator reactivates your account in the Admin Console, this dashboard will immediately unlock in real time without refreshing.`,
                   [{ text: 'OK' }]
                 );
               }}
@@ -227,22 +227,22 @@ export default function ParentDashboardScreen() {
           <View style={styles.emptySeniorIconWrap}>
             <UserPlus size={24} color="#2563EB" />
           </View>
-          <Text style={styles.emptySeniorTitle}>Welcome to ElderGuard!</Text>
+          <Text style={styles.emptySeniorTitle}>Welcome to GUYNOVA GUARD!</Text>
           <Text style={styles.emptySeniorSub}>
-            You haven&apos;t added an elderly loved one yet. Create their profile to monitor vitals, track safe zones, and connect medical sensors.
+            You haven&apos;t added an Patient loved one yet. Create their profile to monitor vitals, track safe zones, and connect medical sensors.
           </Text>
           <TouchableOpacity
             style={styles.addSeniorHeroBtn}
-            onPress={() => router.push('/(parent)/profile/create' as any)}
+            onPress={() => router.push('/(Tutor)/profile/create' as any)}
             activeOpacity={0.85}
           >
             <Plus size={16} color="#FFFFFF" />
-            <Text style={styles.addSeniorHeroBtnText}>Add Elderly Loved One</Text>
+            <Text style={styles.addSeniorHeroBtnText}>Add Patient Loved One</Text>
           </TouchableOpacity>
         </Card>
       ) : (
         <TouchableOpacity
-          onPress={() => router.push('/(parent)/profile' as any)}
+          onPress={() => router.push('/(Tutor)/profile' as any)}
           activeOpacity={0.92}
           style={styles.heroCardContainer}
         >
@@ -333,28 +333,28 @@ export default function ParentDashboardScreen() {
             {
               icon: MapPin,
               label: 'Location',
-              route: '/(parent)/location',
+              route: '/(Tutor)/location',
               color: '#3C6FDB',
               bg: '#EEF5FF',
             },
             {
               icon: Bell,
               label: 'Alerts',
-              route: '/(parent)/alerts',
+              route: '/(Tutor)/alerts',
               color: '#F97316',
               bg: '#FFF7ED',
             },
             {
               icon: Pill,
               label: 'Programme',
-              route: '/(parent)/care',
+              route: '/(Tutor)/care',
               color: '#16A34A',
               bg: '#F0FDF4',
             },
             {
               icon: Shield,
               label: 'Emergency',
-              route: '/(parent)/emergency',
+              route: '/(Tutor)/emergency',
               color: '#EF4444',
               bg: '#FEF2F2',
             },
@@ -379,7 +379,7 @@ export default function ParentDashboardScreen() {
         <View style={styles.sectionHeaderRow}>
           <Text style={styles.sectionOverline}>ASSIGNED CAREGIVER</Text>
           <TouchableOpacity
-            onPress={() => router.push('/(parent)/caregivers/create' as any)}
+            onPress={() => router.push('/(Tutor)/caregivers/create' as any)}
             activeOpacity={0.7}
           >
             <Text style={styles.sectionActionText}>+ Provision caregiver →</Text>
@@ -415,7 +415,7 @@ export default function ParentDashboardScreen() {
             </View>
             <TouchableOpacity
               style={styles.addCaregiverBtn}
-              onPress={() => router.push('/(parent)/caregivers/create' as any)}
+              onPress={() => router.push('/(Tutor)/caregivers/create' as any)}
               activeOpacity={0.85}
             >
               <Plus size={14} color="#FFFFFF" />
@@ -430,7 +430,7 @@ export default function ParentDashboardScreen() {
         <View style={styles.sectionHeaderRow}>
           <Text style={styles.sectionOverline}>LIVE VITALS</Text>
           <TouchableOpacity
-            onPress={() => router.push('/(parent)/health' as any)}
+            onPress={() => router.push('/(Tutor)/health' as any)}
             activeOpacity={0.7}
           >
             <Text style={styles.sectionActionText}>Full report →</Text>
@@ -442,7 +442,7 @@ export default function ParentDashboardScreen() {
             <Activity size={24} color="#94A3B8" />
             <Text style={styles.emptyVitalsNoticeTitle}>Vitals Telemetry Pending Setup</Text>
             <Text style={styles.emptyVitalsNoticeSub}>
-              Add your elderly loved one and pair an ElderGuard Smart Wearable to receive live heart rate, SpO₂, and body temperature readings.
+              Add your Patient loved one and pair an GUYNOVA GUARD Smart Wearable to receive live heart rate, SpO₂, and body temperature readings.
             </Text>
           </Card>
         ) : (
@@ -546,7 +546,7 @@ export default function ParentDashboardScreen() {
         <View style={styles.sectionHeaderRow}>
           <Text style={styles.sectionOverline}>TODAY'S PROGRAMME</Text>
           <TouchableOpacity
-            onPress={() => router.push('/(parent)/care' as any)}
+            onPress={() => router.push('/(Tutor)/care' as any)}
             activeOpacity={0.7}
           >
             <Text style={styles.sectionActionText}>Full view →</Text>
@@ -558,7 +558,7 @@ export default function ParentDashboardScreen() {
             <Pill size={24} color="#94A3B8" />
             <Text style={styles.emptyVitalsNoticeTitle}>No Programme Scheduled</Text>
             <Text style={styles.emptyVitalsNoticeSub}>
-              Add your elderly loved one to configure medication schedules and daily activity routines.
+              Add your Patient loved one to configure medication schedules and daily activity routines.
             </Text>
           </Card>
         ) : (
@@ -636,7 +636,7 @@ export default function ParentDashboardScreen() {
         <View style={styles.sectionHeaderRow}>
           <Text style={styles.sectionOverline}>RECENT ALERTS</Text>
           <TouchableOpacity
-            onPress={() => router.push('/(parent)/alerts' as any)}
+            onPress={() => router.push('/(Tutor)/alerts' as any)}
             activeOpacity={0.7}
           >
             <Text style={styles.sectionActionText}>See all →</Text>
@@ -1610,3 +1610,4 @@ const styles = StyleSheet.create({
     lineHeight: 15,
   },
 });
+

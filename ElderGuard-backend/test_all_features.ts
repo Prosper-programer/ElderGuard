@@ -58,7 +58,7 @@ async function request(method: string, path: string, body?: any, token?: string)
 
 async function runTests() {
   console.log('===============================================================');
-  console.log('   🚀 ELDERGUARD BACKEND FULL FEATURE INTEGRATION TEST SUITE   ');
+  console.log('   🚀 GUYNOVA GUARD BACKEND FULL FEATURE INTEGRATION TEST SUITE   ');
   console.log('===============================================================\n');
 
   await new Promise((resolve) => setTimeout(resolve, 800));
@@ -80,7 +80,7 @@ async function runTests() {
     // -------------------------------------------------------------
     console.log('\n--- SECTION 2: Auth & Role Provisioning ---');
     const timestamp = Date.now();
-    const parentEmail = `test_parent_${timestamp}@elderguard.test`;
+    const parentEmail = `test_parent_${timestamp}@GUYNOVA GUARD.test`;
     const regParentRes = await request('POST', '/api/auth/register', {
       fullName: 'Alice Parent',
       email: parentEmail,
@@ -111,7 +111,7 @@ async function runTests() {
     assert(updateProfileRes.status === 200 && updateProfileRes.data?.data?.full_name === 'Alice Updated', 'Update user profile PUT /api/users/profile', updateProfileRes);
 
     // Provision Caregiver
-    const caregiverEmail = `test_caregiver_${timestamp}@elderguard.test`;
+    const caregiverEmail = `test_caregiver_${timestamp}@GUYNOVA GUARD.test`;
     const createCaregiverRes = await request('POST', '/api/users/caregivers', {
       fullName: 'Bob Caregiver',
       email: caregiverEmail,
@@ -122,7 +122,7 @@ async function runTests() {
     caregiverId = createCaregiverRes.data?.data?.user_id;
 
     // Provision Doctor
-    const doctorEmail = `test_doctor_${timestamp}@elderguard.test`;
+    const doctorEmail = `test_doctor_${timestamp}@GUYNOVA GUARD.test`;
     const createDoctorRes = await request('POST', '/api/users/doctors', {
       fullName: 'Dr. Carol Smith',
       email: doctorEmail,
@@ -423,14 +423,14 @@ async function runTests() {
 
     // Download report
     const dlReportRes = await request('GET', `/api/reports/${reportId}/download`, undefined, parentToken);
-    assert(dlReportRes.status === 200 && typeof dlReportRes.text === 'string' && dlReportRes.text.includes('ELDERGUARD SUMMARY REPORT'), 'Download report GET /api/reports/:id/download', dlReportRes);
+    assert(dlReportRes.status === 200 && typeof dlReportRes.text === 'string' && dlReportRes.text.includes('GUYNOVA GUARD SUMMARY REPORT'), 'Download report GET /api/reports/:id/download', dlReportRes);
 
     // -------------------------------------------------------------
     // SECTION 12: Admin Dashboard
     // -------------------------------------------------------------
     console.log('\n--- SECTION 12: Admin Dashboard ---');
     const adminLoginRes = await request('POST', '/api/auth/admin/login', {
-      email: 'admin@elderguard.com',
+      email: 'admin@GUYNOVA GUARD.com',
       password: 'admin123456'
     });
     assert(adminLoginRes.status === 200 && !!adminLoginRes.data?.token, 'Admin login POST /api/auth/admin/login', adminLoginRes);
@@ -544,3 +544,4 @@ async function runTests() {
 }
 
 runTests();
+

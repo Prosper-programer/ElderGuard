@@ -14,7 +14,7 @@ type StatusChangeCallback = (event: AccountStatusChangeEvent) => void;
 let statusChangeCallbacks: StatusChangeCallback[] = [];
 
 /**
- * Connects the mobile app to the ElderGuard WebSocket server
+ * Connects the mobile app to the GUYNOVA GUARD WebSocket server
  * and joins the user's personal channel for instant push updates.
  */
 export function connectSocket(userId: string | number): Socket {
@@ -73,3 +73,4 @@ export function disconnectSocket(): void {
 export function getSocket(): Socket | null {
   return socket;
 }
+

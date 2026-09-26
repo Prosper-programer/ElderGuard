@@ -103,7 +103,7 @@ export default function ManageCaregiversScreen() {
           <View style={{ height: 20 }} />
           <Button
             title="Provision a Caregiver"
-            onPress={() => router.push('/(parent)/caregivers/create' as any)}
+            onPress={() => router.push('/(Tutor)/caregivers/create' as any)}
             variant="primary"
             leftIcon={<UserPlus size={18} color="#FFF" />}
           />
@@ -144,7 +144,7 @@ export default function ManageCaregiversScreen() {
             <View style={styles.detailRow}>
               <Mail size={16} color="#64748B" />
               <Text style={styles.detailText}>
-                {caregiverName.toLowerCase().replace(/\s+/g, '.')}@elderguard.cm
+                {caregiverName.toLowerCase().replace(/\s+/g, '.')}@GUYNOVA GUARD.cm
               </Text>
             </View>
             <View style={styles.detailRow}>
@@ -159,7 +159,7 @@ export default function ManageCaregiversScreen() {
 
           <Button
             title="Reassign Caregiver"
-            onPress={() => router.push('/(parent)/caregivers/create' as any)}
+            onPress={() => router.push('/(Tutor)/caregivers/create' as any)}
             variant="outline"
             leftIcon={<UserPlus size={18} color="#2563EB" />}
           />
@@ -314,3 +314,4 @@ const styles = StyleSheet.create({
     color: '#0F172A',
   },
 });
+

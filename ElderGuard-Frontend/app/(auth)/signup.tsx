@@ -111,7 +111,7 @@ export default function SignupScreen() {
             <Text style={styles.backText}>Welcome</Text>
           </TouchableOpacity>
 
-          <Text style={styles.screenTitle}>Create parent account</Text>
+          <Text style={styles.screenTitle}>Create Tutor account</Text>
           <Text style={styles.screenSubtitle}>
             Family Manager · Monitor your loved one and manage care
           </Text>

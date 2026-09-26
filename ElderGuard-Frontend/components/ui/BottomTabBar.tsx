@@ -29,7 +29,7 @@ export type TabKey =
 
 interface BottomTabBarProps {
   activeTab: TabKey;
-  role: 'parent' | 'caregiver';
+  role: 'Tutor' | 'caregiver';
 }
 
 export function BottomTabBar({ activeTab, role }: BottomTabBarProps) {
@@ -43,11 +43,11 @@ export function BottomTabBar({ activeTab, role }: BottomTabBarProps) {
   const activeIconBg = role === 'parent' ? 'rgba(60, 111, 219, 0.10)' : 'rgba(34, 197, 94, 0.12)';
 
   const parentTabs: { key: TabKey; label: string; icon: any; route: string }[] = [
-    { key: 'home', label: 'Home', icon: Home, route: '/(parent)' },
-    { key: 'health', label: 'Health', icon: Activity, route: '/(parent)/health' },
-    { key: 'alerts', label: 'Alerts', icon: Bell, route: '/(parent)/alerts' },
-    { key: 'location', label: 'Location', icon: MapPin, route: '/(parent)/location' },
-    { key: 'more', label: 'More', icon: MoreHorizontal, route: '/(parent)/more' },
+    { key: 'home', label: 'Home', icon: Home, route: '/(Tutor)' },
+    { key: 'health', label: 'Health', icon: Activity, route: '/(Tutor)/health' },
+    { key: 'alerts', label: 'Alerts', icon: Bell, route: '/(Tutor)/alerts' },
+    { key: 'location', label: 'Location', icon: MapPin, route: '/(Tutor)/location' },
+    { key: 'more', label: 'More', icon: MoreHorizontal, route: '/(Tutor)/more' },
   ];
 
   const caregiverTabs: { key: TabKey; label: string; icon: any; route: string }[] = [

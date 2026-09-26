@@ -1,10 +1,10 @@
 /**
  * ============================================================================
- * ElderGuard — ScreenContainer.tsx
+ * GUYNOVA GUARD — ScreenContainer.tsx
  * ============================================================================
  * 
  * PURPOSE:
- * The foundational layout wrapper used across all screens in the ElderGuard app.
+ * The foundational layout wrapper used across all screens in the GUYNOVA GUARD app.
  * 
  * CORE RESPONSIBILITIES:
  * 1. DYNAMIC SAFE AREA INSET ADAPTATION:
@@ -135,3 +135,4 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 });
+

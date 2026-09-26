@@ -283,7 +283,7 @@ export default function DoctorPortalScreen() {
           <View style={{ flex: 1 }}>
             <Text style={styles.advisoryHeadline}>No Telemetry Anomalies</Text>
             <Text style={styles.advisorySub}>
-              All vital parameters are currently within baseline thresholds. ElderGuard wearable hardware is active and syncing every 60 seconds.
+              All vital parameters are currently within baseline thresholds. GUYNOVA GUARD wearable hardware is active and syncing every 60 seconds.
             </Text>
           </View>
         </Card>
@@ -588,3 +588,4 @@ const styles = StyleSheet.create({
     lineHeight: 18,
   },
 });
+

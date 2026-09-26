@@ -48,8 +48,8 @@ export default function AlertsListScreen() {
       severity: 'critical',
       title: 'Fall Detected',
       description: 'Wearable sensor detected a sudden 3.4g impact in Kitchen.',
-      elderlyId: 'eld-01',
-      elderlyName: 'Margaret Thompson',
+      elderlyId: activeProfile?.id?.toString() || 'unknown',
+      elderlyName: activeProfile?.fullName || 'Patient',
       location: 'Ground Floor, Kitchen',
       vitalReadings: {
         heartRate: 119,
@@ -66,8 +66,8 @@ export default function AlertsListScreen() {
       severity: 'warning',
       title: 'Elevated Heart Rate',
       description: 'Heart rate reached 91 bpm during morning activity.',
-      elderlyId: 'eld-01',
-      elderlyName: 'Margaret Thompson',
+      elderlyId: activeProfile?.id?.toString() || 'unknown',
+      elderlyName: activeProfile?.fullName || 'Patient',
       location: 'Living Room',
       vitalReadings: {
         heartRate: 91,
@@ -81,11 +81,11 @@ export default function AlertsListScreen() {
       scrollable
       padded
       backgroundColor="#F0F4FA"
-      bottomBar={<BottomTabBar activeTab="alerts" role="parent" />}
+      bottomBar={<BottomTabBar activeTab="alerts" role="Tutor" />}
     >
       <TopBar
         title="Alerts & Incidents"
-        onBack={() => (router.canGoBack() ? router.back() : router.replace('/(parent)' as any))}
+        onBack={() => (router.canGoBack() ? router.back() : router.replace('/(Tutor)' as any))}
       />
 
       {/* Filter Tabs matching Figma */}
@@ -164,9 +164,9 @@ export default function AlertsListScreen() {
                 resolved={isResolved}
                 onPress={() => {
                   if (type === 'critical' || a.type === 'fall' || a.title?.toLowerCase().includes('fall')) {
-                    router.push('/(parent)/emergency' as any);
+                    router.push('/(Tutor)/emergency' as any);
                   } else {
-                    router.push(`/(parent)/alerts/${a.id}` as any);
+                    router.push(`/(Tutor)/alerts/${a.id}` as any);
                   }
                 }}
               />

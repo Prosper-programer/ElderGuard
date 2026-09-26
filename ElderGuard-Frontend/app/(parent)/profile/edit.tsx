@@ -47,7 +47,7 @@ export default function EditElderlyProfileScreen() {
     activeProfile?.doctorPhone || activeProfile?.medicalInfo?.physicianPhone || '+237 655 89 12 34'
   );
   const [doctorEmail, setDoctorEmail] = useState(
-    activeProfile?.doctorEmail || 'doctor.mbarga@elderguard.cm'
+    activeProfile?.doctorEmail || 'doctor.mbarga@GUYNOVA GUARD.cm'
   );
 
   const [emergencyName, setEmergencyName] = useState(primaryContact.name);
@@ -117,7 +117,7 @@ export default function EditElderlyProfileScreen() {
     setLoading(false);
     setSavedSuccess(true);
     setTimeout(() => {
-      router.replace('/(parent)/profile' as any);
+      router.replace('/(Tutor)/profile' as any);
     }, 400);
   };
 
@@ -125,7 +125,7 @@ export default function EditElderlyProfileScreen() {
     if (router.canGoBack()) {
       router.back();
     } else {
-      router.replace('/(parent)/profile' as any);
+      router.replace('/(Tutor)/profile' as any);
     }
   };
 
@@ -136,11 +136,11 @@ export default function EditElderlyProfileScreen() {
         <Card style={{ padding: 24, alignItems: 'center', marginTop: 24 }}>
           <Text style={{ fontSize: 16, fontWeight: '700', color: '#0F172A' }}>No Profile Found</Text>
           <Text style={{ fontSize: 13, color: '#64748B', marginTop: 4, textAlign: 'center' }}>
-            Please add an elderly profile first before editing.
+            Please add an Patient Profile first before editing.
           </Text>
           <Button
             title="Create Senior Profile"
-            onPress={() => router.replace('/(parent)/profile/create' as any)}
+            onPress={() => router.replace('/(Tutor)/profile/create' as any)}
             style={{ marginTop: 16 }}
           />
         </Card>
@@ -343,7 +343,7 @@ export default function EditElderlyProfileScreen() {
           onChangeText={setDoctorEmail}
           keyboardType="email-address"
           autoCapitalize="none"
-          placeholder="e.g. doctor@elderguard.com"
+          placeholder="e.g. doctor@GUYNOVA GUARD.com"
         />
       </Card>
 
@@ -419,3 +419,4 @@ const styles = StyleSheet.create({
     paddingBottom: Spacing['3xl'],
   },
 });
+

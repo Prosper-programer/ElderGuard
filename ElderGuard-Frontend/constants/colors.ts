@@ -1,5 +1,5 @@
 /**
- * ElderGuard Color Palette
+ * GUYNOVA GUARD Color Palette
  *
  * Primary: #3C6FDB (brand blue)
  * Accent: #00FBFB (cyan — used sparingly for interactive highlights)
@@ -75,3 +75,4 @@ export const StatusColors = {
 } as const;
 
 export type StatusType = keyof typeof StatusColors;
+

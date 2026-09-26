@@ -82,10 +82,10 @@ export default function ParentElderlyProfileScreen() {
     Linking.openURL(`tel:${phone.replace(/[^0-9+]/g, '')}`).catch(() => {});
   };
 
-  const name = activeProfile?.fullName || MOCK_ELDERLY_PERSON.fullName;
-  const age = activeProfile?.age || MOCK_ELDERLY_PERSON.age;
-  const dob = MOCK_ELDERLY_PERSON.dateOfBirth;
-  const photo = activeProfile?.imageUrl || MOCK_ELDERLY_PERSON.photo;
+  const name = activeProfile?.fullName || 'Patient';
+  const age = activeProfile?.age || '';
+  const dob = activeProfile?.dateOfBirth || '';
+  const photo = activeProfile?.imageUrl;
 
   return (
     <ScreenContainer
@@ -94,19 +94,19 @@ export default function ParentElderlyProfileScreen() {
       backgroundColor="#F0F4FA"
     >
       <TopBar
-        title="Elderly Profile"
-        onBack={() => (router.canGoBack() ? router.back() : router.replace('/(parent)' as any))}
+        title="Patient Profile"
+        onBack={() => (router.canGoBack() ? router.back() : router.replace('/(Tutor)' as any))}
         right={
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
             <TouchableOpacity
-              onPress={() => router.push('/(parent)/settings' as any)}
+              onPress={() => router.push('/(Tutor)/settings' as any)}
               style={styles.headerIconBtn}
               activeOpacity={0.7}
             >
               <Settings size={17} color="#475569" />
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={() => router.push('/(parent)/profile/edit' as any)}
+              onPress={() => router.push('/(Tutor)/profile/edit' as any)}
               style={styles.editBtn}
               activeOpacity={0.7}
             >
@@ -122,10 +122,7 @@ export default function ParentElderlyProfileScreen() {
 
         <View style={styles.profileBody}>
           <View style={styles.avatarRow}>
-            <Image
-              source={typeof photo === 'string' ? { uri: photo } : photo}
-              style={styles.avatarImage}
-            />
+            {photo ? (<Image source={typeof photo === 'string' ? { uri: photo } : photo} style={styles.avatarImage} />) : (<View style={[styles.avatarImage, { backgroundColor: '#E2E8F0', alignItems: 'center', justifyContent: 'center' }]}><Text style={{fontSize: 24, fontWeight: 'bold', color: '#64748B'}}>{name.slice(0, 2).toUpperCase()}</Text></View>)}
             <View style={styles.statusBadgeWrap}>
               <StatusBadge status="safe" size="md" />
             </View>
@@ -198,9 +195,9 @@ export default function ParentElderlyProfileScreen() {
         <Card style={styles.cardZeroPadding}>
           {[
             {
-              name: MOCK_USERS.parent.name,
-              role: 'Son · Primary Parent',
-              phone: MOCK_USERS.parent.phone,
+              name: MOCK_USERS.Tutor.name,
+              role: 'Son · Primary Tutor',
+              phone: MOCK_USERS.Tutor.phone,
               initials: 'RT',
               color: '#3C6FDB',
             },
@@ -255,7 +252,7 @@ export default function ParentElderlyProfileScreen() {
         <View style={styles.sectionHeaderRow}>
           <Text style={styles.sectionOverline}>ACTIVE MEDICATIONS</Text>
           <TouchableOpacity
-            onPress={() => router.push('/(parent)/care' as any)}
+            onPress={() => router.push('/(Tutor)/care' as any)}
             activeOpacity={0.7}
           >
             <Text style={styles.sectionActionText}>Full list →</Text>
@@ -286,7 +283,7 @@ export default function ParentElderlyProfileScreen() {
         </Card>
       </View>
 
-      {/* ── My Parent Account & Session Card ────────────────── */}
+      {/* ── My Tutor Account & Session Card ────────────────── */}
       <View style={styles.sectionWrap}>
         <View style={styles.sectionHeaderRow}>
           <Text style={styles.sectionOverline}>ACCOUNT & SESSION</Text>
@@ -307,14 +304,14 @@ export default function ParentElderlyProfileScreen() {
             <View style={{ flex: 1 }}>
               <Text style={styles.accountName}>{user?.name || 'Robert Thompson'}</Text>
               <Text style={styles.accountEmail}>{user?.email || 'robert.thompson@email.com'}</Text>
-              <Text style={styles.accountRole}>Family Manager (Parent)</Text>
+              <Text style={styles.accountRole}>Family Manager (Tutor)</Text>
             </View>
           </View>
 
           <View style={styles.accountActionsRow}>
             <TouchableOpacity
               style={styles.accountSettingsBtn}
-              onPress={() => router.push('/(parent)/settings' as any)}
+              onPress={() => router.push('/(Tutor)/settings' as any)}
               activeOpacity={0.7}
             >
               <Settings size={15} color="#3C6FDB" />

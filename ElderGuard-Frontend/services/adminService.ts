@@ -14,7 +14,7 @@ export interface AdminUser {
   full_name: string;
   email: string;
   phone_number: string;
-  role: 'parent' | 'caregiver' | 'admin';
+  role: 'Tutor' | 'caregiver' | 'admin';
   status: 'active' | 'inactive';
   created_at: string;
 }

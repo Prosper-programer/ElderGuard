@@ -9,7 +9,7 @@ export const setAuthToken = (token: string | null) => {
 };
 
 /**
- * Communicates with the ElderGuard Node.js + Express backend
+ * Communicates with the GUYNOVA GUARD Node.js + Express backend
  * to authenticate a user.
  */
 export async function apiLogin(
@@ -73,7 +73,7 @@ export async function apiSignup(
   name: string,
   email: string,
   password: string,
-  role: 'parent' | 'caregiver',
+  role: 'Tutor' | 'caregiver',
   phoneNumber: string = '690000000'
 ): Promise<{ success: boolean; user?: User; token?: string; error?: string }> {
   try {

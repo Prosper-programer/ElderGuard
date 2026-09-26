@@ -1,6 +1,6 @@
 /**
  * ============================================================================
- * ElderGuard — AlertContext.tsx
+ * GUYNOVA GUARD — AlertContext.tsx
  * ============================================================================
  * 
  * PURPOSE:
@@ -38,8 +38,8 @@ const INITIAL_ALERTS: AlertIncident[] = [
     description:
       'Wearable accelerometer detected high impact (3.2G) followed by 45 seconds of immobility.',
     timestamp: '8 minutes ago',
-    elderlyId: 'eld-01',
-    elderlyName: 'Margaret Johnson',
+    elderlyId: 'active',
+    elderlyName: 'Patient',
     location: 'Living Room — 142 Elm Street',
     coordinates: { latitude: 40.73061, longitude: -74.26384 },
     vitalReadings: {
@@ -56,8 +56,8 @@ const INITIAL_ALERTS: AlertIncident[] = [
     title: 'Elevated Heart Rate',
     description: 'Sustained resting heart rate of 118 bpm detected for 10 minutes.',
     timestamp: '2 hours ago',
-    elderlyId: 'eld-01',
-    elderlyName: 'Margaret Johnson',
+    elderlyId: 'active',
+    elderlyName: 'Patient',
     location: 'Home Residence',
     vitalReadings: {
       heartRate: 118,
@@ -74,10 +74,10 @@ const INITIAL_ALERTS: AlertIncident[] = [
     title: 'Low Wearable Battery (15%)',
     description: 'Wearable battery reached low threshold. Charging cradle placed.',
     timestamp: 'Yesterday at 08:30 PM',
-    elderlyId: 'eld-01',
-    elderlyName: 'Margaret Johnson',
+    elderlyId: 'active',
+    elderlyName: 'Patient',
     location: 'Bedroom',
-    resolvedBy: 'Eleanor Vance (Parent)',
+    resolvedBy: 'Eleanor Vance (Tutor)',
     resolvedAt: 'Yesterday at 09:00 PM',
     resolutionNotes: 'Charged device on nightstand until 100%. Re-paired successfully.',
   },
@@ -194,3 +194,4 @@ export function useAlerts(): AlertContextValue {
   }
   return context;
 }
+

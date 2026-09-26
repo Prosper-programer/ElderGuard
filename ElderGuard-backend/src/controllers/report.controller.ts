@@ -71,7 +71,7 @@ export async function generateReport(req: AuthenticatedRequest, res: Response): 
     const reportTitle = title || `${period.toUpperCase()} Care & Health Report for ${elderly.full_name}`;
 
     const reportContent = {
-      summary: `ElderGuard ${period} status report for ${elderly.full_name}`,
+      summary: `GUYNOVA GUARD ${period} status report for ${elderly.full_name}`,
       elderly_info: {
         name: elderly.full_name,
         date_of_birth: elderly.date_of_birth,
@@ -200,13 +200,13 @@ export async function downloadReport(req: AuthenticatedRequest, res: Response): 
       return;
     }
 
-    const filename = `ElderGuard_Report_${report.report_id}.txt`;
+    const filename = `GUYNOVA GUARD_Report_${report.report_id}.txt`;
 
     res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
     res.setHeader('Content-Type', 'text/plain');
     res.send(
       `=======================================================\n` +
-      `  ELDERGUARD SUMMARY REPORT\n` +
+      `  GUYNOVA GUARD SUMMARY REPORT\n` +
       `=======================================================\n` +
       `Title: ${report.title}\n` +
       `Period: ${report.period}\n` +
@@ -219,3 +219,4 @@ export async function downloadReport(req: AuthenticatedRequest, res: Response): 
     res.status(500).json({ message: 'Error downloading report.', status: 'error' });
   }
 }
+

@@ -53,7 +53,7 @@ export default function DoctorPrescriptionsScreen() {
       timesOfDay: [scheduledTime.trim() || '08:00 AM'],
     });
 
-    // Synchronize to backend to persist and trigger dual notifications for Parent and Caregiver
+    // Synchronize to backend to persist and trigger dual notifications for Tutor and Caregiver
     const rawId = activeProfile?.id || '1';
     await apiCreatePrescription({
       elderly_id: rawId,
@@ -68,7 +68,7 @@ export default function DoctorPrescriptionsScreen() {
     setDosage('');
     setInstructions('');
     setModalVisible(false);
-    Alert.alert('Prescription Added', `${drugName.trim()} added. Parent and Caregiver have been automatically notified.`);
+    Alert.alert('Prescription Added', `${drugName.trim()} added. Tutor and Caregiver have been automatically notified.`);
   };
 
   return (

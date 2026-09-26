@@ -1,5 +1,5 @@
 /**
- * ElderGuard Data Types
+ * GUYNOVA GUARD Data Types
  * Clean TypeScript interfaces matching the UML Class Diagram entities
  */
 
@@ -149,3 +149,4 @@ export interface Report {
   generated_date: string;
   content: string;
 }
+

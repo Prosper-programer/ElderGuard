@@ -1,6 +1,6 @@
 /**
  * ============================================================================
- * ElderGuard — ElderlyContext.tsx
+ * GUYNOVA GUARD — ElderlyContext.tsx
  * ============================================================================
  * 
  * PURPOSE:
@@ -13,7 +13,7 @@
  */
 
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import { ElderlyProfile, ElderlyContextValue } from '@/types/elderly';
+import { ElderlyProfile, ElderlyContextValue } from '@/types/Patient';
 import { useAuth } from '@/context/AuthContext';
 import {
   apiGetElderlyProfiles,
@@ -35,7 +35,7 @@ const DEMO_MARGARET_PROFILE: ElderlyProfile = {
   address: 'Bastos, Yaoundé, Cameroon',
   phone: '+237 671 23 45 67',
   imageUrl: require('@/assets/images/elderly_margaret.jpg'),
-  parentManagerId: 'usr-parent-01',
+  parentManagerId: 'usr-Tutor-01',
   primaryCaregiverId: 'usr-caregiver-01',
   primaryCaregiverName: 'Amara Biya',
   doctorId: 'usr-doctor-01',
@@ -43,7 +43,7 @@ const DEMO_MARGARET_PROFILE: ElderlyProfile = {
   doctorPhone: '+237 655 89 12 34',
   doctorSpecialty: 'Cardiologie & Médecine Gériatrique',
   doctorHospital: 'Hôpital Central de Yaoundé',
-  doctorEmail: 'doctor.mbarga@elderguard.cm',
+  doctorEmail: 'doctor.mbarga@GUYNOVA GUARD.cm',
 
   medicalInfo: {
     bloodType: 'O+',
@@ -67,7 +67,7 @@ const DEMO_MARGARET_PROFILE: ElderlyProfile = {
 
   deviceStatus: {
     deviceId: 'EG-IOT-4892',
-    deviceName: 'ElderGuard Wearable Band V2',
+    deviceName: 'GUYNOVA GUARD Wearable Band V2',
     connected: true,
     batteryLevel: 84,
     lastSync: '2 minutes ago',
@@ -88,13 +88,13 @@ export function ElderlyProvider({ children }: { children: React.ReactNode }) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const isDemoAccount =
-    user?.email === 'parent@elderguard.com' ||
+    user?.email === 'Tutor@GUYNOVA GUARD.com' ||
     user?.email === 'robert.thompson@email.com' ||
-    user?.email === 'robert.ngu@elderguard.cm' ||
-    user?.email === 'caregiver@elderguard.com' ||
-    user?.email === 'amara.biya@elderguard.cm' ||
-    user?.email === 'doctor@elderguard.com' ||
-    user?.email === 'doctor.mbarga@elderguard.cm';
+    user?.email === 'robert.ngu@GUYNOVA GUARD.cm' ||
+    user?.email === 'caregiver@GUYNOVA GUARD.com' ||
+    user?.email === 'amara.biya@GUYNOVA GUARD.cm' ||
+    user?.email === 'doctor@GUYNOVA GUARD.com' ||
+    user?.email === 'doctor.mbarga@GUYNOVA GUARD.cm';
 
   const refreshProfiles = useCallback(async () => {
     if (!isAuthenticated || !user) {
@@ -274,3 +274,4 @@ export function useElderly(): ElderlyContextValue {
   }
   return context;
 }
+

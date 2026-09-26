@@ -18,7 +18,7 @@ export function App() {
         <div className="relative w-10 h-10 rounded-2xl bg-[#3C6FDB] flex items-center justify-center text-white mb-3">
           <ShieldCheck size={20} />
         </div>
-        <p className="text-xs font-mono text-slate-500">Initializing ElderGuard Console...</p>
+        <p className="text-xs font-mono text-slate-500">Initializing GUYNOVA GUARD Console...</p>
       </div>
     );
   }
@@ -74,3 +74,4 @@ export function App() {
 }
 
 export default App;
+

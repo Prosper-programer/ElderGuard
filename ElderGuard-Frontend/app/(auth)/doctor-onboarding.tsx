@@ -66,7 +66,7 @@ export default function DoctorOnboardingScreen() {
   };
 
   const handleInstantDemoLogin = async () => {
-    const res = await login('doctor@elderguard.com', 'password123');
+    const res = await login('doctor@GUYNOVA GUARD.com', 'password123');
     if (res.success) {
       router.replace('/(doctor)' as any);
     } else {
@@ -453,3 +453,4 @@ const styles = StyleSheet.create({
     color: '#475569',
   },
 });
+

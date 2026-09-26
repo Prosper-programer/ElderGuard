@@ -89,7 +89,7 @@ export default function CaregiverCareScreen() {
     markDoseStatus(doseId, 'taken', caregiverName);
     Alert.alert(
       'Medication Administered',
-      `${medName} has been recorded as taken. The parent and medical chart have been updated.`
+      `${medName} has been recorded as taken. The Tutor and medical chart have been updated.`
     );
   };
 

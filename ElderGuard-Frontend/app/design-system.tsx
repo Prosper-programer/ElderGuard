@@ -29,7 +29,7 @@ export default function DesignSystemScreen() {
     if (router.canGoBack()) {
       router.back();
     } else {
-      router.replace('/(parent)' as any);
+      router.replace('/(Tutor)' as any);
     }
   };
 
@@ -50,7 +50,7 @@ export default function DesignSystemScreen() {
       {/* Header */}
       <View style={styles.header}>
         <Text style={[Typography.h1, { color: Colors.textPrimary }]}>
-          ElderGuard
+          GUYNOVA GUARD
         </Text>
         <Text style={[Typography.bodySmall, { color: Colors.textTertiary }]}>
           Design System & Component Library — Phase 0
@@ -322,3 +322,4 @@ const styles = StyleSheet.create({
     gap: Spacing.md,
   },
 });
+

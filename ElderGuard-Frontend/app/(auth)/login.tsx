@@ -30,7 +30,7 @@ interface RolePreset {
 const ROLE_PRESETS: RolePreset[] = [
   {
     role: 'parent',
-    label: 'Parent',
+    label: 'parent',
     badge: 'Family Manager',
     name: 'Robert Thompson',
     email: 'robert.thompson@email.com',
@@ -43,7 +43,7 @@ const ROLE_PRESETS: RolePreset[] = [
     label: 'Caregiver',
     badge: 'Professional Care',
     name: 'Sarah Mitchell',
-    email: 'caregiver@elderguard.com',
+    email: 'caregiver@GUYNOVA GUARD.com',
     icon: HeartHandshake,
     accentColor: '#16A34A',
     accentBg: '#F0FDF4',
@@ -53,7 +53,7 @@ const ROLE_PRESETS: RolePreset[] = [
     label: 'Doctor',
     badge: 'Primary Physician',
     name: 'Dr. Jean-Paul Mbarga',
-    email: 'doctor@elderguard.com',
+    email: 'doctor@GUYNOVA GUARD.com',
     icon: Stethoscope,
     accentColor: '#7C3AED',
     accentBg: '#F5F3FF',
@@ -121,7 +121,7 @@ export default function LoginScreen() {
     } else {
       const activeRole = result.user?.role || selectedRole;
       if (activeRole === 'parent') {
-        router.replace('/(parent)');
+        router.replace('/(Tutor)');
       } else if (activeRole === 'caregiver') {
         router.replace('/(caregiver)');
       } else if (activeRole === 'doctor') {
@@ -247,19 +247,19 @@ export default function LoginScreen() {
             activeOpacity={0.7}
           >
             <Text style={styles.switchRoleText}>
-              Switch to {selectedRole === 'parent' ? 'Caregiver' : selectedRole === 'caregiver' ? 'Doctor' : 'Parent'} sign in
+              Switch to {selectedRole === 'parent' ? 'Caregiver' : selectedRole === 'caregiver' ? 'Doctor' : 'Tutor'} sign in
             </Text>
             <ChevronRight size={14} color="#64748B" />
           </TouchableOpacity>
         </View>
       </View>
 
-      {/* Switch to Sign Up (Only for Parents) */}
+      {/* Switch to Sign Up (Only for Tutors) */}
       {selectedRole !== 'parent' ? (
         <View style={styles.caregiverNotice}>
           <Text style={styles.caregiverNoticeText}>
             {selectedRole === 'caregiver'
-              ? 'Caregiver accounts are created by the senior\'s family manager. Contact the parent if you need login credentials.'
+              ? 'Caregiver accounts are created by the senior\'s family manager. Contact the Tutor if you need login credentials.'
               : 'Doctor accounts are provisioned by families or healthcare partners. Log in with your assigned clinical credentials.'}
           </Text>
         </View>
@@ -439,3 +439,4 @@ const styles = StyleSheet.create({
     lineHeight: 18,
   },
 });
+

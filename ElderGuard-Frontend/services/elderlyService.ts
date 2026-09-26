@@ -1,6 +1,6 @@
 import { API_BASE_URL } from '../constants/api';
 import { getAuthToken } from './authService';
-import { ElderlyProfile } from '../types/elderly';
+import { ElderlyProfile } from '../types/Patient';
 
 export interface BackendElderlyProfile {
   elderly_id: number;
@@ -74,7 +74,7 @@ export function mapBackendToElderlyProfile(item: BackendElderlyProfile): Elderly
     doctorPhone: item.doctor_phone || '+237 655 89 12 34',
     doctorSpecialty: item.doctor_specialty || 'Cardiologie & Médecine Gériatrique',
     doctorHospital: item.doctor_hospital || 'Hôpital Central de Yaoundé',
-    doctorEmail: item.doctor_email || 'doctor.mbarga@elderguard.cm',
+    doctorEmail: item.doctor_email || 'doctor.mbarga@GUYNOVA GUARD.cm',
     medicalInfo: {
       bloodType: 'O+',
       allergies: [],
@@ -95,7 +95,7 @@ export function mapBackendToElderlyProfile(item: BackendElderlyProfile): Elderly
     ],
     deviceStatus: {
       deviceId: `EG-IOT-${item.elderly_id.toString().padStart(4, '0')}`,
-      deviceName: 'ElderGuard Smart Wearable',
+      deviceName: 'GUYNOVA GUARD Smart Wearable',
       connected: true,
       batteryLevel: 94,
       lastSync: 'Just now',
@@ -108,7 +108,7 @@ export function mapBackendToElderlyProfile(item: BackendElderlyProfile): Elderly
 }
 
 /**
- * Fetch all elderly profiles managed by or assigned to the authenticated user.
+ * Fetch all Patient profiles managed by or assigned to the authenticated user.
  */
 export async function apiGetElderlyProfiles(): Promise<{
   success: boolean;
@@ -120,7 +120,7 @@ export async function apiGetElderlyProfiles(): Promise<{
     const headers: Record<string, string> = { 'Content-Type': 'application/json' };
     if (token) headers['Authorization'] = `Bearer ${token}`;
 
-    const response = await fetch(`${API_BASE_URL}/api/elderly`, {
+    const response = await fetch(`${API_BASE_URL}/api/Patient`, {
       method: 'GET',
       headers,
     });
@@ -130,7 +130,7 @@ export async function apiGetElderlyProfiles(): Promise<{
       return {
         success: false,
         profiles: [],
-        error: data.message || 'Failed to fetch elderly profiles.',
+        error: data.message || 'Failed to fetch Patient profiles.',
       };
     }
 
@@ -147,13 +147,13 @@ export async function apiGetElderlyProfiles(): Promise<{
     return {
       success: false,
       profiles: [],
-      error: err.message || 'Network error fetching elderly profiles.',
+      error: err.message || 'Network error fetching Patient profiles.',
     };
   }
 }
 
 /**
- * Create a new elderly profile in the backend database.
+ * Create a new Patient Profile in the backend database.
  */
 export async function apiCreateElderlyProfile(payload: {
   fullName: string;
@@ -173,7 +173,7 @@ export async function apiCreateElderlyProfile(payload: {
     const headers: Record<string, string> = { 'Content-Type': 'application/json' };
     if (token) headers['Authorization'] = `Bearer ${token}`;
 
-    const response = await fetch(`${API_BASE_URL}/api/elderly`, {
+    const response = await fetch(`${API_BASE_URL}/api/Patient`, {
       method: 'POST',
       headers,
       body: JSON.stringify(payload),
@@ -184,7 +184,7 @@ export async function apiCreateElderlyProfile(payload: {
     if (!response.ok) {
       return {
         success: false,
-        error: data.message || 'Failed to create elderly profile.',
+        error: data.message || 'Failed to create Patient Profile.',
       };
     }
 
@@ -197,7 +197,7 @@ export async function apiCreateElderlyProfile(payload: {
     console.error('apiCreateElderlyProfile error:', err);
     return {
       success: false,
-      error: err.message || 'Network error creating elderly profile.',
+      error: err.message || 'Network error creating Patient Profile.',
     };
   }
 }
@@ -375,7 +375,7 @@ export async function apiCreateDoctor(payload: {
 }
 
 /**
- * Fetch clinical consultation notes for an elderly person.
+ * Fetch clinical consultation notes for an Patient.
  */
 export async function apiGetClinicalNotes(elderlyId: number | string): Promise<{
   success: boolean;
@@ -388,7 +388,7 @@ export async function apiGetClinicalNotes(elderlyId: number | string): Promise<{
     const headers: Record<string, string> = { 'Content-Type': 'application/json' };
     if (token) headers['Authorization'] = `Bearer ${token}`;
 
-    const response = await fetch(`${API_BASE_URL}/api/clinical-notes/elderly/${numericId}`, {
+    const response = await fetch(`${API_BASE_URL}/api/clinical-notes/Patient/${numericId}`, {
       method: 'GET',
       headers,
     });
@@ -484,7 +484,7 @@ export interface PrescriptionRecord {
 }
 
 /**
- * Fetch prescriptions for an elderly person.
+ * Fetch prescriptions for an Patient.
  */
 export async function apiGetPrescriptions(elderlyId: number | string): Promise<{
   success: boolean;
@@ -497,7 +497,7 @@ export async function apiGetPrescriptions(elderlyId: number | string): Promise<{
     const headers: Record<string, string> = { 'Content-Type': 'application/json' };
     if (token) headers['Authorization'] = `Bearer ${token}`;
 
-    const response = await fetch(`${API_BASE_URL}/api/prescriptions/elderly/${numericId}`, {
+    const response = await fetch(`${API_BASE_URL}/api/prescriptions/Patient/${numericId}`, {
       method: 'GET',
       headers,
     });
@@ -616,7 +616,7 @@ export async function apiAdministerPrescription(
 }
 
 /**
- * Parent updates caregiver details.
+ * Tutor updates caregiver details.
  */
 export async function apiUpdateCaregiver(
   caregiverId: number,
@@ -645,7 +645,7 @@ export async function apiUpdateCaregiver(
 }
 
 /**
- * Parent updates doctor details.
+ * Tutor updates doctor details.
  */
 export async function apiUpdateDoctor(
   doctorId: number,
@@ -674,7 +674,7 @@ export async function apiUpdateDoctor(
 }
 
 /**
- * Parent deletes/unlinks a caregiver or doctor user.
+ * Tutor deletes/unlinks a caregiver or doctor user.
  */
 export async function apiDeleteUser(userId: number): Promise<{ success: boolean; error?: string }> {
   try {
@@ -697,4 +697,65 @@ export async function apiDeleteUser(userId: number): Promise<{ success: boolean;
     return { success: false, error: err.message || 'Network error removing user.' };
   }
 }
+
+/**
+ * GEOFENCE APIs
+ */
+export const apiGetGeofence = async (elderlyId: number | string) => {
+  try {
+    const token = await getAuthToken();
+    const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+    if (token) headers['Authorization'] = `Bearer ${token}`;
+
+    const response = await fetch(`${API_BASE_URL}/api/geofences/${elderlyId}`, {
+      method: 'GET',
+      headers,
+    });
+    if (!response.ok) return null;
+    const json = await response.json();
+    return json.data;
+  } catch (error) {
+    console.error('apiGetGeofence error:', error);
+    return null;
+  }
+};
+
+export const apiCreateGeofence = async (payload: { elderly_id: number | string, center_latitude: number, center_longitude: number, radius: number }) => {
+  try {
+    const token = await getAuthToken();
+    const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+    if (token) headers['Authorization'] = `Bearer ${token}`;
+
+    const response = await fetch(`${API_BASE_URL}/api/geofences`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify(payload),
+    });
+    const json = await response.json();
+    return json;
+  } catch (error) {
+    console.error('apiCreateGeofence error:', error);
+    throw error;
+  }
+};
+
+export const apiToggleGeofence = async (elderlyId: number | string, enable: boolean) => {
+  try {
+    const token = await getAuthToken();
+    const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+    if (token) headers['Authorization'] = `Bearer ${token}`;
+
+    const action = enable ? 'enable' : 'disable';
+    const response = await fetch(`${API_BASE_URL}/api/geofences/${elderlyId}/${action}`, {
+      method: 'PATCH',
+      headers,
+    });
+    const json = await response.json();
+    return json;
+  } catch (error) {
+    console.error('apiToggleGeofence error:', error);
+    throw error;
+  }
+};
+
 

@@ -81,7 +81,7 @@ export default function WelcomeScreen() {
                 <Shield size={18} color="#FFFFFF" />
               </View>
               <Text style={styles.brandTitle}>
-                Elder<Text style={styles.brandAccent}>Guard</Text>
+                Patient<Text style={styles.brandAccent}>Guard</Text>
               </Text>
             </View>
 
@@ -129,13 +129,13 @@ export default function WelcomeScreen() {
 
           {/* Role Navigation Buttons */}
           <View style={styles.roleButtonsContainer}>
-            {/* Parent Role Button */}
+            {/* Tutor Role Button */}
             <TouchableOpacity
               style={styles.parentRoleButton}
               onPress={() =>
                 router.push({
                   pathname: '/(auth)/login',
-                  params: { role: 'parent' },
+                  params: { role: 'Tutor' },
                 } as any)
               }
               activeOpacity={0.88}
@@ -144,7 +144,7 @@ export default function WelcomeScreen() {
                 <Heart size={20} color="#FFFFFF" />
               </View>
               <View style={styles.roleTextGroup}>
-                <Text style={styles.roleMainTitle}>I'm a Parent</Text>
+                <Text style={styles.roleMainTitle}>I'm a Tutor</Text>
                 <Text style={styles.roleSubTitle}>Monitor your loved one</Text>
               </View>
               <ArrowRight size={18} color="rgba(255, 255, 255, 0.7)" />
@@ -196,7 +196,7 @@ export default function WelcomeScreen() {
           >
             <Text style={styles.createAccountPrompt}>
               New family manager?{' '}
-              <Text style={styles.createAccountLink}>Register parent account →</Text>
+              <Text style={styles.createAccountLink}>Register Tutor account →</Text>
             </Text>
           </TouchableOpacity>
         </View>

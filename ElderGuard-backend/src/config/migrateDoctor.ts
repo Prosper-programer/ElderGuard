@@ -55,16 +55,16 @@ async function migrate() {
     console.log('✅ clinical_notes table created or verified');
 
     // 4. Seed demo doctor if not present
-    const [docRows]: any = await pool.query('SELECT user_id FROM users WHERE email = ?', ['doctor@elderguard.com']);
+    const [docRows]: any = await pool.query('SELECT user_id FROM users WHERE email = ?', ['doctor@GUYNOVA GUARD.com']);
     let docId = 0;
     if (docRows.length === 0) {
       const hashed = await bcrypt.hash('password123', 10);
       const [ins]: any = await pool.query(
         'INSERT INTO users (full_name, email, phone_number, password, role, status) VALUES (?, ?, ?, ?, ?, ?)',
-        ['Dr. James Hargreaves', 'doctor@elderguard.com', '+44 20 7946 0000', hashed, 'doctor', 'active']
+        ['Dr. James Hargreaves', 'doctor@GUYNOVA GUARD.com', '+44 20 7946 0000', hashed, 'doctor', 'active']
       );
       docId = ins.insertId;
-      console.log('👤 Seeded demo doctor: doctor@elderguard.com (ID: ' + docId + ')');
+      console.log('👤 Seeded demo doctor: doctor@GUYNOVA GUARD.com (ID: ' + docId + ')');
     } else {
       docId = docRows[0].user_id;
       console.log('👤 Demo doctor exists (ID: ' + docId + ')');
@@ -78,7 +78,7 @@ async function migrate() {
           doctor_phone = '+44 20 7946 0000',
           doctor_specialty = 'Geriatric Medicine',
           doctor_hospital = 'St. Thomas\\' Hospital, London',
-          doctor_email = 'doctor@elderguard.com'
+          doctor_email = 'doctor@GUYNOVA GUARD.com'
       WHERE doctor_name IS NULL OR doctor_id IS NULL
     `, [docId]);
     console.log('✅ Assigned default doctor to existing elderly profiles');
@@ -92,3 +92,4 @@ async function migrate() {
 }
 
 migrate();
+

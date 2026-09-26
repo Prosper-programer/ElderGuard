@@ -69,16 +69,16 @@ export default function CaregiverHomeScreen() {
     .slice(0, 2)
     .toUpperCase();
 
-  const seniorPhoto = activeProfile?.imageUrl || MOCK_ELDERLY_PERSON.photo;
-  const seniorName = activeProfile?.fullName || MOCK_ELDERLY_PERSON.fullName;
-  const seniorAge = activeProfile?.age || MOCK_ELDERLY_PERSON.age;
+  const seniorPhoto = activeProfile?.imageUrl || undefined;
+  const seniorName = activeProfile?.fullName || 'Patient';
+  const seniorAge = activeProfile?.age || '';
 
   const hrValue = vitals.heartRate?.value || 72;
   const spo2Value = vitals.spo2?.value || 97;
   const tempValue = vitals.temperature?.value || 36.8;
 
   const handleCallParent = () => {
-    const phone = activeProfile?.emergencyContacts?.[0]?.phone || MOCK_USERS.parent.phone || '+237671234567';
+    const phone = activeProfile?.emergencyContacts?.[0]?.phone || MOCK_USERS.Tutor.phone || '+237671234567';
     const cleanPhone = phone.replace(/[^0-9+]/g, '');
     const url = Platform.OS === 'ios' ? `telprompt:${cleanPhone}` : `tel:${cleanPhone}`;
     Linking.openURL(url).catch(() => {});
@@ -98,7 +98,7 @@ export default function CaregiverHomeScreen() {
       backgroundColor="#F0F4FA"
       bottomBar={<BottomTabBar activeTab="home" role="caregiver" />}
     >
-      {/* ── 1. Top Header Bar (Matching Parent Design System) ── */}
+      {/* ── 1. Top Header Bar (Matching Tutor Design System) ── */}
       <View style={styles.topHeader}>
         <View>
           <Text style={styles.dateLabel}>{todayStr}</Text>
@@ -178,7 +178,7 @@ export default function CaregiverHomeScreen() {
             <ChevronRight size={20} color="rgba(255, 255, 255, 0.5)" />
           </View>
 
-          {/* Mini Vitals 4-Col Grid (Matching Parent Layout) */}
+          {/* Mini Vitals 4-Col Grid (Matching Tutor Layout) */}
           <View style={styles.miniVitalsGrid}>
             <View style={styles.miniVitalCell}>
               <Text style={styles.miniVitalValue}>
@@ -245,7 +245,7 @@ export default function CaregiverHomeScreen() {
         </TouchableOpacity>
       )}
 
-      {/* ── 4. Quick Actions (4-Button Grid Matching Parent) ─── */}
+      {/* ── 4. Quick Actions (4-Button Grid Matching Tutor) ─── */}
       <View style={styles.sectionWrap}>
         <Text style={styles.sectionOverline}>QUICK ACTIONS</Text>
         <View style={styles.quickActionsGrid}>
@@ -297,7 +297,7 @@ export default function CaregiverHomeScreen() {
         </View>
       </View>
 
-      {/* ── 5. Live Vitals (2x2 Grid Matching Parent) ───────── */}
+      {/* ── 5. Live Vitals (2x2 Grid Matching Tutor) ───────── */}
       <View style={styles.sectionWrap}>
         <View style={styles.sectionHeaderRow}>
           <Text style={styles.sectionOverline}>LIVE VITALS</Text>
@@ -571,7 +571,7 @@ export default function CaregiverHomeScreen() {
         </View>
       </View>
 
-      {/* ── 7. Today's Programme (Matching Parent Timeline Card) ── */}
+      {/* ── 7. Today's Programme (Matching Tutor Timeline Card) ── */}
       <View style={styles.sectionWrap}>
         <View style={styles.sectionHeaderRow}>
           <Text style={styles.sectionOverline}>TODAY'S CARE SCHEDULE</Text>

@@ -56,7 +56,7 @@ app.use('/api/prescriptions', prescriptionRoutes);
  */
 app.get('/', (req: Request, res: Response) => {
   res.status(200).json({
-    message: 'ElderGuard Backend API is running',
+    message: 'GUYNOVA GUARD Backend API is running',
     status: 'success'
   });
 });
@@ -96,7 +96,7 @@ app.set('io', io);
 // Start the HTTP and WebSocket server
 server.listen(PORT, async () => {
   console.log(`=====================================================`);
-  console.log(`  ElderGuard Backend Server is running on:`);
+  console.log(`  GUYNOVA GUARD Backend Server is running on:`);
   console.log(`  http://localhost:${PORT}`);
   console.log(`  Database ORM: Sequelize (MySQL)`);
   console.log(`  WebSocket (Socket.io) real-time events enabled`);
@@ -116,3 +116,4 @@ server.listen(PORT, async () => {
 
 export { app, server };
 export default app;
+

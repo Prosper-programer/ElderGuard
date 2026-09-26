@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "ElderGuard",
-    "slug": "elderguard",
+    "name": "GUYNOVA GUARD",
+    "slug": "guynova-guard",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "elderguard",
+    "scheme": "guynovaguard",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
@@ -46,3 +46,4 @@
     }
   }
 }
+
