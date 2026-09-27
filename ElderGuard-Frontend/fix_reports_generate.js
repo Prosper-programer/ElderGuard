@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+const fs = require('fs');
+
+const content = \import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -25,12 +27,12 @@ export default function ReportsScreen() {
   const [activeReportTypes, setActiveReportTypes] = useState<string[]>(['Elderly Health']);
 
   const reportTypes = [
-    { id: 'Elderly Health', icon: '💖' },
-    { id: 'Alerts', icon: '🔔' },
-    { id: 'Emergency Events', icon: '🚨' },
-    { id: 'Medication History', icon: '💊' },
-    { id: 'Caregiver Activity', icon: '👩‍⚕️' },
-    { id: 'Geofencing Events', icon: '📍' },
+    { id: 'Elderly Health', icon: '??' },
+    { id: 'Alerts', icon: '??' },
+    { id: 'Emergency Events', icon: '??' },
+    { id: 'Medication History', icon: '??' },
+    { id: 'Caregiver Activity', icon: '?????' },
+    { id: 'Geofencing Events', icon: '??' },
   ];
 
   const toggleReportType = (id: string) => {
@@ -61,7 +63,7 @@ export default function ReportsScreen() {
             source={{ uri: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=200&auto=format&fit=crop' }}
             style={styles.personAvatar}
           />
-          <Text style={styles.personName}>Marie Johnson <Text style={styles.personAge}>· Age 74</Text></Text>
+          <Text style={styles.personName}>Marie Johnson <Text style={styles.personAge}>� Age 74</Text></Text>
         </View>
 
         {/* REPORT PERIOD */}
@@ -184,7 +186,6 @@ const styles = StyleSheet.create({
     color: TEXT_DARK,
   },
   personAge: {
-    color: TEXT_LIGHT,
     fontWeight: '500',
   },
   grid2x2: {
@@ -224,8 +225,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     borderRadius: 12,
     backgroundColor: '#FFFFFF',
-    borderWidth: 1.5,
-    borderColor: '#F3F4F6',
+    borderWidth: 1,
+    borderColor: BORDER,
   },
   typeBtnActive: {
     borderColor: TEAL,
@@ -243,7 +244,6 @@ const styles = StyleSheet.create({
   },
   typeBtnTextActive: {
     color: TEAL,
-    fontWeight: '700',
   },
   actionRow: {
     flexDirection: 'row',
@@ -277,3 +277,6 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
 });
+\;
+
+fs.writeFileSync('app/(parent)/reports/index.tsx', content, 'utf8');
