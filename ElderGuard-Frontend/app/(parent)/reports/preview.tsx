@@ -12,7 +12,8 @@ import { useRouter } from 'expo-router';
 import { ChevronLeft, Download, Share } from 'lucide-react-native';
 import Svg, { Circle, G } from 'react-native-svg';
 
-const TEAL = '#0D7066';
+import { Colors } from '@/constants/theme';
+const TEAL = Colors.primary;
 const BG = '#F9FAFB';
 
 export default function ReportPreviewScreen() {
@@ -345,7 +346,7 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
   summaryCard: {
-    backgroundColor: '#E6F3F2',
+    backgroundColor: 'rgba(60, 111, 219, 0.1)',
     borderRadius: 16,
     padding: 20,
     marginBottom: 20,

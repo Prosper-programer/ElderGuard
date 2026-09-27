@@ -12,8 +12,9 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { ChevronLeft } from 'lucide-react-native';
 
-const TEAL = '#0D7066';
-const LIGHT_TEAL = '#E6F3F2';
+import { Colors } from '@/constants/theme';
+const TEAL = Colors.primary;
+const LIGHT_TEAL = 'rgba(60, 111, 219, 0.1)';
 const BG = '#FFFFFF';
 const TEXT_DARK = '#1F2937';
 const TEXT_LIGHT = '#6B7280';

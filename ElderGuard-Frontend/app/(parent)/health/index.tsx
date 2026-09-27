@@ -202,24 +202,20 @@ export default function HealthMonitoringScreen() {
       
       bottomBar={<BottomTabBar activeTab="health" role="parent" />}
     >
-      {/* -- 1. Premium Dark Hero Header -- */}
-      <View style={styles.darkHeroHeader}>
+      {/* -- 1. Seamless White Header (Design A) -- */}
+      <View style={styles.whiteHeroHeader}>
         <View style={styles.headerRow}>
           <TouchableOpacity
-            onPress={() => (router.canGoBack() ? router.back() : router.replace('/(parent)' as any))}
+            onPress={() => (router.canGoBack() ? router.back() : router.replace('/(parent)'))}
             style={styles.backBtn}
             activeOpacity={0.7}
           >
-            <ChevronLeft size={20} color={Colors.white} />
+            <ChevronLeft size={24} color={Colors.textPrimary || '#1F2937'} />
           </TouchableOpacity>
-  
-          <Text style={styles.screenTitle}>Health Report</Text>
-  
-          <View style={{ width: 38 }} /> 
         </View>
         
         <View style={styles.heroContent}>
-          <Text style={styles.heroSubtitle}>Overall Health</Text>
+          <Text style={styles.heroSubtitle}>Health Summary</Text>
           <View style={styles.heroStatusRow}>
             <Text style={styles.heroStatusText}>
               {vitals?.overallStatus === 'critical' ? 'Needs Attention' : 'Safe & Stable'}
@@ -237,7 +233,7 @@ export default function HealthMonitoringScreen() {
             return (
               <TouchableOpacity
                 key={p}
-                onPress={() => setPeriod(p as any)}
+                onPress={() => setPeriod(p)}
                 style={[styles.periodBtn, active && styles.periodBtnActive]}
                 activeOpacity={0.8}
               >
@@ -652,25 +648,22 @@ export default function HealthMonitoringScreen() {
 }
 
 const styles = StyleSheet.create({
-  darkHeroHeader: {
-    backgroundColor: '#1E293B',
-    borderRadius: BorderRadius.lg,
-    padding: Spacing.lg,
-    marginBottom: Spacing.xl,
-    shadowColor: Colors.primary,
-    shadowOffset: { width: 0, height: 12 },
-    shadowOpacity: 0.2,
-    shadowRadius: 30,
-    elevation: 8,
+  whiteHeroHeader: {
+    backgroundColor: 'transparent',
+    padding: Spacing.md,
+    marginBottom: Spacing.lg,
   },
   heroContent: {
-    alignItems: 'center',
+    alignItems: 'flex-start',
     marginVertical: Spacing.md,
+    paddingHorizontal: 4,
   },
   heroSubtitle: {
     fontSize: 14,
-    color: 'rgba(255, 255, 255, 0.7)',
-    fontWeight: '600',
+    color: Colors.textSecondary,
+    fontWeight: '700',
+    textTransform: 'uppercase',
+    letterSpacing: 1,
     marginBottom: 4,
   },
   heroStatusRow: {
@@ -680,10 +673,10 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   heroStatusText: {
-    fontSize: 28,
+    fontSize: 34,
     fontWeight: '800',
-    color: Colors.white,
-    letterSpacing: -0.5,
+    color: Colors.textPrimary,
+    letterSpacing: -1,
   },
   statusDotSmall: {
     width: 8,
@@ -691,8 +684,10 @@ const styles = StyleSheet.create({
     borderRadius: 4,
   },
   heroUpdateText: {
-    fontSize: 12,
-    color: 'rgba(255, 255, 255, 0.6)',
+    fontSize: 13,
+    color: Colors.textSecondary,
+    fontWeight: '500',
+    marginTop: 4,
   },
   vitalsListContainer: {
     marginBottom: Spacing.xl,
@@ -767,7 +762,11 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     marginBottom: 12,
   },
-  backBtn: { width: 38, height: 38, borderRadius: 12, backgroundColor: 'rgba(255,255,255,0.1)', borderWidth: 0,
+  backBtn: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: '#F3F4F6',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -777,9 +776,13 @@ const styles = StyleSheet.create({
     color: '#0F172A',
     letterSpacing: -0.3,
   },
-  periodSwitcher: { flexDirection: 'row', backgroundColor: 'rgba(255,255,255,0.1)', alignSelf: 'center',
-    borderRadius: 999,
-    padding: 3,
+  periodSwitcher: {
+    flexDirection: 'row',
+    backgroundColor: '#F3F4F6',
+    alignSelf: 'stretch',
+    borderRadius: 12,
+    padding: 4,
+    marginTop: 20,
   },
   periodBtn: {
     paddingHorizontal: 12,
