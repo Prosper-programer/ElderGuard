@@ -26,7 +26,7 @@ import {
 } from 'lucide-react-native';
 import { BottomTabBar } from '@/components/ui';
 import { useAuth } from '@/context/AuthContext';
-import { MOCK_CAREGIVER, MOCK_ELDERLY_PERSON } from '@/services/mockData';
+
 
 export default function CaregiverSettingsScreen() {
   const router = useRouter();
@@ -97,10 +97,10 @@ export default function CaregiverSettingsScreen() {
         {/* Caregiver Profile Banner (Emerald) */}
         <View style={styles.profileCard}>
           <View style={styles.avatarBox}>
-            <Text style={styles.avatarText}>SM</Text>
+            <User size={26} color="#FFFFFF" />
           </View>
           <View style={styles.profileInfo}>
-            <Text style={styles.profileName}>{MOCK_CAREGIVER.name}</Text>
+            <Text style={styles.profileName}>{user?.name || 'Caregiver'}</Text>
             <Text style={styles.profileRole}>Certified Nursing Assistant · St. Jude</Text>
             <Text style={styles.profileEmail}>sarah.mitchell@care.org</Text>
           </View>
@@ -123,7 +123,7 @@ export default function CaregiverSettingsScreen() {
               </Text>
               <Text style={styles.switchSub}>
                 {onDuty
-                  ? `Active shift · ${MOCK_CAREGIVER.shiftStart}–${MOCK_CAREGIVER.shiftEnd}. Receiving live sensor telemetry.`
+                  ? `Active shift · ${'08:00 AM'}–${'05:00 PM'}. Receiving live sensor telemetry.`
                   : 'Alerts forwarded to primary family contact.'}
               </Text>
             </View>
@@ -187,7 +187,7 @@ export default function CaregiverSettingsScreen() {
             </View>
             <View style={{ flex: 1 }}>
               <Text style={styles.menuLabel}>Assigned Senior</Text>
-              <Text style={styles.menuSub}>{(activeProfile?.fullName || 'Patient')} · {MOCK_ELDERLY_PERSON.room}</Text>
+              <Text style={styles.menuSub}>{(activeProfile?.fullName || 'Patient')} · {'Primary Residence'}</Text>
             </View>
             <ChevronRight size={18} color="#CBD5E1" />
           </TouchableOpacity>

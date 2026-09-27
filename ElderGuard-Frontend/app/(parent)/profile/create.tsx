@@ -30,13 +30,13 @@ export default function CreateElderlyProfileScreen() {
 
   const [emergencyName, setEmergencyName] = useState(user?.name || '');
   const [emergencyRelation, setEmergencyRelation] = useState('Tutor Manager');
-  const [emergencyPhone, setEmergencyPhone] = useState('+237 671 23 45 67');
+  const [emergencyPhone, setEmergencyPhone] = useState('');
 
-  const [doctorName, setDoctorName] = useState('Dr. Jean-Paul Mbarga');
-  const [doctorSpecialty, setDoctorSpecialty] = useState('Cardiologie & Médecine Gériatrique');
-  const [doctorHospital, setDoctorHospital] = useState('Hôpital Central de Yaoundé');
-  const [doctorPhone, setDoctorPhone] = useState('+237 655 89 12 34');
-  const [doctorEmail, setDoctorEmail] = useState('doctor.mbarga@GUYNOVA GUARD.cm');
+  const [doctorName, setDoctorName] = useState('');
+  const [doctorSpecialty, setDoctorSpecialty] = useState('');
+  const [doctorHospital, setDoctorHospital] = useState('');
+  const [doctorPhone, setDoctorPhone] = useState('');
+  const [doctorEmail, setDoctorEmail] = useState('');
 
   const [deviceId, setDeviceId] = useState(`EG-IOT-${Math.floor(1000 + Math.random() * 9000)}`);
 
@@ -97,7 +97,7 @@ export default function CreateElderlyProfileScreen() {
       address: address.trim(),
       phone: phone.trim(),
       parentManagerId: user?.id || 'usr-Tutor-01',
-      doctorName: doctorName.trim() || 'Dr. Jean-Paul Mbarga',
+      doctorName: doctorName.trim() || undefined,
       doctorSpecialty: doctorSpecialty.trim() || 'Geriatric Medicine',
       doctorHospital: doctorHospital.trim() || "St. Thomas' Hospital, London",
       doctorPhone: doctorPhone.trim() || '+44 20 7946 0000',

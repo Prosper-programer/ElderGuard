@@ -18,7 +18,7 @@ import {
   TopBar,
 } from '@/components/ui';
 import { Colors, Spacing } from '@/constants/theme';
-import { MOCK_TIMELINE_EVENTS } from '@/services/mockData';
+
 
 export default function CaregiverHistoryScreen() {
   const router = useRouter();
@@ -66,7 +66,7 @@ export default function CaregiverHistoryScreen() {
       </View>
 
       {/* Grouped Timelines */}
-      {MOCK_TIMELINE_EVENTS.map(({ date, events }) => (
+      {[].map(({ date, events }) => (
         <View key={date} style={styles.dateGroup}>
           <Text style={styles.dateGroupTitle}>{date}</Text>
           <Card style={styles.timelineCard}>

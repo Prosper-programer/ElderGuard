@@ -20,6 +20,7 @@ import {
   apiCreateElderlyProfile,
   apiCreateCaregiver,
   apiCreateDoctor,
+  apiUpdateElderlyProfile,
 } from '@/services/elderlyService';
 
 /**
@@ -170,7 +171,7 @@ export function ElderlyProvider({ children }: { children: React.ReactNode }) {
       dateOfBirth: data.dateOfBirth || '1950-01-01',
       gender: data.gender || 'Female',
       address: data.address,
-      emergencyContact: data.phone || data.emergencyContacts?.[0]?.phone || '+1 555 000 0000',
+      emergencyContact: data.phone || data.emergencyContacts?.[0]?.phone || 'Not provided',
       medicalInformation: data.medicalInfo?.chronicConditions?.join(', ') || undefined,
     });
 
@@ -207,7 +208,7 @@ export function ElderlyProvider({ children }: { children: React.ReactNode }) {
     }
 
     // Automatically associate with active profile if active profile has no caregiver
-    if (activeProfile && !activeProfile.primaryCaregiverName && res.caregiver) {
+    if (activeProfile && res.caregiver) {
       updateProfile(activeProfile.id, {
         primaryCaregiverId: `usr-${res.caregiver.user_id}`,
         primaryCaregiverName: res.caregiver.full_name,

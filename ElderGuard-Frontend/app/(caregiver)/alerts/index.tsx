@@ -19,7 +19,7 @@ import {
 } from '@/components/ui';
 import { Colors, Typography, Spacing } from '@/constants/theme';
 import { useAlerts } from '@/context/AlertContext';
-import { MOCK_ALERTS_LIST, MOCK_ELDERLY_PERSON, MOCK_CAREGIVER } from '@/services/mockData';
+
 
 export default function CaregiverAlertsScreen() {
   const router = useRouter();
@@ -28,7 +28,7 @@ export default function CaregiverAlertsScreen() {
 
   const [activeTab, setActiveTab] = useState<'all' | 'critical' | 'warning' | 'info'>('all');
 
-  const combinedAlerts = alerts.length > 0 ? alerts : MOCK_ALERTS_LIST;
+  const combinedAlerts = alerts.length > 0 ? alerts : [];
 
   const filteredAlerts = combinedAlerts.filter((a: any) => {
     const sev = (a.severity || a.type || 'info').toLowerCase();
@@ -76,7 +76,7 @@ export default function CaregiverAlertsScreen() {
           <Text style={styles.dutySeniorName}>{(activeProfile?.fullName || 'Patient')}</Text>
         </View>
         <Text style={styles.dutySubtext}>
-          Assigned to {MOCK_CAREGIVER.name} ({MOCK_CAREGIVER.shiftStart}–{MOCK_CAREGIVER.shiftEnd}). Real-time telemetry monitored.
+          Assigned to {user?.name || 'Caregiver'} ({'08:00 AM'}–{'05:00 PM'}). Real-time telemetry monitored.
         </Text>
       </Card>
 

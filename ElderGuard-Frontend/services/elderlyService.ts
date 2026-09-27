@@ -759,3 +759,27 @@ export const apiToggleGeofence = async (elderlyId: number | string, enable: bool
 };
 
 
+export async function apiUpdateElderlyProfile(elderlyId: string, updates: any): Promise<{success: boolean; error?: string}> {
+  try {
+    const token = getAuthToken();
+    const headers = { 'Content-Type': 'application/json' };
+    if (token) headers['Authorization'] = `Bearer ${token}`;
+    
+    // elderlyId comes as 'eld-123', we need just '123'
+    const id = elderlyId.replace('eld-', '');
+
+    const response = await fetch(`${API_BASE_URL}/api/Patient/${id}`, {
+      method: 'PUT',
+      headers,
+      body: JSON.stringify(updates),
+    });
+
+    if (!response.ok) {
+      const data = await response.json().catch(() => ({}));
+      return { success: false, error: data.message || 'Failed to update profile' };
+    }
+    return { success: true };
+  } catch (err) {
+    return { success: false, error: 'Network error' };
+  }
+}

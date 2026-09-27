@@ -25,7 +25,7 @@ import {
   Check,
   X,
 } from 'lucide-react-native';
-import { MOCK_ELDERLY_PERSON, MOCK_DOCTOR, MOCK_CAREGIVER } from '@/services/mockData';
+
 
 export default function EmergencyScreen() {
   const router = useRouter();
@@ -65,20 +65,20 @@ export default function EmergencyScreen() {
   };
 
   const handleYango = async () => {
-    const yangoUrl = 'yango://';
     try {
-      const supported = await Linking.canOpenURL(yangoUrl);
-      if (supported) {
-        await Linking.openURL(yangoUrl);
+      await Linking.openURL('yango://');
+    } catch (appError) {
+      if (Platform.OS === 'ios') {
+        Linking.openURL('https://apps.apple.com/app/yango/id1436984399').catch(() => {
+          Alert.alert('Notice', 'Could not open Yango or the App Store.');
+        });
       } else {
-        if (Platform.OS === 'ios') {
-          Linking.openURL('https://apps.apple.com/app/yango/id1436984399');
-        } else {
-          Linking.openURL('https://play.google.com/store/apps/details?id=com.yandex.yango');
-        }
+        Linking.openURL('market://details?id=com.yandex.yango').catch(() => {
+          Linking.openURL('https://play.google.com/store/apps/details?id=com.yandex.yango').catch(() => {
+            Alert.alert('Notice', 'Could not open Yango or the Play Store.');
+          });
+        });
       }
-    } catch (error) {
-      Alert.alert('Error', 'Unable to open Yango app.');
     }
   };
 
@@ -134,7 +134,7 @@ export default function EmergencyScreen() {
           <Text style={styles.fallLabel}>FALL DETECTED</Text>
           <Text style={styles.seniorName}>{(activeProfile?.fullName || 'Patient')}</Text>
           <Text style={styles.seniorLocation}>
-            {MOCK_ELDERLY_PERSON.address} · 10:15 AM
+            {activeProfile?.address || 'Location Unknown'} · 10:15 AM
           </Text>
         </View>
 

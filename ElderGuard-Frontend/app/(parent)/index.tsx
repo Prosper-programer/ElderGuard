@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image, ImageBackground } from 'react-native';
 import { useRouter } from 'expo-router';
-import { Bell, MapPin, Pill, ShieldAlert, Shield, CheckCircle, UserPlus, Plus, Heart, Activity, Thermometer, Footprints, ChevronRight, Battery } from 'lucide-react-native';
+import { Bell, MapPin, Pill, ShieldAlert, Shield, CheckCircle, UserPlus, Plus, Heart, Activity, Thermometer, Footprints, ChevronRight, Battery, User } from 'lucide-react-native';
 import { ScreenContainer, BottomTabBar, Card, VitalSparklineCard } from '@/components/ui';
 import { Colors, Typography, Spacing, BorderRadius, Shadows } from '@/constants/theme';
 
@@ -209,7 +209,9 @@ export default function ParentDashboardScreen() {
         </View>
         {hasCaregiver ? (
           <Card style={styles.caregiverCard}>
-            <Image source={{ uri: caregiverImageUri }} style={styles.caregiverImage} />
+            <View style={[styles.caregiverImage, { backgroundColor: Colors.primaryFadedMedium, justifyContent: 'center', alignItems: 'center' }]}>
+              <User size={32} color={Colors.primary} />
+            </View>
             <View style={styles.caregiverInfo}>
               <Text style={styles.caregiverName}>{assignedCaregiverName || 'Sarah Mitchell'}</Text>
               <Text style={styles.caregiverRole}>Primary Caregiver · 08:00–20:00</Text>

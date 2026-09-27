@@ -26,6 +26,7 @@ import {
   Check,
   CheckCircle2,
   Clock,
+  User,
 } from 'lucide-react-native';
 import {
   ScreenContainer,
@@ -38,12 +39,7 @@ import { useElderly } from '@/context/ElderlyContext';
 import { useVitals } from '@/context/VitalsContext';
 import { useAlerts } from '@/context/AlertContext';
 import { useCare } from '@/context/CareContext';
-import {
-  MOCK_ELDERLY_PERSON,
-  MOCK_CAREGIVER,
-  MOCK_CARE_ACTIVITIES,
-  MOCK_USERS,
-} from '@/services/mockData';
+
 
 export default function CaregiverHomeScreen() {
   const router = useRouter();
@@ -60,7 +56,7 @@ export default function CaregiverHomeScreen() {
     year: 'numeric',
   }).toUpperCase();
 
-  const caregiverName = user?.name || MOCK_CAREGIVER.name;
+  const caregiverName = user?.name || user?.name || 'Caregiver';
   const caregiverFirstName = caregiverName.split(' ')[0];
   const caregiverInitials = caregiverName
     .split(' ')
@@ -78,14 +74,14 @@ export default function CaregiverHomeScreen() {
   const tempValue = vitals.temperature?.value || 36.8;
 
   const handleCallParent = () => {
-    const phone = activeProfile?.emergencyContacts?.[0]?.phone || MOCK_USERS.Tutor.phone || '+237671234567';
+    const phone = activeProfile?.emergencyContacts?.[0]?.phone || '+237671234567' || '+237671234567';
     const cleanPhone = phone.replace(/[^0-9+]/g, '');
     const url = Platform.OS === 'ios' ? `telprompt:${cleanPhone}` : `tel:${cleanPhone}`;
     Linking.openURL(url).catch(() => {});
   };
 
   const handleCallDoctor = () => {
-    const phone = activeProfile?.doctorPhone || MOCK_USERS.doctor.phone || '+237655891234';
+    const phone = activeProfile?.doctorPhone || '+237655891234' || '+237655891234';
     const cleanPhone = phone.replace(/[^0-9+]/g, '');
     const url = Platform.OS === 'ios' ? `telprompt:${cleanPhone}` : `tel:${cleanPhone}`;
     Linking.openURL(url).catch(() => {});
@@ -105,7 +101,7 @@ export default function CaregiverHomeScreen() {
           <Text style={styles.greetingTitle}>Good morning, {caregiverFirstName} 👋</Text>
           <View style={styles.shiftPillRow}>
             <View style={styles.shiftGreenDot} />
-            <Text style={styles.shiftPillText}>ON DUTY · {MOCK_CAREGIVER.shiftStart}–{MOCK_CAREGIVER.shiftEnd}</Text>
+            <Text style={styles.shiftPillText}>ON DUTY · {'08:00 AM'}–{'05:00 PM'}</Text>
           </View>
         </View>
 
@@ -129,7 +125,7 @@ export default function CaregiverHomeScreen() {
             activeOpacity={0.8}
           >
             <View style={styles.avatarInner}>
-              <Text style={styles.avatarButtonText}>{caregiverInitials}</Text>
+              <User size={20} color="#FFFFFF" />
             </View>
           </TouchableOpacity>
         </View>
@@ -655,7 +651,7 @@ export default function CaregiverHomeScreen() {
         </View>
 
         <Card style={styles.cardZeroPadding}>
-          {MOCK_CARE_ACTIVITIES.slice(0, 3).map((act, i) => (
+          {[].map((act, i) => (
             <View
               key={act.id}
               style={[styles.activityRow, i === 2 && { borderBottomWidth: 0 }]}

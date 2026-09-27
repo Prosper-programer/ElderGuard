@@ -26,7 +26,7 @@ import {
   Button,
 } from '@/components/ui';
 import { Colors, Spacing } from '@/constants/theme';
-import { MOCK_ELDERLY_PERSON, MOCK_VITALS } from '@/services/mockData';
+
 
 export default function DeviceStatusScreen() {
   const router = useRouter();
@@ -55,7 +55,7 @@ export default function DeviceStatusScreen() {
         </View>
 
         <Text style={styles.bandModel}>GUYNOVA GUARD Smart Band</Text>
-        <Text style={styles.bandSerial}>ID: {MOCK_ELDERLY_PERSON.deviceId}</Text>
+        <Text style={styles.bandSerial}>ID: {activeProfile?.deviceStatus?.deviceId || 'Unknown-ID'}</Text>
 
         <View style={styles.statusPill}>
           <View style={styles.greenDot} />

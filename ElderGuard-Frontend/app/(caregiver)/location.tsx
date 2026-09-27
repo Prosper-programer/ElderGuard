@@ -25,7 +25,7 @@ import {
   Button,
 } from '@/components/ui';
 import { Colors, Spacing } from '@/constants/theme';
-import { MOCK_ELDERLY_PERSON, MOCK_USERS } from '@/services/mockData';
+
 
 export default function CaregiverLocationScreen() {
   const router = useRouter();
@@ -33,7 +33,7 @@ export default function CaregiverLocationScreen() {
 
   const handleCallParent = () => {
     Linking.openURL(
-      `tel:${(MOCK_USERS.Tutor.phone || '+15551234567').replace(/[^0-9+]/g, '')}`
+      `tel:${('+237671234567' || '+15551234567').replace(/[^0-9+]/g, '')}`
     ).catch(() => {});
   };
 
@@ -55,8 +55,8 @@ export default function CaregiverLocationScreen() {
           height={260}
           showGeofence={true}
           geofenceRadius={280 * zoomLevel}
-          address={MOCK_ELDERLY_PERSON.address}
-          room={MOCK_ELDERLY_PERSON.room}
+          address={activeProfile?.address || 'No Address'}
+          room={'Primary Residence'}
           isSafe={true}
         />
 
@@ -101,7 +101,7 @@ export default function CaregiverLocationScreen() {
 
         <View style={styles.addressRow}>
           <MapPin size={18} color="#3C6FDB" style={{ marginTop: 2 }} />
-          <Text style={styles.addressText}>{MOCK_ELDERLY_PERSON.address}</Text>
+          <Text style={styles.addressText}>{activeProfile?.address || 'No Address'}</Text>
         </View>
 
         <View style={styles.updateRow}>
@@ -158,7 +158,7 @@ export default function CaregiverLocationScreen() {
           fullWidth
           onPress={handleCallParent}
           leftIcon={<Phone size={16} color={Colors.primary} />}
-          title={`Call Family (${MOCK_USERS.Tutor.name})`}
+          title={`Call Family (${'Family'})`}
         />
       </View>
 

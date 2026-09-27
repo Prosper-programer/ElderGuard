@@ -113,7 +113,7 @@ export default function ManageCaregiversScreen() {
           <Card style={styles.infoCard}>
             <View style={styles.cardHeader}>
               <View style={styles.avatarWrap}>
-                <Text style={styles.avatarText}>{caregiverName.charAt(0)}</Text>
+                <User size={24} color="#2563EB" />
               </View>
               <View style={{ flex: 1 }}>
                 <Text style={styles.name}>{caregiverName}</Text>

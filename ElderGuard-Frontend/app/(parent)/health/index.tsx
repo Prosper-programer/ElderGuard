@@ -202,25 +202,42 @@ export default function HealthMonitoringScreen() {
       
       bottomBar={<BottomTabBar activeTab="health" role="parent" />}
     >
-      {/* ── 1. Header with Inline Period Switcher ───────────── */}
-      <View style={styles.headerRow}>
-        <TouchableOpacity
-          onPress={() => (router.canGoBack() ? router.back() : router.replace('/(parent)' as any))}
-          style={styles.backBtn}
-          activeOpacity={0.7}
-        >
-          <ChevronLeft size={20} color="#334155" />
-        </TouchableOpacity>
-
-        <Text style={styles.screenTitle}>Health Monitoring</Text>
-
+      {/* -- 1. Premium Dark Hero Header -- */}
+      <View style={styles.darkHeroHeader}>
+        <View style={styles.headerRow}>
+          <TouchableOpacity
+            onPress={() => (router.canGoBack() ? router.back() : router.replace('/(parent)' as any))}
+            style={styles.backBtn}
+            activeOpacity={0.7}
+          >
+            <ChevronLeft size={20} color={Colors.white} />
+          </TouchableOpacity>
+  
+          <Text style={styles.screenTitle}>Health Report</Text>
+  
+          <View style={{ width: 38 }} /> 
+        </View>
+        
+        <View style={styles.heroContent}>
+          <Text style={styles.heroSubtitle}>Overall Health</Text>
+          <View style={styles.heroStatusRow}>
+            <Text style={styles.heroStatusText}>
+              {vitals?.overallStatus === 'critical' ? 'Needs Attention' : 'Safe & Stable'}
+            </Text>
+            <View style={[styles.statusDotSmall, { backgroundColor: getStatusColor(vitals?.overallStatus || 'safe') }]} />
+          </View>
+          <Text style={styles.heroUpdateText}>
+            {vitals?.overallStatus === 'offline' ? 'Last known data' : 'Updated ' + (vitals?.lastSyncTime || 'recently')}
+          </Text>
+        </View>
+        
         <View style={styles.periodSwitcher}>
-          {(['24h', '7d', '30d'] as const).map((p) => {
+          {['24h', '7d', '30d'].map((p) => {
             const active = period === p;
             return (
               <TouchableOpacity
                 key={p}
-                onPress={() => setPeriod(p)}
+                onPress={() => setPeriod(p as any)}
                 style={[styles.periodBtn, active && styles.periodBtnActive]}
                 activeOpacity={0.8}
               >
@@ -233,94 +250,51 @@ export default function HealthMonitoringScreen() {
         </View>
       </View>
 
-      {/* ── 2. 4-Vital Cards in 2x2 Grid ────────────────────── */}
-      <View style={styles.vitalsGrid}>
-        {/* Heart Rate */}
-        <Card style={styles.vitalCard}>
-          <View style={[styles.cardAccentBar, { backgroundColor: '#10B981' }]} />
-          <View style={styles.cardContent}>
-            <View style={styles.cardTopRow}>
-              <View style={[styles.metricIconWrap, { backgroundColor: 'rgba(16, 185, 129, 0.12)' }]}>
-                <Heart size={14} color="#10B981" />
+      {/* -- 2. Responsive Vitals List (Matching Dashboard) -- */}
+      <View style={styles.vitalsListContainer}>
+        <Text style={styles.sectionOverline}>CURRENT VITALS</Text>
+        <Card style={styles.healthListCard}>
+          {vitals?.heartRate && (
+            <View style={[styles.healthRow, styles.itemBorderBottom]}>
+              <View style={[styles.healthIconWrap, { backgroundColor: Colors.criticalBg || 'rgba(239, 68, 68, 0.1)' }]}>
+                <Heart size={18} color={Colors.critical || '#EF4444'} />
               </View>
-              <Text style={styles.metricLabel}>HEART RATE</Text>
-              <View style={styles.cyanLiveDot} />
+              <Text style={styles.healthRowTitle}>{vitals.heartRate.label || 'Heart Rate'}</Text>
+              <View style={styles.healthRowRight}>
+                <Text style={styles.healthRowValue}>{vitals.heartRate.value} <Text style={styles.healthRowUnit}>{vitals.heartRate.unit}</Text></Text>
+                <Text style={[styles.healthRowStatus, { color: getStatusColor(vitals.heartRate.status as any) }]}>{vitals.heartRate.statusLabel}</Text>
+              </View>
             </View>
-            <View style={styles.metricValRow}>
-              <Text style={styles.metricValue}>72</Text>
-              <Text style={styles.metricUnit}> bpm</Text>
-            </View>
-            <View style={styles.metricStatusRow}>
-              <View style={[styles.statusDot, { backgroundColor: '#10B981' }]} />
-              <Text style={[styles.statusText, { color: '#10B981' }]}>Safe</Text>
-            </View>
-          </View>
-        </Card>
+          )}
 
-        {/* SpO2 */}
-        <Card style={styles.vitalCard}>
-          <View style={[styles.cardAccentBar, { backgroundColor: '#10B981' }]} />
-          <View style={styles.cardContent}>
-            <View style={styles.cardTopRow}>
-              <View style={[styles.metricIconWrap, { backgroundColor: 'rgba(16, 185, 129, 0.12)' }]}>
-                <Activity size={14} color="#10B981" />
+          {vitals?.spo2 && (
+            <View style={[styles.healthRow, styles.itemBorderBottom]}>
+              <View style={[styles.healthIconWrap, { backgroundColor: Colors.primaryFaded || 'rgba(60, 111, 219, 0.1)' }]}>
+                <Activity size={18} color={Colors.primary || '#3C6FDB'} />
               </View>
-              <Text style={styles.metricLabel}>SPO₂</Text>
-              <View style={styles.cyanLiveDot} />
+              <Text style={styles.healthRowTitle}>{vitals.spo2.label || 'Blood Oxygen'}</Text>
+              <View style={styles.healthRowRight}>
+                <Text style={styles.healthRowValue}>{vitals.spo2.value} <Text style={styles.healthRowUnit}>{vitals.spo2.unit}</Text></Text>
+                <Text style={[styles.healthRowStatus, { color: getStatusColor(vitals.spo2.status as any) }]}>{vitals.spo2.statusLabel}</Text>
+              </View>
             </View>
-            <View style={styles.metricValRow}>
-              <Text style={styles.metricValue}>97</Text>
-              <Text style={styles.metricUnit}> %</Text>
-            </View>
-            <View style={styles.metricStatusRow}>
-              <View style={[styles.statusDot, { backgroundColor: '#10B981' }]} />
-              <Text style={[styles.statusText, { color: '#10B981' }]}>Safe</Text>
-            </View>
-          </View>
-        </Card>
+          )}
 
-        {/* Temperature */}
-        <Card style={styles.vitalCard}>
-          <View style={[styles.cardAccentBar, { backgroundColor: '#10B981' }]} />
-          <View style={styles.cardContent}>
-            <View style={styles.cardTopRow}>
-              <View style={[styles.metricIconWrap, { backgroundColor: 'rgba(16, 185, 129, 0.12)' }]}>
-                <Thermometer size={14} color="#10B981" />
+          {vitals?.temperature && (
+            <View style={[styles.healthRow, styles.itemBorderBottom]}>
+              <View style={[styles.healthIconWrap, { backgroundColor: Colors.warningBg || 'rgba(245, 158, 11, 0.1)' }]}>
+                <Thermometer size={18} color={Colors.warning || '#F59E0B'} />
               </View>
-              <Text style={styles.metricLabel}>TEMPERATURE</Text>
-              <View style={styles.cyanLiveDot} />
-            </View>
-            <View style={styles.metricValRow}>
-              <Text style={styles.metricValue}>36.8</Text>
-              <Text style={styles.metricUnit}> °C</Text>
-            </View>
-            <View style={styles.metricStatusRow}>
-              <View style={[styles.statusDot, { backgroundColor: '#10B981' }]} />
-              <Text style={[styles.statusText, { color: '#10B981' }]}>Safe</Text>
-            </View>
-          </View>
-        </Card>
-
-        {/* Steps */}
-        <Card style={styles.vitalCard}>
-          <View style={[styles.cardAccentBar, { backgroundColor: '#3C6FDB' }]} />
-          <View style={styles.cardContent}>
-            <View style={styles.cardTopRow}>
-              <Text style={styles.metricLabel}>STEPS</Text>
-              <View style={styles.livePill}>
-                <View style={styles.liveCyanDot} />
-                <Text style={styles.livePillText}>LIVE</Text>
+              <Text style={styles.healthRowTitle}>{vitals.temperature.label || 'Body Temp'}</Text>
+              <View style={styles.healthRowRight}>
+                <Text style={styles.healthRowValue}>{vitals.temperature.value} <Text style={styles.healthRowUnit}>{vitals.temperature.unit}</Text></Text>
+                <Text style={[styles.healthRowStatus, { color: getStatusColor(vitals.temperature.status as any) }]}>{vitals.temperature.statusLabel}</Text>
               </View>
             </View>
-            <View style={styles.metricValRow}>
-              <Text style={styles.metricValue}>1,247</Text>
-            </View>
-            <Text style={styles.goalSubText}>Goal: 3,000 steps</Text>
-          </View>
+          )}
         </Card>
       </View>
 
-      {/* ── 3. Heart Rate Detailed Interactive Hover/Scrub Chart Card ─ */}
       <Card style={styles.chartCard}>
         <View style={styles.chartHeaderRow}>
           <View>
@@ -784,6 +758,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     marginTop: 2,
   },
+
 
   headerRow: {
     flexDirection: 'row',

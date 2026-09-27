@@ -22,11 +22,7 @@ import { Card, Button } from '@/components/ui';
 import { Colors, Typography, Spacing, BorderRadius } from '@/constants/theme';
 import { useElderly } from '@/context/ElderlyContext';
 import { useVitals } from '@/context/VitalsContext';
-import {
-  MOCK_HEART_RATE_HISTORY,
-  MOCK_SPO2_HISTORY,
-  MOCK_TEMP_HISTORY,
-} from '@/services/mockData';
+
 
 export default function DoctorTelemetryScreen() {
   const { activeProfile } = useElderly();
@@ -124,7 +120,7 @@ export default function DoctorTelemetryScreen() {
         <Card style={styles.historyCard}>
           {activeTab === 'heart' && (
             <View style={styles.historyList}>
-              {MOCK_HEART_RATE_HISTORY.slice(-8).map((point, index) => (
+              {[].map((point, index) => (
                 <View key={index} style={styles.historyRow}>
                   <Text style={styles.historyTime}>{point.time}</Text>
                   <View style={styles.historyBarWrap}>
@@ -146,7 +142,7 @@ export default function DoctorTelemetryScreen() {
 
           {activeTab === 'spo2' && (
             <View style={styles.historyList}>
-              {MOCK_SPO2_HISTORY.slice(-8).map((point, index) => (
+              {[].map((point, index) => (
                 <View key={index} style={styles.historyRow}>
                   <Text style={styles.historyTime}>{point.time}</Text>
                   <View style={styles.historyBarWrap}>
@@ -168,7 +164,7 @@ export default function DoctorTelemetryScreen() {
 
           {activeTab === 'temp' && (
             <View style={styles.historyList}>
-              {MOCK_TEMP_HISTORY.map((point, index) => (
+              {[].map((point, index) => (
                 <View key={index} style={styles.historyRow}>
                   <Text style={styles.historyTime}>{point.time}</Text>
                   <View style={styles.historyBarWrap}>

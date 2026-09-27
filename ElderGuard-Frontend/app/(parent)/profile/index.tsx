@@ -38,12 +38,7 @@ import {
 import { Colors, Spacing } from '@/constants/theme';
 import { useElderly } from '@/context/ElderlyContext';
 import { useAuth } from '@/context/AuthContext';
-import {
-  MOCK_ELDERLY_PERSON,
-  MOCK_CAREGIVER,
-  MOCK_DOCTOR,
-  MOCK_USERS,
-} from '@/services/mockData';
+
 
 export default function ParentElderlyProfileScreen() {
   const router = useRouter();
@@ -135,17 +130,17 @@ export default function ParentElderlyProfileScreen() {
           <View style={styles.clinicalGrid}>
             <View style={styles.clinicalCell}>
               <Text style={styles.clinicalLabel}>BLOOD TYPE</Text>
-              <Text style={styles.clinicalVal}>{MOCK_ELDERLY_PERSON.bloodType}</Text>
+              <Text style={styles.clinicalVal}>{activeProfile?.medicalInfo?.bloodType || 'Unknown'}</Text>
             </View>
             <View style={styles.clinicalDivider} />
             <View style={styles.clinicalCell}>
               <Text style={styles.clinicalLabel}>HEIGHT</Text>
-              <Text style={styles.clinicalVal}>{MOCK_ELDERLY_PERSON.height}</Text>
+              <Text style={styles.clinicalVal}>{'N/A'}</Text>
             </View>
             <View style={styles.clinicalDivider} />
             <View style={styles.clinicalCell}>
               <Text style={styles.clinicalLabel}>WEIGHT</Text>
-              <Text style={styles.clinicalVal}>{MOCK_ELDERLY_PERSON.weight}</Text>
+              <Text style={styles.clinicalVal}>{'N/A'}</Text>
             </View>
           </View>
         </View>
@@ -158,8 +153,8 @@ export default function ParentElderlyProfileScreen() {
         </View>
         <View style={{ flex: 1 }}>
           <Text style={styles.addressHeading}>Home Address</Text>
-          <Text style={styles.addressText}>{MOCK_ELDERLY_PERSON.address}</Text>
-          <Text style={styles.roomText}>{MOCK_ELDERLY_PERSON.room}</Text>
+          <Text style={styles.addressText}>{activeProfile?.address || 'No Address'}</Text>
+          <Text style={styles.roomText}>{'Primary Residence'}</Text>
         </View>
       </Card>
 
@@ -167,7 +162,7 @@ export default function ParentElderlyProfileScreen() {
       <Card style={styles.conditionsCard}>
         <Text style={styles.cardHeading}>Medical Conditions</Text>
         <View style={styles.conditionsList}>
-          {MOCK_ELDERLY_PERSON.conditions.map((cond, i) => (
+          {(activeProfile?.medicalInfo?.chronicConditions || []).map((cond, i) => (
             <View key={i} style={styles.conditionRow}>
               <View style={styles.conditionRedDot} />
               <Text style={styles.conditionText}>{cond}</Text>
@@ -180,7 +175,7 @@ export default function ParentElderlyProfileScreen() {
       <Card style={styles.allergiesCard}>
         <Text style={styles.cardHeading}>Known Allergies</Text>
         <View style={styles.allergiesWrap}>
-          {MOCK_ELDERLY_PERSON.allergies.map((all, i) => (
+          {(activeProfile?.medicalInfo?.allergies || []).map((all, i) => (
             <View key={i} style={styles.allergyPill}>
               <AlertTriangle size={12} color="#DC2626" />
               <Text style={styles.allergyText}>{all}</Text>
@@ -195,23 +190,23 @@ export default function ParentElderlyProfileScreen() {
         <Card style={styles.cardZeroPadding}>
           {[
             {
-              name: MOCK_USERS.Tutor.name,
+              name: user?.name || 'Primary Tutor',
               role: 'Son · Primary Tutor',
-              phone: MOCK_USERS.Tutor.phone,
+              phone: user?.phone || 'No Phone',
               initials: 'RT',
               color: '#3C6FDB',
             },
             {
-              name: MOCK_CAREGIVER.name,
+              name: activeProfile?.primaryCaregiverName || 'Not Assigned',
               role: 'Assigned Caregiver · RN',
-              phone: MOCK_CAREGIVER.phone,
+              phone: 'N/A',
               initials: 'SM',
               color: '#16A34A',
             },
             {
-              name: MOCK_DOCTOR.name,
+              name: activeProfile?.doctorName || 'Not Assigned',
               role: 'Attending Physician · GP',
-              phone: MOCK_DOCTOR.phone,
+              phone: activeProfile?.doctorPhone || 'N/A',
               initials: 'JH',
               color: '#8B5CF6',
             },

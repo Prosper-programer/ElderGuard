@@ -30,8 +30,6 @@ import {
   Card,
 } from '@/components/ui';
 import { useElderly } from '@/context/ElderlyContext';
-import { MOCK_ELDERLY_PERSON } from '@/services/mockData';
-
 export default function ParentLocationScreen() {
   const router = useRouter();
   const { activeProfile } = useElderly();

@@ -30,7 +30,7 @@ import {
   Button,
 } from '@/components/ui';
 import { Colors, Spacing } from '@/constants/theme';
-import { MOCK_CARE_ACTIVITIES } from '@/services/mockData';
+
 import { useCare } from '@/context/CareContext';
 import { useAuth } from '@/context/AuthContext';
 import { useElderly } from '@/context/ElderlyContext';
@@ -47,7 +47,7 @@ export default function CaregiverCareScreen() {
   const [notes, setNotes] = useState('');
   const [saved, setSaved] = useState(false);
 
-  const [activities, setActivities] = useState(MOCK_CARE_ACTIVITIES);
+  const [activities, setActivities] = useState([]);
 
   const caregiverName = user?.name || 'Amara Biya';
   const seniorName = activeProfile?.fullName || 'Pa Samuel Ngu';

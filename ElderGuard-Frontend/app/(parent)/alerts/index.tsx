@@ -23,7 +23,7 @@ import {
 import { Colors, Typography, Spacing } from '@/constants/theme';
 import { useAlerts } from '@/context/AlertContext';
 import { useVitals } from '@/context/VitalsContext';
-import { MOCK_ALERTS_LIST } from '@/services/mockData';
+
 
 export default function AlertsListScreen() {
   const router = useRouter();
@@ -33,7 +33,7 @@ export default function AlertsListScreen() {
 
   const [activeTab, setActiveTab] = useState<'all' | 'critical' | 'warning' | 'info'>('all');
 
-  const combinedAlerts = alerts.length > 0 ? alerts : MOCK_ALERTS_LIST;
+  const combinedAlerts = alerts;
 
   const filteredAlerts = combinedAlerts.filter((a: any) => {
     const sev = (a.severity || a.type || 'info').toLowerCase();
