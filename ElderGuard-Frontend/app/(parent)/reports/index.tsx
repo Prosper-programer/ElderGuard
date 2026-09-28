@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
+import { useElderly } from '@/context/ElderlyContext';
 import { ChevronLeft } from 'lucide-react-native';
 
 import { Colors } from '@/constants/theme';
@@ -21,6 +22,7 @@ const TEXT_LIGHT = '#6B7280';
 const BORDER = '#E5E7EB';
 
 export default function ReportsScreen() {
+  const { activeProfile } = useElderly();
   const router = useRouter();
   const [period, setPeriod] = useState<'Daily' | 'Weekly' | 'Monthly' | 'Custom'>('Weekly');
   const [activeReportTypes, setActiveReportTypes] = useState<string[]>(['Elderly Health']);
@@ -59,10 +61,10 @@ export default function ReportsScreen() {
         <Text style={styles.sectionTitle}>ELDERLY PERSON</Text>
         <View style={styles.personCard}>
           <Image
-            source={{ uri: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=200&auto=format&fit=crop' }}
+            source={{ uri: activeProfile?.imageUrl || 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=200&auto=format&fit=crop' }}
             style={styles.personAvatar}
           />
-          <Text style={styles.personName}>Marie Johnson <Text style={styles.personAge}>· Age 74</Text></Text>
+          <Text style={styles.personName}>{activeProfile?.preferredName || activeProfile?.fullName || 'Senior'} <Text style={styles.personAge}>· {activeProfile?.age ? 'Age ' + activeProfile.age : ''}</Text></Text>
         </View>
 
         {/* REPORT PERIOD */}

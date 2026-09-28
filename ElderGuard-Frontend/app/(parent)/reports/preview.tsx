@@ -9,6 +9,8 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
+import { useElderly } from '@/context/ElderlyContext';
+import { useVitals } from '@/context/VitalsContext';
 import { ChevronLeft, Download, Share } from 'lucide-react-native';
 import Svg, { Circle, G } from 'react-native-svg';
 
@@ -17,6 +19,8 @@ const TEAL = Colors.primary;
 const BG = '#F9FAFB';
 
 export default function ReportPreviewScreen() {
+  const { activeProfile } = useElderly();
+  const { vitals } = useVitals();
   const router = useRouter();
 
   // Simple SVG Donut logic
@@ -54,7 +58,7 @@ export default function ReportPreviewScreen() {
         <View style={styles.heroCard}>
           <Text style={styles.heroBrand}>ELDERGUARD</Text>
           <Text style={styles.heroTitle}>Elderly Care Report</Text>
-          <Text style={styles.heroSubtitle}>Marie Johnson - Weekly Report</Text>
+          <Text style={styles.heroSubtitle}>{activeProfile?.preferredName || activeProfile?.fullName || 'Senior'} - Weekly Report</Text>
           <Text style={styles.heroSubtitle}>Aug 18 – Aug 25, 2024</Text>
         </View>
 
@@ -65,7 +69,7 @@ export default function ReportPreviewScreen() {
           <View style={styles.rowItem}>
             <Text style={styles.rowLabel}>Average Heart Rate</Text>
             <View style={styles.rowValueWrap}>
-              <Text style={styles.rowValue}>78 BPM</Text>
+              <Text style={styles.rowValue}>{vitals?.heartRate?.value || '78'} BPM</Text>
               <View style={styles.pillNormal}><Text style={styles.pillTextNormal}>Normal</Text></View>
             </View>
           </View>
@@ -73,7 +77,7 @@ export default function ReportPreviewScreen() {
           <View style={styles.rowItem}>
             <Text style={styles.rowLabel}>Average SpO₂</Text>
             <View style={styles.rowValueWrap}>
-              <Text style={styles.rowValue}>97%</Text>
+              <Text style={styles.rowValue}>{vitals?.spo2?.value || '97'}%</Text>
               <View style={styles.pillNormal}><Text style={styles.pillTextNormal}>Normal</Text></View>
             </View>
           </View>
@@ -81,7 +85,7 @@ export default function ReportPreviewScreen() {
           <View style={[styles.rowItem, { borderBottomWidth: 0 }]}>
             <Text style={styles.rowLabel}>Average Temperature</Text>
             <View style={styles.rowValueWrap}>
-              <Text style={styles.rowValue}>36.7°C</Text>
+              <Text style={styles.rowValue}>{vitals?.temperature?.value || '36.7'}{vitals?.temperature?.unit || '°C'}</Text>
               <View style={styles.pillNormal}><Text style={styles.pillTextNormal}>Normal</Text></View>
             </View>
           </View>
@@ -157,7 +161,7 @@ export default function ReportPreviewScreen() {
         <View style={styles.summaryCard}>
           <Text style={styles.summaryTitle}>Overall Summary</Text>
           <Text style={styles.summaryText}>
-            During this period, Marie Johnson's health remained generally stable. Three alerts were recorded and one emergency event occurred. The caregiver completed 92% of scheduled care activities and responded to all emergency alerts.
+            During this period, {activeProfile?.preferredName || 'the senior'}'s health remained generally stable. Three alerts were recorded and one emergency event occurred. The caregiver completed 92% of scheduled care activities and responded to all emergency alerts.
           </Text>
         </View>
 
