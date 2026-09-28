@@ -126,23 +126,8 @@ export default function ParentElderlyProfileScreen() {
           <Text style={styles.profileName}>{name}</Text>
           <Text style={styles.profileSub}>Born {dob} · {age} years old</Text>
 
-          {/* 3-Col Clinical Specs */}
-          <View style={styles.clinicalGrid}>
-            <View style={styles.clinicalCell}>
-              <Text style={styles.clinicalLabel}>BLOOD TYPE</Text>
-              <Text style={styles.clinicalVal}>{activeProfile?.medicalInfo?.bloodType || 'Unknown'}</Text>
-            </View>
-            <View style={styles.clinicalDivider} />
-            <View style={styles.clinicalCell}>
-              <Text style={styles.clinicalLabel}>HEIGHT</Text>
-              <Text style={styles.clinicalVal}>{'N/A'}</Text>
-            </View>
-            <View style={styles.clinicalDivider} />
-            <View style={styles.clinicalCell}>
-              <Text style={styles.clinicalLabel}>WEIGHT</Text>
-              <Text style={styles.clinicalVal}>{'N/A'}</Text>
-            </View>
-          </View>
+          
+          {/* We removed the hardcoded 3-col clinical specs (height, weight) because they aren't collected during creation */}
         </View>
       </Card>
 
@@ -153,132 +138,89 @@ export default function ParentElderlyProfileScreen() {
         </View>
         <View style={{ flex: 1 }}>
           <Text style={styles.addressHeading}>Home Address</Text>
-          <Text style={styles.addressText}>{activeProfile?.address || 'No Address'}</Text>
-          <Text style={styles.roomText}>{'Primary Residence'}</Text>
+          <Text style={styles.addressText}>{activeProfile?.address || 'No Address Provided'}</Text>
+          {activeProfile?.address ? <Text style={styles.roomText}>Primary Residence</Text> : null}
         </View>
       </Card>
 
       {/* Medical Conditions */}
-      <Card style={styles.conditionsCard}>
-        <Text style={styles.cardHeading}>Medical Conditions</Text>
-        <View style={styles.conditionsList}>
-          {(activeProfile?.medicalInfo?.chronicConditions || []).map((cond, i) => (
-            <View key={i} style={styles.conditionRow}>
-              <View style={styles.conditionRedDot} />
-              <Text style={styles.conditionText}>{cond}</Text>
-            </View>
-          ))}
-        </View>
-      </Card>
+      {activeProfile?.medicalInfo?.chronicConditions && activeProfile.medicalInfo.chronicConditions.length > 0 && activeProfile.medicalInfo.chronicConditions[0] !== '' && (
+        <Card style={styles.conditionsCard}>
+          <Text style={styles.cardHeading}>Medical Information</Text>
+          <View style={styles.conditionsList}>
+            {activeProfile.medicalInfo.chronicConditions.map((cond, i) => (
+              <View key={i} style={styles.conditionRow}>
+                <View style={styles.conditionRedDot} />
+                <Text style={styles.conditionText}>{cond}</Text>
+              </View>
+            ))}
+          </View>
+        </Card>
+      )}
 
-      {/* Known Allergies */}
-      <Card style={styles.allergiesCard}>
-        <Text style={styles.cardHeading}>Known Allergies</Text>
-        <View style={styles.allergiesWrap}>
-          {(activeProfile?.medicalInfo?.allergies || []).map((all, i) => (
-            <View key={i} style={styles.allergyPill}>
-              <AlertTriangle size={12} color="#DC2626" />
-              <Text style={styles.allergyText}>{all}</Text>
-            </View>
-          ))}
-        </View>
-      </Card>
-
-      {/* Emergency Contacts with One-Tap Dialers */}
+      {/* Real Emergency Contact */}
       <View style={styles.sectionWrap}>
-        <SectionHeader title="Emergency Contacts" />
+        <SectionHeader title="Emergency Contact" />
         <Card style={styles.cardZeroPadding}>
-          {[
-            {
-              name: user?.name || 'Primary Tutor',
-              role: 'Son · Primary Tutor',
-              phone: user?.phone || 'No Phone',
-              initials: 'RT',
-              color: '#3C6FDB',
-            },
-            {
-              name: activeProfile?.primaryCaregiverName || 'Not Assigned',
-              role: 'Assigned Caregiver · RN',
-              phone: 'N/A',
-              initials: 'SM',
-              color: '#16A34A',
-            },
-            {
-              name: activeProfile?.doctorName || 'Not Assigned',
-              role: 'Attending Physician · GP',
-              phone: activeProfile?.doctorPhone || 'N/A',
-              initials: 'JH',
-              color: '#8B5CF6',
-            },
-          ].map((c, i) => (
-            <View
-              key={c.name}
-              style={[
-                styles.contactRow,
-                i === 2 && { borderBottomWidth: 0 },
-              ]}
-            >
-              <View style={[styles.contactInitials, { backgroundColor: c.color + '18' }]}>
-                <Text style={[styles.contactInitialsText, { color: c.color }]}>
-                  {c.initials}
-                </Text>
-              </View>
+          <View style={[styles.contactRow, { borderBottomWidth: 0 }]}>
+            <View style={[styles.contactInitials, { backgroundColor: Colors.primaryFaded || '#3C6FDB18' }]}>
+              <Text style={[styles.contactInitialsText, { color: Colors.primary }]}>
+                EC
+              </Text>
+            </View>
+            <View style={{ flex: 1 }}>
+              <Text style={styles.contactName}>Primary Emergency Contact</Text>
+              <Text style={styles.contactRole}>Designated Number</Text>
+              <Text style={styles.contactPhone}>{activeProfile?.phone || 'Not Set'}</Text>
+            </View>
 
-              <View style={{ flex: 1 }}>
-                <Text style={styles.contactName}>{c.name}</Text>
-                <Text style={styles.contactRole}>{c.role}</Text>
-                <Text style={styles.contactPhone}>{c.phone}</Text>
-              </View>
-
+            {activeProfile?.phone ? (
               <TouchableOpacity
-                onPress={() => handleCall(c.phone)}
+                onPress={() => handleCall(activeProfile.phone)}
                 style={styles.callCircleBtn}
                 activeOpacity={0.7}
               >
                 <Phone size={16} color={Colors.primary} />
               </TouchableOpacity>
-            </View>
-          ))}
+            ) : null}
+          </View>
         </Card>
       </View>
 
-      {/* Active Medications matching design */}
+      {/* Assigned Caregiver & Doctor */}
       <View style={styles.sectionWrap}>
-        <View style={styles.sectionHeaderRow}>
-          <Text style={styles.sectionOverline}>ACTIVE MEDICATIONS</Text>
-          <TouchableOpacity
-            onPress={() => router.push('/(parent)/care' as any)}
-            activeOpacity={0.7}
-          >
-            <Text style={styles.sectionActionText}>Full list →</Text>
-          </TouchableOpacity>
-        </View>
-
+        <SectionHeader title="Assigned Personnel" />
         <Card style={styles.cardZeroPadding}>
-          {[
-            { name: 'Aspirin 100mg', time: 'Morning · 08:00', color: '#3C6FDB' },
-            { name: 'Lisinopril 10mg', time: 'Morning · 08:00', color: '#16A34A' },
-            { name: 'Metformin 500mg', time: 'After Lunch · 13:00', color: '#EA580C' },
-          ].map((med, i) => (
-            <View
-              key={med.name}
-              style={[
-                styles.medicationRow,
-                i === 2 && { borderBottomWidth: 0 },
-              ]}
-            >
-              <View style={[styles.medDot, { backgroundColor: med.color }]} />
-              <View style={{ flex: 1 }}>
-                <Text style={styles.medNameText}>{med.name}</Text>
-                <Text style={styles.medTimeText}>{med.time}</Text>
-              </View>
-              <CheckCircle size={17} color="#16A34A" />
+          <View style={styles.contactRow}>
+            <View style={[styles.contactInitials, { backgroundColor: '#16A34A18' }]}>
+              <Text style={[styles.contactInitialsText, { color: '#16A34A' }]}>
+                CG
+              </Text>
             </View>
-          ))}
+            <View style={{ flex: 1 }}>
+              <Text style={styles.contactName}>{activeProfile?.primaryCaregiverName || 'No Caregiver Assigned'}</Text>
+              <Text style={styles.contactRole}>Primary Caregiver</Text>
+            </View>
+          </View>
+          <View style={[styles.contactRow, { borderBottomWidth: 0 }]}>
+            <View style={[styles.contactInitials, { backgroundColor: '#8B5CF618' }]}>
+              <Text style={[styles.contactInitialsText, { color: '#8B5CF6' }]}>
+                DR
+              </Text>
+            </View>
+            <View style={{ flex: 1 }}>
+              <Text style={styles.contactName}>{activeProfile?.doctorName || 'No Doctor Assigned'}</Text>
+              <Text style={styles.contactRole}>Attending Physician</Text>
+              {activeProfile?.doctorPhone ? (
+                <Text style={styles.contactPhone}>{activeProfile.doctorPhone}</Text>
+              ) : null}
+            </View>
+          </View>
         </Card>
       </View>
 
       {/* ── My Tutor Account & Session Card ────────────────── */}
+
       <View style={styles.sectionWrap}>
         <View style={styles.sectionHeaderRow}>
           <Text style={styles.sectionOverline}>ACCOUNT & SESSION</Text>

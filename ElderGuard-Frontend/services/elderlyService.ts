@@ -52,7 +52,7 @@ export interface ClinicalNoteRecord {
 }
 
 export function mapBackendToElderlyProfile(item: BackendElderlyProfile): ElderlyProfile {
-  const birthYear = item.date_of_birth ? new Date(item.date_of_birth).getFullYear() : 1948;
+  const birthYear = item.date_of_birth ? new Date(item.date_of_birth).getFullYear() : new Date().getFullYear();
   const currentYear = new Date().getFullYear();
   const calculatedAge = Math.max(1, currentYear - birthYear);
 
@@ -61,33 +61,33 @@ export function mapBackendToElderlyProfile(item: BackendElderlyProfile): Elderly
     fullName: item.full_name,
     preferredName: item.full_name.split(' ')[0],
     age: calculatedAge,
-    dateOfBirth: item.date_of_birth ? String(item.date_of_birth).split('T')[0] : '1948-03-22',
-    gender: (item.gender as 'Female' | 'Male' | 'Other') || 'Female',
+    dateOfBirth: item.date_of_birth ? String(item.date_of_birth).split('T')[0] : '',
+    gender: (item.gender as 'Female' | 'Male' | 'Other') || 'Other',
     address: item.address,
     phone: item.emergency_contact,
-    imageUrl: require('@/assets/images/elderly_margaret.jpg'),
+    imageUrl: require('@/assets/images/elderly_margaret.jpg'), // Keeping default avatar for UI appeal
     parentManagerId: `usr-${item.parent_id}`,
     primaryCaregiverId: item.caregiver_id ? `usr-${item.caregiver_id}` : undefined,
-    primaryCaregiverName: item.caregiver_name || (item.caregiver_id ? 'Assigned Caregiver' : undefined),
+    primaryCaregiverName: item.caregiver_name || undefined,
     doctorId: item.doctor_id ? `usr-${item.doctor_id}` : undefined,
-    doctorName: item.doctor_name || 'Dr. Jean-Paul Mbarga',
-    doctorPhone: item.doctor_phone || '+237 655 89 12 34',
-    doctorSpecialty: item.doctor_specialty || 'Cardiologie & Médecine Gériatrique',
-    doctorHospital: item.doctor_hospital || 'Hôpital Central de Yaoundé',
-    doctorEmail: item.doctor_email || 'doctor.mbarga@GUYNOVA GUARD.cm',
+    doctorName: item.doctor_name || undefined,
+    doctorPhone: item.doctor_phone || undefined,
+    doctorSpecialty: item.doctor_specialty || undefined,
+    doctorHospital: item.doctor_hospital || undefined,
+    doctorEmail: item.doctor_email || undefined,
     medicalInfo: {
-      bloodType: 'O+',
+      bloodType: '',
       allergies: [],
-      chronicConditions: item.medical_information ? [item.medical_information] : ['Hypertension', 'Type 2 Diabetes'],
-      medicationNotes: item.medical_information || 'Amlodipine 5mg le matin, Metformin 500mg le soir après le dîner.',
-      physicianName: item.doctor_name || 'Dr. Jean-Paul Mbarga',
-      physicianPhone: item.doctor_phone || '+237 655 89 12 34',
-      hospitalPreference: item.doctor_hospital || 'Hôpital Central de Yaoundé',
+      chronicConditions: item.medical_information ? [item.medical_information] : [],
+      medicationNotes: item.medical_information || '',
+      physicianName: item.doctor_name || undefined,
+      physicianPhone: item.doctor_phone || undefined,
+      hospitalPreference: item.doctor_hospital || undefined,
     },
     emergencyContacts: [
       {
         id: `ec-${item.elderly_id}`,
-        name: 'Family Contact',
+        name: 'Designated Contact',
         relationship: 'Emergency Contact',
         phone: item.emergency_contact,
         isPrimary: true,
@@ -762,7 +762,7 @@ export const apiToggleGeofence = async (elderlyId: number | string, enable: bool
 export async function apiUpdateElderlyProfile(elderlyId: string, updates: any): Promise<{success: boolean; error?: string}> {
   try {
     const token = getAuthToken();
-    const headers = { 'Content-Type': 'application/json' };
+    const headers: Record<string, string> = { 'Content-Type': 'application/json' };
     if (token) headers['Authorization'] = `Bearer ${token}`;
     
     // elderlyId comes as 'eld-123', we need just '123'
