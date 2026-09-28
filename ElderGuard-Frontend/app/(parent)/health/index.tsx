@@ -202,15 +202,15 @@ export default function HealthMonitoringScreen() {
       
       bottomBar={<BottomTabBar activeTab="health" role="parent" />}
     >
-      {/* -- 1. Seamless White Header (Design A) -- */}
-      <View style={styles.whiteHeroHeader}>
+      {/* -- 1. Soft Blue Edge Header (Design B) -- */}
+      <View style={styles.softBlueHeroHeader}>
         <View style={styles.headerRow}>
           <TouchableOpacity
             onPress={() => (router.canGoBack() ? router.back() : router.replace('/(parent)'))}
             style={styles.backBtn}
             activeOpacity={0.7}
           >
-            <ChevronLeft size={24} color={Colors.textPrimary || '#1F2937'} />
+            <ChevronLeft size={24} color={Colors.white} />
           </TouchableOpacity>
         </View>
         
@@ -233,7 +233,7 @@ export default function HealthMonitoringScreen() {
             return (
               <TouchableOpacity
                 key={p}
-                onPress={() => setPeriod(p)}
+                onPress={() => setPeriod(p as any)}
                 style={[styles.periodBtn, active && styles.periodBtnActive]}
                 activeOpacity={0.8}
               >
@@ -648,9 +648,13 @@ export default function HealthMonitoringScreen() {
 }
 
 const styles = StyleSheet.create({
-  whiteHeroHeader: {
-    backgroundColor: 'transparent',
-    padding: Spacing.md,
+  softBlueHeroHeader: {
+    backgroundColor: Colors.primary,
+    paddingTop: 30,
+    paddingHorizontal: 20,
+    paddingBottom: 24,
+    marginHorizontal: -20,
+    marginTop: -20,
     marginBottom: Spacing.lg,
   },
   heroContent: {
@@ -660,7 +664,7 @@ const styles = StyleSheet.create({
   },
   heroSubtitle: {
     fontSize: 14,
-    color: Colors.textSecondary,
+    color: 'rgba(255,255,255,0.7)',
     fontWeight: '700',
     textTransform: 'uppercase',
     letterSpacing: 1,
@@ -675,7 +679,7 @@ const styles = StyleSheet.create({
   heroStatusText: {
     fontSize: 34,
     fontWeight: '800',
-    color: Colors.textPrimary,
+    color: Colors.white,
     letterSpacing: -1,
   },
   statusDotSmall: {
@@ -685,7 +689,7 @@ const styles = StyleSheet.create({
   },
   heroUpdateText: {
     fontSize: 13,
-    color: Colors.textSecondary,
+    color: 'rgba(255,255,255,0.7)',
     fontWeight: '500',
     marginTop: 4,
   },
@@ -766,7 +770,7 @@ const styles = StyleSheet.create({
     width: 44,
     height: 44,
     borderRadius: 22,
-    backgroundColor: '#F3F4F6',
+    backgroundColor: 'rgba(255,255,255,0.15)',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -778,7 +782,7 @@ const styles = StyleSheet.create({
   },
   periodSwitcher: {
     flexDirection: 'row',
-    backgroundColor: '#F3F4F6',
+    backgroundColor: 'rgba(255,255,255,0.15)',
     alignSelf: 'stretch',
     borderRadius: 12,
     padding: 4,
